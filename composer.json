@@ -1,0 +1,42 @@
+{
+	"$schema": "https://getcomposer.org/schema.json",
+	"name": "ediamin/additional-css-class-manager",
+	"description": "Additional CSS Class Manager for Blocks.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"authors": [
+		{
+			"name": "Edi Amin",
+			"email": "to.ediamin@gmail.com"
+		}
+	],
+	"require": {
+		"php": "^7.4"
+	},
+	"autoload": {
+		"psr-4": {
+			"CSSClassManager\\": "includes/"
+		}
+	},
+	"scripts": {
+		"phpcs": "phpcs",
+		"phpcbf": "phpcbf -p"
+	},
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/PHPCompatibility/PHPCompatibility"
+        }
+    ],
+	"require-dev": {
+		"automattic/vipwpcs": "^3.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+		"phpcompatibility/php-compatibility": "dev-develop",
+		"slevomat/coding-standard": "^8.14"
+	},
+	"config": {
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		}
+	}
+}

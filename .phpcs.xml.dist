@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<ruleset name="Additional CSS Class Manager"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+	<description>Custom PHPCS ruleset for Additional CSS Class Manager plugin.</description>
+
+	<!-- Exclude paths. -->
+	<exclude-pattern>wp-core/</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/dist/*</exclude-pattern>
+
+	<!-- Arguments. -->
+	<arg value="sp"/>
+	<arg name="colors"/>
+	<arg name="parallel" value="8"/>
+	<arg name="extensions" value="php"/>
+
+	<!-- Configs. -->
+	<config name="testVersion" value="7.4-"/>
+	<config name="minimum_supported_wp_version" value="6.0-"/>
+
+	<!-- PHPCompatibility. -->
+    <rule ref="PHPCompatibility">
+		<!--
+			PHPCompatibilityWP is not compatible with the php-compatibility@dev-develop.
+			This ruleset is copied from PHPCompatibilityWP GH repo.
+			https://github.com/PHPCompatibility/PHPCompatibilityWP/blob/1708fc935ceeff3ec57dca5b1b18666403e53fba/PHPCompatibilityWP/ruleset.xml
+		-->
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.hash_hmacFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.json_encodeFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.json_decodeFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.hash_equalsFound"/>
+        <exclude name="PHPCompatibility.Constants.NewConstants.json_pretty_printFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.json_last_error_msgFound"/>
+        <exclude name="PHPCompatibility.Interfaces.NewInterfaces.jsonserializableFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.array_replace_recursiveFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.is_iterableFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.is_countableFound"/>
+        <exclude name="PHPCompatibility.Constants.NewConstants.imagetype_webpFound"/>
+        <exclude name="PHPCompatibility.Constants.NewConstants.img_webpFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.array_key_firstFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.array_key_lastFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.str_containsFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.str_starts_withFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.str_ends_withFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.spl_autoload_registerFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.spl_autoload_unregisterFound"/>
+        <exclude name="PHPCompatibility.FunctionUse.NewFunctions.spl_autoload_functionsFound"/>
+    </rule>
+
+	<!-- Use PSR-12 as baseline standard. -->
+	<rule ref="PSR12">
+		<!-- Prefer WP - Use tabs. -->
+		<exclude name="Generic.WhiteSpace.DisallowTabIndent.TabsUsed"/>
+
+		<!-- Prefer WP - Space after and before brackets. -->
+		<exclude name="PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket"/>
+		<exclude name="PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket"/>
+		<exclude name="PSR12.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace"/>
+		<exclude name="PSR12.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace"/>
+
+		<!-- Prefer WP - Use snake_case method names instead of camelCase. -->
+		<exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>
+
+		<!-- Prefer SlevomatCodingStandard - space arount equal sign in `declare(strict_types = 1)`. -->
+		<exclude name="PSR12.Files.DeclareStatement.SpaceFoundAfterDirective"/>
+		<exclude name="PSR12.Files.DeclareStatement.SpaceFoundBeforeDirectiveValue"/>
+	</rule>
+
+	<!-- WordPress. -->
+	<rule ref="WordPress-VIP-Go"/>
+	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Docs">
+		<exclude name="Squiz.Commenting.FileComment.Missing"/>
+
+		<!-- Handle with the SlevomatCodingStandard. -->
+		<exclude name="Squiz.Commenting.VariableComment.MissingVar"/>
+	</rule>
+	<rule ref="WordPress-Core">
+		<!-- Let's stop using Yoda. -->
+		<exclude name="WordPress.PHP.YodaConditions.NotYoda"/>
+
+		<!-- Prefer PSR12 - Opening brace on new line. -->
+		<exclude name="Generic.Classes.OpeningBraceSameLine.BraceOnNewLine"/>
+		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing.ExtraSpaceAfterCloseParenthesis"/>
+		<exclude name="Generic.Functions.OpeningFunctionBraceKernighanRitchie.BraceOnNewLine"/>
+
+		<!-- Allow PSR-4 style file names. -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+
+		<!-- Allow [] notation for array. Rule for array() syntax can be found below. -->
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax.Found"/>
+	</rule>
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array" value="additional-css-class-manager"/>
+		</properties>
+	</rule>
+
+	<!-- Do not allow array() syntax. Use [] instead. -->
+	<rule ref="Generic.Arrays.DisallowLongArraySyntax"></rule>
+
+	<!-- Inline comments must starts with capital letter. -->
+	<rule ref="Squiz.Commenting.InlineComment.NotCapital">
+		<severity>5</severity>
+	</rule>
+
+	<!-- Allow side effects only in plugin main file. -->
+	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+		<exclude-pattern>additional-css-class-manager.php</exclude-pattern>
+	</rule>
+
+	<!-- Allow no space after opening php tag at the top. -->
+	<rule ref="PSR12.Files.FileHeader.SpacingAfterBlock">
+		<exclude-pattern>additional-css-class-manager.php</exclude-pattern>
+	</rule>
+
+	<!-- SlevomatCodingStandard rules. -->
+	<rule ref="SlevomatCodingStandard">
+		<!-- Always use parantheses when initialize classes. -->
+		<exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses.UselessParentheses"/>
+
+		<!-- Not sure about this one. Why do we have to declare a class either abstract or final? -->
+		<exclude name="SlevomatCodingStandard.Classes.RequireAbstractOrFinal.ClassNeitherAbstractNorFinal"/>
+
+		<!-- Prefer PSR12 - No empty space after or before class braces. -->
+		<exclude name="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces.NoEmptyLineAfterOpeningBrace"/>
+		<exclude name="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces.NoEmptyLineBeforeClosingBrace"/>
+
+		<!-- Allow using global functions without using a namespace. -->
+		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified"/>
+		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified"/>
+
+		<!-- Allow whitespaces after and before array brackets. -->
+		<exclude name="SlevomatCodingStandard.Arrays.SingleLineArrayWhitespace.SpaceAfterArrayOpen"/>
+		<exclude name="SlevomatCodingStandard.Arrays.SingleLineArrayWhitespace.SpaceBeforeArrayClose"/>
+
+		<!-- Allow use of empty() function. -->
+		<exclude name="SlevomatCodingStandard.ControlStructures.DisallowEmpty.DisallowedEmpty"/>
+
+		<!-- Let's stop using Yoda. -->
+		<exclude name="SlevomatCodingStandard.ControlStructures.RequireYodaComparison.RequiredYodaComparison"/>
+
+		<!-- Ignore PHP v7.4+ specific rules. -->
+		<exclude name="SlevomatCodingStandard.Functions.RequireTrailingCommaInCall.MissingTrailingComma"/>
+
+		<!-- Ignore PHP v7.4+ specific rules. -->
+		<exclude name="SlevomatCodingStandard.Numbers.RequireNumericLiteralSeparator"/>
+
+		<!-- It throws error when we have multiple params and the unused ones are at the begining. -->
+		<exclude name="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter"/>
+
+		<!-- Not sure what number would be the good fit. -->
+		<exclude name="SlevomatCodingStandard.Functions.FunctionLength"/>
+		<exclude name="SlevomatCodingStandard.Files.FunctionLength.FunctionLength"/>
+
+		<!-- mixed type is very common in WordPress.  -->
+		<exclude name="SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint.DisallowedMixedTypeHint"/>
+
+		<!-- Do not allow arrow functions. -->
+		<exclude name="SlevomatCodingStandard.Functions.RequireArrowFunction.RequiredArrowFunction"/>
+
+		<!-- Ignoring the documentation for array return type. -->
+		<exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification"/>
+
+		<!-- Don't want to impose this rule. -->
+		<exclude name="SlevomatCodingStandard.Files.FileLength.FileTooLong"/>
+	</rule>
+
+	<!-- Allowed namespace(after the declare statement). -->
+	<rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+		<properties>
+			<property name="rootNamespaces" type="array">
+				<element key="includes" value="CSSClassManager"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Whitelisted namespaces to use in the `use` statement. -->
+	<rule ref="SlevomatCodingStandard.Namespaces.UseOnlyWhitelistedNamespaces">
+		<properties>
+			<property name="namespacesRequiredToUse" type="array">
+				<element value="CSSClassManager"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Checks against unnecessary duplicate spaces-->
+	<rule ref="SlevomatCodingStandard.Whitespaces.DuplicateSpaces">
+		<properties>
+			<property name="ignoreSpacesBeforeAssignment" value="true"/>
+			<property name="ignoreSpacesInAnnotation" value="true"/>
+		</properties>
+	</rule>
+
+</ruleset>

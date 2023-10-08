@@ -19,7 +19,8 @@
 	},
 	"scripts": {
 		"env:start": "wp-env start --xdebug=debug",
-		"env:stop": "wp-env stop"
+		"env:stop": "wp-env stop",
+		"composer": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer"
 	},
 	"devDependencies": {
 		"@wordpress/env": "8.9.0"
