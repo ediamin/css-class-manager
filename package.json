@@ -21,8 +21,9 @@
 		"env:start": "wp-env start --xdebug=debug",
 		"env:stop": "wp-env stop",
 		"composer": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer",
-		"dev": "wp-scripts start assets/src/index.ts --output-path=assets/dist",
-		"build": "wp-scripts build assets/src/index.ts --output-path=assets/dist"
+		"dev": "wp-scripts start",
+		"build": "wp-scripts build",
+		"clean": "rimraf assets/dist"
 	},
 	"devDependencies": {
 		"@wordpress/env": "8.9.0",
