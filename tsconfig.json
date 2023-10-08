@@ -1,0 +1,34 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"compilerOptions": {
+		"allowJs": false,
+		"checkJs": false,
+		"allowSyntheticDefaultImports": false,
+		"jsx": "react-native",
+		"target": "esnext",
+		"module": "NodeNext",
+		"lib": [ "dom", "esnext" ],
+		"declaration": true,
+		"declarationMap": false,
+		"composite": true,
+		"emitDeclarationOnly": false,
+		"isolatedModules": true,
+
+		/* Strict Type-Checking Options */
+		"strict": true,
+
+		/* Additional Checks */
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+
+		/* Module Resolution Options */
+		"moduleResolution": "NodeNext",
+
+		/* This needs to be false so our types are possible to consume without setting this */
+		"esModuleInterop": false,
+		"resolveJsonModule": true
+	},
+	"exclude": []
+}
