@@ -23,7 +23,8 @@
 		"composer": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer",
 		"dev": "wp-scripts start",
 		"build": "wp-scripts build",
-		"clean": "rimraf assets/dist"
+		"clean": "rimraf assets/dist",
+		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer analyze"
 	},
 	"devDependencies": {
 		"@wordpress/env": "8.9.0",

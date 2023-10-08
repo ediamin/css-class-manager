@@ -1,0 +1,10 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+	level: 9
+	paths:
+		- additional-css-class-manager.php
+		- includes/
+	ignoreErrors:
+		- '#Constant CSS_CLASS_MANAGER_ABSPATH not found.#'
+		- '#Constant CSS_CLASS_MANAGER_URL not found.#'

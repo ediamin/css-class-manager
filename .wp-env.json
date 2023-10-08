@@ -2,7 +2,8 @@
 	"core": "WordPress/WordPress#6.3.1",
 	"phpVersion": "7.4",
 	"mappings": {
-		"wp-content/plugins/additional-css-class-manager": "./"
+		"wp-content/plugins/additional-css-class-manager": "./",
+		"../../../usr/local/etc/php/conf.d/custom.ini": "./.php.ini"
 	},
 	"config": {
 		"WP_DEBUG_LOG": true,
