@@ -1,0 +1,27 @@
+{
+	"name": "@ediamin/additional-css-class-manager",
+	"version": "0.0.1",
+	"description": "Additional CSS Class Manager for Blocks.",
+	"author": "Edi Amin <to.ediamin@gmail.com>",
+	"license": "GPL-2.0-or-later",
+	"keywords": [],
+	"homepage": "https://github.com/ediamin/additional-css-class-manager#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ediamin/additional-css-class-manager.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ediamin/additional-css-class-manager/issues"
+	},
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=9.5.1"
+	},
+	"scripts": {
+		"env:start": "wp-env start --xdebug=debug",
+		"env:stop": "wp-env stop"
+	},
+	"devDependencies": {
+		"@wordpress/env": "8.9.0"
+	}
+}
