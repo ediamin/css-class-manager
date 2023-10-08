@@ -1,0 +1,8 @@
+.husky
+.vscode
+dist
+includes
+node_modules
+vendor
+wp-core
+

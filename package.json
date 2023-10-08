@@ -20,6 +20,8 @@
 	"scripts": {
 		"env:start": "wp-env start --xdebug=debug",
 		"env:stop": "wp-env stop",
+		"format": "wp-scripts format",
+		"lint:js": "wp-scripts lint-js",
 		"composer": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer",
 		"dev": "wp-scripts start",
 		"build": "wp-scripts build",
