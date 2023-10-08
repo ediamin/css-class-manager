@@ -67,6 +67,9 @@
 		<exclude name="PSR12.Files.DeclareStatement.SpaceFoundBeforeDirectiveValue"/>
 	</rule>
 
+	<!-- This will make sure to use the function open brace in next line. -->
+	<rule ref="Generic.Functions" />
+
 	<!-- WordPress. -->
 	<rule ref="WordPress-VIP-Go"/>
 	<rule ref="WordPress-Extra"/>
