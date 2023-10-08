@@ -27,5 +27,6 @@ class Hooks
 
 		// General assets.
 		add_action( 'init', [ Enqueue::class, 'register_scripts' ] );
+		add_action( 'enqueue_block_editor_assets', [ Enqueue::class, 'enqueue_block_editor_assets' ] );
 	}
 }

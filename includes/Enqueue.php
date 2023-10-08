@@ -24,6 +24,22 @@ class Enqueue
 	 */
 	public static function register_scripts(): void
 	{
-		// Register scripts here.
+		$asset = require_once Plugin::ASSETS_DIST_PATH . '/css-class-manager/index.asset.php';
+
+		wp_register_script(
+			self::SCRIPT_HANDLE,
+			Plugin::ASSETS_DIST_URL . '/css-class-manager/index.js',
+			array_merge( $asset['dependencies'] ),
+			$asset['version'],
+			true
+		);
+	}
+
+	/**
+	 * Enqueue assets in block editor.
+	 */
+	public static function enqueue_block_editor_assets(): void
+	{
+		wp_enqueue_script( self::SCRIPT_HANDLE );
 	}
 }
