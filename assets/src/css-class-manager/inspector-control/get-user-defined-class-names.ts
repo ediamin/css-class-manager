@@ -1,4 +1,4 @@
-import type { ClassPreset } from './types';
+import type { ClassPreset } from '../types';
 
 function getUserDefinedClassNames(): ClassPreset[] {
 	return [

@@ -61,4 +61,14 @@ class Plugin
 	{
 		// Code goes here.
 	}
+
+	/**
+	 * Get the filtered class names provided by themes and plugins.
+	 *
+	 * @return array<array<string,string>>
+	 */
+	public function get_filtered_class_names(): array
+	{
+		return apply_filters( 'css_class_manager_filtered_class_names', [] );
+	}
 }

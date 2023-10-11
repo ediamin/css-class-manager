@@ -7,7 +7,7 @@ import { __ } from '@wordpress/i18n';
 import getClassNames from './get-class-names';
 import getRenderItem from './get-render-item';
 
-import type { BlockEditProps } from './types.ts';
+import type { BlockEditProps } from '../types.ts';
 import type { FormTokenFieldProps } from '@wordpress/components/build-types/form-token-field/types';
 import type { FC } from 'react';
 

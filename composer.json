@@ -16,7 +16,10 @@
 	"autoload": {
 		"psr-4": {
 			"CSSClassManager\\": "includes/"
-		}
+		},
+		"files": [
+			"includes/functions.php"
+		]
 	},
 	"scripts": {
 		"analyze": "phpstan analyze",

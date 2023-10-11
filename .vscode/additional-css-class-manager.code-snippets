@@ -7,7 +7,7 @@
 	// Placeholders with the same ids are connected.
 	// Example:
 	"Plugin hypheneted name": {
-		"scope": "javascript,typescript",
+		"scope": "javascript,typescript,php",
 		"prefix": "addc",
 		"body": [
 			"'additional-css-class-manager$1'"

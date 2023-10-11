@@ -33,6 +33,14 @@ class Enqueue
 			$asset['version'],
 			true
 		);
+
+		wp_localize_script(
+			self::SCRIPT_HANDLE,
+			'cssClassManager',
+			[
+				'filteredClassNames' => css_class_manager()->get_filtered_class_names(),
+			]
+		);
 	}
 
 	/**

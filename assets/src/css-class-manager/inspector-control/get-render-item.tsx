@@ -1,7 +1,7 @@
 import getFilteredClassNames from './get-filtered-class-names';
 import getUserDefinedClassNames from './get-user-defined-class-names';
 
-import type { ClassPreset } from './types';
+import type { ClassPreset } from '../types';
 import type { ReactNode } from 'react';
 
 interface ClassNamesPreset {
