@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<ruleset name="Additional CSS Class Manager"
+<ruleset name="CSS Class Manager"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
-	<description>Custom PHPCS ruleset for Additional CSS Class Manager plugin.</description>
+	<description>Custom PHPCS ruleset for CSS Class Manager plugin.</description>
 
 	<!-- Exclude paths. -->
 	<exclude-pattern>wp-core/</exclude-pattern>
@@ -98,7 +98,7 @@
 	</rule>
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="additional-css-class-manager"/>
+			<property name="text_domain" type="array" value="css-class-manager"/>
 		</properties>
 	</rule>
 
@@ -112,12 +112,12 @@
 
 	<!-- Allow side effects only in plugin main file. -->
 	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
-		<exclude-pattern>additional-css-class-manager.php</exclude-pattern>
+		<exclude-pattern>css-class-manager.php</exclude-pattern>
 	</rule>
 
 	<!-- Allow no space after opening php tag at the top. -->
 	<rule ref="PSR12.Files.FileHeader.SpacingAfterBlock">
-		<exclude-pattern>additional-css-class-manager.php</exclude-pattern>
+		<exclude-pattern>css-class-manager.php</exclude-pattern>
 	</rule>
 
 	<!-- SlevomatCodingStandard rules. -->

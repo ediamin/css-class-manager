@@ -3,7 +3,7 @@ includes:
 parameters:
 	level: 9
 	paths:
-		- additional-css-class-manager.php
+		- css-class-manager.php
 		- includes/
 	ignoreErrors:
 		- '#Constant CSS_CLASS_MANAGER_ABSPATH not found.#'

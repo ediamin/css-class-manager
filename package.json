@@ -1,17 +1,17 @@
 {
-	"name": "@ediamin/additional-css-class-manager",
+	"name": "@ediamin/css-class-manager",
 	"version": "0.0.1",
-	"description": "Additional CSS Class Manager for Blocks.",
+	"description": "CSS Class Manager for Blocks.",
 	"author": "Edi Amin <to.ediamin@gmail.com>",
 	"license": "GPL-2.0-or-later",
 	"keywords": [],
-	"homepage": "https://github.com/ediamin/additional-css-class-manager#readme",
+	"homepage": "https://github.com/ediamin/css-class-manager#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ediamin/additional-css-class-manager.git"
+		"url": "git+https://github.com/ediamin/css-class-manager.git"
 	},
 	"bugs": {
-		"url": "https://github.com/ediamin/additional-css-class-manager/issues"
+		"url": "https://github.com/ediamin/css-class-manager/issues"
 	},
 	"engines": {
 		"node": ">=18.0.0",
@@ -30,11 +30,11 @@
 		"env:stop": "wp-env stop",
 		"format": "wp-scripts format",
 		"lint:js": "wp-scripts lint-js",
-		"composer": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer",
+		"composer": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer",
 		"dev": "wp-scripts start",
 		"build": "wp-scripts build",
 		"clean": "rimraf assets/dist",
-		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer analyze",
+		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer analyze",
 		"prepare": "husky install"
 	}
 }

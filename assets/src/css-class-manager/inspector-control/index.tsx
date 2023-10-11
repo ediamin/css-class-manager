@@ -5,6 +5,6 @@ import withCSSClassManagerInspectorControl from './with-css-class-manager-inspec
 
 addFilter(
 	'editor.BlockEdit',
-	'additional-css-class-manager/block-editor/inspector-control',
+	'css-class-manager/block-editor/inspector-control',
 	withCSSClassManagerInspectorControl
 );

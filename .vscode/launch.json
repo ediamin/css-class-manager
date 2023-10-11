@@ -8,7 +8,7 @@
 			"port": 9003,
 			"pathMappings": {
 				"/var/www/html/wp-content/plugins/gutenberg": "/Users/ediamin/www/wp-plugins-repo/gutenberg",
-				"/var/www/html/wp-content/plugins/additional-css-class-manager": "${workspaceRoot}",
+				"/var/www/html/wp-content/plugins/css-class-manager": "${workspaceRoot}",
 				"/var/www/html": "${workspaceRoot}/wp-core"
 			}
 		}

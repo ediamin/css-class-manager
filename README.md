@@ -1,2 +1,2 @@
-# additional-css-class-manager
-Additional CSS Class Manager for Blocks
+# css-class-manager
+CSS Class Manager for Blocks

@@ -1,7 +1,7 @@
 {
 	"$schema": "https://getcomposer.org/schema.json",
-	"name": "ediamin/additional-css-class-manager",
-	"description": "Additional CSS Class Manager for Blocks.",
+	"name": "ediamin/css-class-manager",
+	"description": "CSS Class Manager for Blocks.",
 	"type": "wordpress-plugin",
 	"license": "GPL-2.0-or-later",
 	"authors": [

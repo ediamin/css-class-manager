@@ -7,7 +7,7 @@ module.exports = {
 		'@wordpress/i18n-text-domain': [
 			'error',
 			{
-				allowedTextDomain: [ 'additional-css-class-manager' ],
+				allowedTextDomain: [ 'css-class-manager' ],
 			},
 		],
 		// The plugin is using some `__experimental` APIs.

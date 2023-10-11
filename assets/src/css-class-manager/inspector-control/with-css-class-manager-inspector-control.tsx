@@ -55,7 +55,7 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 						__experimentalExpandOnFocus
 						label={ __(
 							'Additional CSS class(es)',
-							'additional-css-class-manager'
+							'css-class-manager'
 						) }
 						onChange={ handleOnChangeFormtoken }
 						suggestions={ getClassNames( className ) }
