@@ -23,12 +23,12 @@
 		"phpcs": "phpcs",
 		"phpcbf": "phpcbf -p"
 	},
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/PHPCompatibility/PHPCompatibility"
-        }
-    ],
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/PHPCompatibility/PHPCompatibility"
+		}
+	],
 	"require-dev": {
 		"automattic/vipwpcs": "^3.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",

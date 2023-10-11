@@ -17,6 +17,14 @@
 		"node": ">=18.0.0",
 		"npm": ">=9.5.1"
 	},
+	"devDependencies": {
+		"@types/wordpress__block-editor": "11.5.5",
+		"@wordpress/components": "25.9.0",
+		"@wordpress/env": "8.9.0",
+		"@wordpress/scripts": "26.14.0",
+		"husky": "8.0.3",
+		"lint-staged": "14.0.1"
+	},
 	"scripts": {
 		"env:start": "wp-env start --xdebug=debug",
 		"env:stop": "wp-env stop",
@@ -26,12 +34,7 @@
 		"dev": "wp-scripts start",
 		"build": "wp-scripts build",
 		"clean": "rimraf assets/dist",
-		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer analyze"
-	},
-	"devDependencies": {
-		"@types/wordpress__block-editor": "11.5.5",
-		"@wordpress/components": "25.9.0",
-		"@wordpress/env": "8.9.0",
-		"@wordpress/scripts": "26.14.0"
+		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/additional-css-class-manager' cli composer analyze",
+		"prepare": "husky install"
 	}
 }
