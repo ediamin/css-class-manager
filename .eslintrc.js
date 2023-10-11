@@ -10,7 +10,7 @@ module.exports = {
 				allowedTextDomain: [ 'additional-css-class-manager' ],
 			},
 		],
-		// Heavily using the `__experimental` APIs.
+		// The plugin is using some `__experimental` APIs.
 		'@wordpress/no-unsafe-wp-apis': 'off',
 		'import/order': [
 			'error',
