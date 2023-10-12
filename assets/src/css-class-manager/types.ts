@@ -1,7 +1,5 @@
 import type { BlockEditProps as CoreBlockEditProps } from '@wordpress/blocks';
 
-export {};
-
 export interface ClassPreset {
 	name: string;
 	description?: string;

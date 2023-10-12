@@ -7,9 +7,9 @@ import { __ } from '@wordpress/i18n';
 import getClassNames from './get-class-names';
 import getRenderItem from './get-render-item';
 
-import type { BlockEditProps } from '../types.ts';
+import type { BlockEditProps } from '../types';
 import type { FormTokenFieldProps } from '@wordpress/components/build-types/form-token-field/types';
-import type { FC } from 'react';
+import type { FC, MouseEvent } from 'react';
 
 interface Attributes {
 	className: string;
@@ -36,6 +36,11 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 		const renderItem: FormTokenFieldProps[ '__experimentalRenderItem' ] =
 			( { item } ) => getRenderItem( item );
 
+		const openManager = ( event: MouseEvent< HTMLAnchorElement > ) => {
+			event.preventDefault();
+			// console.log( 'open manager' );
+		};
+
 		const hasCustomClassName = hasBlockSupport(
 			name,
 			'customClassName',
@@ -48,22 +53,34 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 
 		return (
 			<>
+				<BlockEdit { ...props } />
 				{ /* @ts-ignore 3RD_PARTY_PACKAGE_IS_MISSING_TYPE */ }
 				<InspectorControls group="advanced">
-					<FormTokenField
-						__experimentalAutoSelectFirstMatch
-						__experimentalExpandOnFocus
-						label={ __(
-							'Additional CSS class(es)',
-							'css-class-manager'
-						) }
-						onChange={ handleOnChangeFormtoken }
-						suggestions={ getClassNames( className ) }
-						value={ className?.split( ' ' ) ?? [] }
-						__experimentalRenderItem={ renderItem }
-					/>
+					<div className="components-base-control">
+						<FormTokenField
+							__experimentalAutoSelectFirstMatch
+							__experimentalExpandOnFocus
+							label={ __(
+								'Additional CSS class(es)',
+								'css-class-manager'
+							) }
+							onChange={ handleOnChangeFormtoken }
+							suggestions={ getClassNames( className ) }
+							value={ className?.split( ' ' ) ?? [] }
+							__experimentalRenderItem={ renderItem }
+						/>
+						<a
+							href="#open-css-class-manager"
+							onClick={ openManager }
+							style={ { fontSize: '12px' } }
+						>
+							{ __(
+								'Open CSS Class Manager',
+								'css-class-manager'
+							) }
+						</a>
+					</div>
 				</InspectorControls>
-				<BlockEdit { ...props } />
 			</>
 		);
 	},
