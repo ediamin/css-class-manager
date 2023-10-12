@@ -1,7 +1,19 @@
-import { registerPlugin } from '@wordpress/plugins';
+import { useDispatch } from '@wordpress/data';
+import { PluginMoreMenuItem } from '@wordpress/edit-post';
+import { __ } from '@wordpress/i18n';
+import { settings } from '@wordpress/icons';
 
-import MoreMenuItem from './more-menu-item';
+import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 
-registerPlugin( 'css-class-manager-preference-menu-item', {
-	render: MoreMenuItem,
-} );
+const MenuItem = () => {
+	const { openModal } = useDispatch( INTERFACE_STORE );
+	const handleOnClick = () => openModal( MANAGER_MODAL_NAME );
+
+	return (
+		<PluginMoreMenuItem icon={ settings } onClick={ handleOnClick }>
+			{ __( 'CSS Class Manager', 'css-class-manager' ) }
+		</PluginMoreMenuItem>
+	);
+};
+
+export default MenuItem;

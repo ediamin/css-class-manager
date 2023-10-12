@@ -17,7 +17,7 @@ interface Selectors {
 interface SelectFunctionParam
 	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
 
-const CSSClassManagerModal = () => {
+const PreferenceModal = () => {
 	const isModalActive: boolean = useSelect< MapSelect >( ( select ) => {
 		return select< SelectFunctionParam >(
 			INTERFACE_STORE as any
@@ -45,4 +45,4 @@ const CSSClassManagerModal = () => {
 	);
 };
 
-export default CSSClassManagerModal;
+export default PreferenceModal;
