@@ -2,7 +2,10 @@ import { InspectorControls } from '@wordpress/block-editor';
 import { hasBlockSupport } from '@wordpress/blocks';
 import { FormTokenField } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
+import { useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
+
+import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 
 import getClassNames from './get-class-names';
 import getRenderItem from './get-render-item';
@@ -25,6 +28,8 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 		const { name, isSelected, attributes, setAttributes } = props;
 		const { className } = attributes;
 
+		const { openModal } = useDispatch( INTERFACE_STORE );
+
 		const handleOnChangeFormtoken: FormTokenFieldProps[ 'onChange' ] = (
 			value
 		) => {
@@ -38,7 +43,7 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 
 		const openManager = ( event: MouseEvent< HTMLAnchorElement > ) => {
 			event.preventDefault();
-			// console.log( 'open manager' );
+			openModal( MANAGER_MODAL_NAME );
 		};
 
 		const hasCustomClassName = hasBlockSupport(
@@ -72,7 +77,11 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 						<a
 							href="#open-css-class-manager"
 							onClick={ openManager }
-							style={ { fontSize: '12px' } }
+							style={ {
+								display: 'block',
+								marginTop: '-0.7em',
+								fontSize: '12px',
+							} }
 						>
 							{ __(
 								'Open CSS Class Manager',
