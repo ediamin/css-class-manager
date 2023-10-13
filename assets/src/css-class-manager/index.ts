@@ -4,7 +4,7 @@ import { registerPlugin } from '@wordpress/plugins';
 
 import InspectorControl from './inspector-control';
 import MenuItem from './menu-item';
-import PreferenceModal from './preference-modal';
+import PreferencesModal from './preferences-modal';
 
 // The inspector control for the blocks.
 addFilter(
@@ -15,7 +15,7 @@ addFilter(
 
 // The preference or settings modal.
 registerPlugin( 'css-class-manager-preference-modal', {
-	render: PreferenceModal,
+	render: PreferencesModal,
 } );
 
 // The menu item in options menu.
