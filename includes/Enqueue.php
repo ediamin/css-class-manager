@@ -26,10 +26,17 @@ class Enqueue
 	{
 		$asset = require_once Plugin::ASSETS_DIST_PATH . '/css-class-manager/index.asset.php';
 
+		wp_register_style(
+			self::STYLE_HANDLE,
+			Plugin::ASSETS_DIST_URL . '/css-class-manager/styles.css',
+			[],
+			$asset['version']
+		);
+
 		wp_register_script(
 			self::SCRIPT_HANDLE,
 			Plugin::ASSETS_DIST_URL . '/css-class-manager/index.js',
-			array_merge( $asset['dependencies'] ),
+			$asset['dependencies'],
 			$asset['version'],
 			true
 		);
@@ -48,6 +55,7 @@ class Enqueue
 	 */
 	public static function enqueue_block_editor_assets(): void
 	{
+		wp_enqueue_style( self::STYLE_HANDLE );
 		wp_enqueue_script( self::SCRIPT_HANDLE );
 	}
 }

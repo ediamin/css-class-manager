@@ -6,8 +6,8 @@ import { useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
+import getClassNames from '../utils/get-class-names';
 
-import getClassNames from './get-class-names';
 import getRenderItem from './get-render-item';
 
 import type { BlockEditProps } from '../types';

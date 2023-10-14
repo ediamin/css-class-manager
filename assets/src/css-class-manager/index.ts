@@ -6,6 +6,8 @@ import InspectorControl from './inspector-control';
 import MenuItem from './menu-item';
 import PreferencesModal from './preferences-modal';
 
+import './styles.scss';
+
 // The inspector control for the blocks.
 addFilter(
 	'editor.BlockEdit',

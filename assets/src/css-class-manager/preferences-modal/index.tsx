@@ -4,8 +4,9 @@ import { __ } from '@wordpress/i18n';
 
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 
-import PreferencesModalSection from './preferences-modal-section';
 import PreferencesModalTabs from './preferences-modal-tabs';
+import tabCssClass from './tab-css-classes';
+import tabImportExport from './tab-import-export';
 
 import type {
 	MapSelect,
@@ -37,43 +38,7 @@ const PreferencesModal = () => {
 		return null;
 	}
 
-	const sections = [
-		{
-			name: 'css-classes',
-			tabLabel: __( 'CSS Classes', 'css-class-manager' ),
-			content: (
-				<PreferencesModalSection
-					title={ __( 'Class List', 'css-class-manager' ) }
-					description={ __(
-						'These classes will appear in the Additional CSS Class(es) control dropdown.',
-						'css-class-manager'
-					) }
-				>
-					<div>Class list...</div>
-				</PreferencesModalSection>
-			),
-		},
-		{
-			name: 'import-export',
-			tabLabel: __( 'Import/Export', 'css-class-manager' ),
-			content: (
-				<>
-					<PreferencesModalSection
-						title={ __( 'Import Class List', 'css-class-manager' ) }
-						description=""
-					>
-						<div>Import...</div>
-					</PreferencesModalSection>
-					<PreferencesModalSection
-						title={ __( 'Export Class List', 'css-class-manager' ) }
-						description=""
-					>
-						<div>Export...</div>
-					</PreferencesModalSection>
-				</>
-			),
-		},
-	];
+	const sections = [ tabCssClass, tabImportExport ];
 
 	return (
 		<Modal

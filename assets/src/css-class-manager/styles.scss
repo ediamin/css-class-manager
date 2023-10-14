@@ -1,0 +1,34 @@
+.css-class-manager {
+
+	&__tab-class-list {
+
+		.edit-post-block-manager__search {
+			margin-top: 0;
+		}
+
+		.components-panel__body {
+
+			&:focus-within {
+				background-color: #f0f0f0;
+			}
+		}
+	}
+
+	&__class-form {
+		flex-basis: 100%;
+		padding-top: 2px;
+
+		fieldset {
+			display: flex;
+			flex-direction: column;
+			row-gap: 16px;
+
+			&:disabled {
+
+				.components-input-control__container {
+					opacity: 0.4;
+				}
+			}
+		}
+	}
+}

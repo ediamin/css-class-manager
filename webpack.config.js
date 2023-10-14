@@ -6,9 +6,21 @@ function resolve( ...paths ) {
 	return path.resolve( __dirname, ...paths );
 }
 
+const plugins = [];
+
+defaultConfig.plugins.forEach( ( item ) => {
+	if ( item.constructor.name.toLowerCase() === 'minicssextractplugin' ) {
+		item.options.filename = '[name]/styles.css';
+	}
+
+	plugins.push( item );
+} );
+
 /** @type {import('webpack').Configuration} */
 module.exports = {
 	...defaultConfig,
+
+	plugins,
 
 	entry: {
 		'css-class-manager': resolve(
