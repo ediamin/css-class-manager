@@ -8,7 +8,7 @@
 	// Example:
 	"Plugin hypheneted name": {
 		"scope": "javascript,typescript,php",
-		"prefix": "addc",
+		"prefix": "cssm",
 		"body": [
 			"'css-class-manager$1'"
 		],
