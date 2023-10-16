@@ -7,11 +7,11 @@ import {
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-import type { ClassPreset } from '../types';
+import type { ClassPreset, CombinedClassPreset } from '../types';
 import type { FC, FormEventHandler } from 'react';
 
 interface ClassFormProps {
-	classPreset?: ClassPreset;
+	classPreset?: CombinedClassPreset;
 	disabled: boolean;
 	onSubmit: ( classPreset: ClassPreset ) => void;
 }
@@ -40,6 +40,8 @@ const ClassForm: FC< ClassFormProps > = ( {
 			...states,
 			showConfirmMsg: ! states.showConfirmMsg,
 		} );
+
+		inputRef.current?.focus();
 	};
 
 	const onSubmitHandler: FormEventHandler< HTMLFormElement > = ( event ) => {
@@ -51,12 +53,48 @@ const ClassForm: FC< ClassFormProps > = ( {
 		inputRef.current?.focus();
 	}, [] );
 
+	const CreateButton = () => (
+		<Flex>
+			<FlexItem>
+				<Button variant="primary" type="submit">
+					{ __( 'Add Class', 'css-class-manager' ) }
+				</Button>
+			</FlexItem>
+		</Flex>
+	);
+
+	const EditButtons = () => (
+		<Flex>
+			<FlexItem>
+				<Button variant="primary" type="submit">
+					{ __( 'Update', 'css-class-manager' ) }
+				</Button>
+			</FlexItem>
+			<FlexItem>
+				{ ! states.showConfirmMsg ? (
+					<Button onClick={ () => toggleConfirmationMsg() }>
+						{ __( 'Delete', 'css-class-manager' ) }
+					</Button>
+				) : (
+					<>
+						<Button isDestructive>
+							{ __( 'Confirm Delete', 'css-class-manager' ) }
+						</Button>
+						<Button onClick={ () => toggleConfirmationMsg() }>
+							{ __( 'Cancel', 'css-class-manager' ) }
+						</Button>
+					</>
+				) }
+			</FlexItem>
+		</Flex>
+	);
+
 	return (
 		<form
 			className="css-class-manager__class-form"
 			onSubmit={ onSubmitHandler }
 		>
-			<fieldset disabled={ disabled }>
+			<fieldset disabled={ classPreset?.isFilteredClassName || disabled }>
 				<InputControl
 					label={ __( 'Class name', 'css-class-manager' ) }
 					__next40pxDefaultSize
@@ -84,48 +122,17 @@ const ClassForm: FC< ClassFormProps > = ( {
 						} )
 					}
 				/>
-				{ ! isNewForm ? (
+				{ classPreset?.isFilteredClassName ? (
 					<Flex>
-						<FlexItem>
-							<Button variant="primary" type="submit">
-								{ __( 'Update', 'css-class-manager' ) }
-							</Button>
-						</FlexItem>
-						<FlexItem>
-							{ ! states.showConfirmMsg ? (
-								<Button
-									onClick={ () => toggleConfirmationMsg() }
-								>
-									{ __( 'Delete', 'css-class-manager' ) }
-								</Button>
-							) : (
-								<>
-									<Button isDestructive>
-										{ __(
-											'Confirm Delete',
-											'css-class-manager'
-										) }
-									</Button>
-									<Button
-										onClick={ () => {
-											toggleConfirmationMsg();
-											inputRef.current?.focus();
-										} }
-									>
-										{ __( 'Cancel', 'css-class-manager' ) }
-									</Button>
-								</>
+						<FlexItem className="css-class-manager__class-form__info">
+							{ __(
+								'Editing is not available for the filtered class names.',
+								'css-class-manager'
 							) }
 						</FlexItem>
 					</Flex>
 				) : (
-					<Flex>
-						<FlexItem>
-							<Button variant="primary" type="submit">
-								{ __( 'Add Class', 'css-class-manager' ) }
-							</Button>
-						</FlexItem>
-					</Flex>
+					<>{ isNewForm ? <CreateButton /> : <EditButtons /> }</>
 				) }
 			</fieldset>
 		</form>
