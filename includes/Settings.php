@@ -10,6 +10,11 @@ namespace CSSClassManager;
 class Settings
 {
 	/**
+	 * Option name for the class names.
+	 */
+	public const OPTION_CLASS_NAMES = 'css_class_manager_class_names';
+
+	/**
 	 * Register plugin custom settings.
 	 */
 	public static function register_settings(): void
@@ -17,31 +22,25 @@ class Settings
 		// phpcs:disable SlevomatCodingStandard.Arrays.AlphabeticallySortedByKeys.IncorrectKeyOrder
 		register_setting(
 			'options',
-			'css_class_manager',
+			self::OPTION_CLASS_NAMES,
 			[
 				'type'         => 'object',
-				'default'      => [
-					'user_defined_class_names' => [],
-				],
+				'description'  => __( 'List of user defined class names', 'css-class-manager' ),
+				'default'      => [],
 				'show_in_rest' => [
 					'schema' => [
-						'type'       => 'object',
-						'properties' => [
-							'user_defined_class_names' => [
-								'type'  => 'array',
-								'items' => [
-									'type'       => 'object',
-									'properties' => [
-										'description' => [
-											'type'        => 'string',
-											'description' => __( 'Description of the class name', 'css-class-manager' ),
-										],
-										'name'        => [
-											'type'        => 'string',
-											'description' => __( 'CSS class name', 'css-class-manager' ),
-											'required'    => true,
-										],
-									],
+						'type'  => 'array',
+						'items' => [
+							'type'       => 'object',
+							'properties' => [
+								'name'        => [
+									'type'        => 'string',
+									'description' => __( 'CSS class name', 'css-class-manager' ),
+									'required'    => true,
+								],
+								'description' => [
+									'type'        => 'string',
+									'description' => __( 'Description of the class name', 'css-class-manager' ),
 								],
 							],
 						],

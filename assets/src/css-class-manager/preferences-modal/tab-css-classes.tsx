@@ -4,16 +4,26 @@ import {
 	PanelRow,
 	SearchControl,
 } from '@wordpress/components';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-import getFilteredClassNames from '../utils/get-filtered-class-names';
-import getUserDefinedClassNames from '../utils/get-user-defined-class-names';
+import { STORE_NAME } from '../constants';
+import store from '../store';
 
 import ClassForm from './class-form';
 import PreferencesModalSection from './preferences-modal-section';
 
-import type { ClassPreset, ModalTab } from '../types';
+import type { Selectors } from '../store';
+import type { ClassPreset, CombinedClassPreset, ModalTab } from '../types';
+import type {
+	MapSelect,
+	ReduxStoreConfig,
+	StoreDescriptor,
+} from '@wordpress/data/src/types';
+
+interface SelectFunctionParam
+	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
 
 const AddCSSClassForm = () => {
 	const [ isDisabled, setIsDisabled ] = useState< boolean >( false );
@@ -33,15 +43,26 @@ const AddCSSClassForm = () => {
 };
 
 const ClassList = () => {
-	const [ isDisabled, setIsDisabled ] = useState< boolean >( false );
 	const [ search, setSearch ] = useState< string >( '' );
-	const [ myClasses, setMyClasses ] = useState< ClassPreset[] >( [
-		...getFilteredClassNames(),
-		...getUserDefinedClassNames(),
-	] );
+
+	const { cssClassNames, isSavingSettings } = useSelect< MapSelect >(
+		( select ) => {
+			const dataStore = select< SelectFunctionParam >(
+				STORE_NAME as any
+			);
+
+			return {
+				cssClassNames: dataStore.getCssClassNames(),
+				isSavingSettings: dataStore.isSavingSettings(),
+			};
+		},
+		[]
+	);
+
+	const { startSavingSettings } = useDispatch( store );
 
 	const onSubmitHandler = ( classPreset: ClassPreset ) => {
-		setIsDisabled( true );
+		startSavingSettings();
 		// console.log( { existing: classPreset } );
 	};
 
@@ -67,23 +88,25 @@ const ClassList = () => {
 				/>
 
 				<Panel>
-					{ myClasses.map( ( classPreset ) => {
-						return (
-							<PanelBody
-								key={ classPreset.name }
-								title={ classPreset.name }
-								initialOpen={ false }
-							>
-								<PanelRow>
-									<ClassForm
-										classPreset={ classPreset }
-										disabled={ isDisabled }
-										onSubmit={ onSubmitHandler }
-									/>
-								</PanelRow>
-							</PanelBody>
-						);
-					} ) }
+					{ cssClassNames.map(
+						( classPreset: CombinedClassPreset ) => {
+							return (
+								<PanelBody
+									key={ classPreset.name }
+									title={ classPreset.name }
+									initialOpen={ false }
+								>
+									<PanelRow>
+										<ClassForm
+											classPreset={ classPreset }
+											disabled={ isSavingSettings }
+											onSubmit={ onSubmitHandler }
+										/>
+									</PanelRow>
+								</PanelBody>
+							);
+						}
+					) }
 				</Panel>
 			</div>
 		</PreferencesModalSection>

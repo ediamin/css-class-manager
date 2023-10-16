@@ -55,20 +55,34 @@ class Plugin
 	public const TEMPLATES_PATH = self::ABSPATH . '/templates';
 
 	/**
-	 * Class constructor
-	 */
-	public function __construct()
-	{
-		// Code goes here.
-	}
-
-	/**
 	 * Get the filtered class names provided by themes and plugins.
 	 *
 	 * @return array<array<string,string>>
 	 */
 	public function get_filtered_class_names(): array
 	{
-		return apply_filters( 'css_class_manager_filtered_class_names', [] );
+		return apply_filters(
+			'css_class_manager_filtered_class_names',
+			[
+				[
+					'description' => 'Hide element',
+					'name'        => 'flex',
+				],
+				[
+					'description' => 'Hide element',
+					'name'        => 'hidden',
+				],
+			]
+		);
+	}
+
+	/**
+	 * Get the user defined class names.
+	 *
+	 * @return array<array<string,string>>
+	 */
+	public function get_user_defined_class_names(): array
+	{
+		return get_option( Settings::OPTION_CLASS_NAMES, [] );
 	}
 }

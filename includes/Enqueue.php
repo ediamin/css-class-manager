@@ -45,7 +45,8 @@ class Enqueue
 			self::SCRIPT_HANDLE,
 			'cssClassManager',
 			[
-				'filteredClassNames' => css_class_manager()->get_filtered_class_names(),
+				'filteredClassNames'    => css_class_manager()->get_filtered_class_names(),
+				'userDefinedClassNames' => css_class_manager()->get_user_defined_class_names(),
 			]
 		);
 	}

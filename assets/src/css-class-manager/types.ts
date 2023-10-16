@@ -6,6 +6,10 @@ export interface ClassPreset {
 	description?: string;
 }
 
+export interface CombinedClassPreset extends ClassPreset {
+	isFilteredClassName?: boolean;
+}
+
 export interface BlockEditProps< T extends Record< string, any > >
 	extends CoreBlockEditProps< T > {
 	name: string;
