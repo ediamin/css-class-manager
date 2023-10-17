@@ -7,6 +7,8 @@ import {
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+// @ts-ignore Not sure why it shows the error.
+import { nanoid } from 'nanoid';
 
 import { STORE_NAME } from '../constants';
 import store from '../store';
@@ -25,11 +27,44 @@ import type {
 interface SelectFunctionParam
 	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
 
+interface UseSelectReturn {
+	cssClassNames: ReturnType< Selectors[ 'getCssClassNames' ] >;
+	isSavingSettings: ReturnType< Selectors[ 'isSavingSettings' ] >;
+	userDefinedClassNames: ReturnType<
+		Selectors[ 'getUserDefinedClassNames' ]
+	>;
+}
+
 const AddCSSClassForm = () => {
-	const [ isDisabled, setIsDisabled ] = useState< boolean >( false );
-	const onSubmitHandler = ( classPreset: ClassPreset ) => {
-		setIsDisabled( true );
-		// console.log( { newClass: classPreset } );
+	const {
+		saveUserDefinedClassNames,
+		startSavingSettings,
+		completedSavingSettings,
+	} = useDispatch( store );
+
+	const { userDefinedClassNames, isSavingSettings }: UseSelectReturn =
+		useSelect< MapSelect >( ( select ) => {
+			const dataStore = select< SelectFunctionParam >(
+				STORE_NAME as any
+			);
+			return {
+				userDefinedClassNames: dataStore.getUserDefinedClassNames(),
+				isSavingSettings: dataStore.isSavingSettings(),
+			};
+		}, [] );
+
+	const onSubmitHandler = ( newClassPreset: ClassPreset ) => {
+		const updatedClassNames: CombinedClassPreset[] = [
+			...userDefinedClassNames,
+			{
+				...newClassPreset,
+				id: nanoid(),
+			},
+		];
+
+		startSavingSettings();
+		saveUserDefinedClassNames( updatedClassNames );
+		completedSavingSettings();
 	};
 
 	return (
@@ -37,7 +72,10 @@ const AddCSSClassForm = () => {
 			title={ __( 'Add CSS Class', 'css-class-manager' ) }
 			description=""
 		>
-			<ClassForm disabled={ isDisabled } onSubmit={ onSubmitHandler } />
+			<ClassForm
+				disabled={ isSavingSettings }
+				onSubmit={ onSubmitHandler }
+			/>
 		</PreferencesModalSection>
 	);
 };
@@ -45,25 +83,45 @@ const AddCSSClassForm = () => {
 const ClassList = () => {
 	const [ search, setSearch ] = useState< string >( '' );
 
-	const { cssClassNames, isSavingSettings } = useSelect< MapSelect >(
-		( select ) => {
-			const dataStore = select< SelectFunctionParam >(
-				STORE_NAME as any
-			);
+	const {
+		saveUserDefinedClassNames,
+		startSavingSettings,
+		completedSavingSettings,
+	} = useDispatch( store );
 
-			return {
-				cssClassNames: dataStore.getCssClassNames(),
-				isSavingSettings: dataStore.isSavingSettings(),
-			};
-		},
-		[]
-	);
+	const {
+		cssClassNames,
+		userDefinedClassNames,
+		isSavingSettings,
+	}: UseSelectReturn = useSelect< MapSelect >( ( select ) => {
+		const dataStore = select< SelectFunctionParam >( STORE_NAME as any );
+		return {
+			userDefinedClassNames: dataStore.getUserDefinedClassNames(),
+			cssClassNames: dataStore.getCssClassNames(),
+			isSavingSettings: dataStore.isSavingSettings(),
+		};
+	}, [] );
 
-	const { startSavingSettings } = useDispatch( store );
+	const onSubmitHandler = ( previousClassPreset: CombinedClassPreset ) => {
+		return ( newClassPreset: ClassPreset ) => {
+			const updatedClassNames: CombinedClassPreset[] =
+				userDefinedClassNames.map(
+					( classPreset: CombinedClassPreset ) => {
+						if ( classPreset.name === previousClassPreset.name ) {
+							return {
+								...newClassPreset,
+								id: previousClassPreset.id,
+							};
+						}
 
-	const onSubmitHandler = ( classPreset: ClassPreset ) => {
-		startSavingSettings();
-		// console.log( { existing: classPreset } );
+						return classPreset;
+					}
+				);
+
+			startSavingSettings();
+			saveUserDefinedClassNames( updatedClassNames );
+			completedSavingSettings();
+		};
 	};
 
 	return (
@@ -92,7 +150,7 @@ const ClassList = () => {
 						( classPreset: CombinedClassPreset ) => {
 							return (
 								<PanelBody
-									key={ classPreset.name }
+									key={ classPreset.id }
 									title={ classPreset.name }
 									initialOpen={ false }
 								>
@@ -100,7 +158,9 @@ const ClassList = () => {
 										<ClassForm
 											classPreset={ classPreset }
 											disabled={ isSavingSettings }
-											onSubmit={ onSubmitHandler }
+											onSubmit={ onSubmitHandler(
+												classPreset
+											) }
 										/>
 									</PanelRow>
 								</PanelBody>

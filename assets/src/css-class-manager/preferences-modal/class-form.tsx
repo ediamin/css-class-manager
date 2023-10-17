@@ -47,6 +47,16 @@ const ClassForm: FC< ClassFormProps > = ( {
 	const onSubmitHandler: FormEventHandler< HTMLFormElement > = ( event ) => {
 		event.preventDefault();
 		onSubmit( { name: states.name, description: states.description } );
+
+		if ( isNewForm ) {
+			setStates( {
+				...states,
+				name: '',
+				description: '',
+			} );
+
+			inputRef.current?.focus();
+		}
 	};
 
 	useEffect( () => {

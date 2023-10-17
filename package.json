@@ -27,7 +27,8 @@
 		"@wordpress/plugins": "6.11.0",
 		"@wordpress/scripts": "26.14.0",
 		"husky": "8.0.3",
-		"lint-staged": "14.0.1"
+		"lint-staged": "14.0.1",
+		"nanoid": "5.0.2"
 	},
 	"scripts": {
 		"env:start": "wp-env start --xdebug=debug",

@@ -1,4 +1,6 @@
 import { createReduxStore } from '@wordpress/data';
+// @ts-ignore Not sure why it shows the error.
+import { nanoid } from 'nanoid';
 
 import { STORE_NAME } from '../constants';
 
@@ -7,102 +9,120 @@ import type { ActionCreator } from '@wordpress/data/src/types';
 
 interface State {
 	isSavingSettings: boolean;
-	filteredClassNames: ClassPreset[];
-	userDefinedClassNames: ClassPreset[];
+	filteredClassNames: CombinedClassPreset[];
+	userDefinedClassNames: CombinedClassPreset[];
 }
 
 interface Actions extends Record< string, ActionCreator > {
 	startSavingSettings: () => void;
-	createCssClassName: ( classPreset: ClassPreset ) => void;
-	updateCssClassName: (
-		previousClassPreset: ClassPreset,
-		newClassPreset: ClassPreset
-	) => void;
+	completedSavingSettings: () => void;
+	saveUserDefinedClassNames: ( classPresets: CombinedClassPreset[] ) => void;
 }
 
 export interface Selectors {
 	isSavingSettings: ( state: State ) => boolean;
 	getCssClassNames: ( state: State ) => CombinedClassPreset[];
+	getUserDefinedClassNames: ( state: State ) => CombinedClassPreset[];
 }
 
 interface ReducerAction extends State {
 	type: string;
 }
 
-const SAVE_CLASS_NAMES_ACTION_TYPE = 'SAVE_USER_DEFINED_CLASS_NAMES';
-const SAVING_SETTINGS_ACTION_TYPE = 'SAVING_SETTINGS';
+const ACTION_TYPE = {
+	SAVING_SETTINGS: 'SAVING_SETTINGS',
+	SAVE_USER_DEFINED_CLASS_NAMES: 'SAVE_USER_DEFINED_CLASS_NAMES',
+};
+
+function withNanoId(
+	classPresets: ClassPreset[] | undefined,
+	isFilteredClassName: boolean = false
+): CombinedClassPreset[] {
+	if ( ! classPresets ) {
+		return [];
+	}
+
+	return classPresets.map( ( classPreset: ClassPreset ) => {
+		return {
+			...classPreset,
+			isFilteredClassName,
+			id: nanoid(),
+		};
+	} );
+}
 
 const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 	initialState: {
 		isSavingSettings: false,
-		// @ts-ignore cssClassManager is a global variable.
-		filteredClassNames: cssClassManager?.filteredClassNames ?? [],
-		// @ts-ignore cssClassManager is a global variable.
-		userDefinedClassNames: cssClassManager?.userDefinedClassNames ?? [],
+		filteredClassNames: withNanoId(
+			// @ts-ignore cssClassManager is a global variable.
+			cssClassManager?.filteredClassNames,
+			true
+		),
+		userDefinedClassNames: withNanoId(
+			// @ts-ignore cssClassManager is a global variable.
+			cssClassManager?.userDefinedClassNames
+		),
 	},
+
 	reducer( state: State, action: ReducerAction ) {
 		switch ( action.type ) {
-			case SAVE_CLASS_NAMES_ACTION_TYPE:
-				state = {
-					...state,
-					userDefinedClassNames: action.userDefinedClassNames,
-				};
-				break;
-			case SAVING_SETTINGS_ACTION_TYPE:
+			case ACTION_TYPE.SAVING_SETTINGS:
 				state = {
 					...state,
 					isSavingSettings: action.isSavingSettings,
 				};
 				break;
+
+			case ACTION_TYPE.SAVE_USER_DEFINED_CLASS_NAMES:
+				state = {
+					...state,
+					userDefinedClassNames: action.userDefinedClassNames,
+				};
+				break;
+
 			default:
 				break;
 		}
 
 		return state;
 	},
+
 	actions: {
 		startSavingSettings() {
 			return {
-				type: SAVING_SETTINGS_ACTION_TYPE,
+				type: ACTION_TYPE.SAVING_SETTINGS,
 				isSavingSettings: true,
 			};
 		},
 
 		completedSavingSettings() {
 			return {
-				type: SAVING_SETTINGS_ACTION_TYPE,
+				type: ACTION_TYPE.SAVING_SETTINGS,
 				isSavingSettings: false,
 			};
 		},
-		createCssClassName( classPreset ) {
-			// save user defined class names.
-			return {
-				type: SAVE_CLASS_NAMES_ACTION_TYPE,
-				classNames: [],
-			};
-		},
 
-		updateCssClassName( previousClassPreset, newClassPreset ) {
-			// save user defined class names.
+		saveUserDefinedClassNames( classPresets: ClassPreset[] ) {
 			return {
-				type: SAVE_CLASS_NAMES_ACTION_TYPE,
-				classNames: [],
+				type: ACTION_TYPE.SAVE_USER_DEFINED_CLASS_NAMES,
+				userDefinedClassNames: classPresets,
 			};
 		},
 	},
-	selectors: {
-		getCssClassNames( state ) {
-			const filteredClassNames = state.filteredClassNames.map(
-				( classPreset ) => {
-					return {
-						...classPreset,
-						isFilteredClassName: true,
-					};
-				}
-			);
 
+	selectors: {
+		isSavingSettings( state ) {
+			return state.isSavingSettings;
+		},
+
+		getUserDefinedClassNames( state ) {
+			return state.userDefinedClassNames;
+		},
+
+		getCssClassNames( state ) {
 			return [
-				...filteredClassNames,
+				...state.filteredClassNames,
 				...state.userDefinedClassNames,
 			].sort( ( a, b ) => {
 				// Convert names to lowercase for case-insensitive sorting
@@ -120,10 +140,6 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 				// names are equal
 				return 0;
 			} );
-		},
-
-		isSavingSettings( state ) {
-			return state.isSavingSettings;
 		},
 	},
 } );
