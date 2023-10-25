@@ -23,7 +23,11 @@ interface State {
 interface Actions extends Record< string, ActionCreator > {
 	startSavingSettings: () => void;
 	completedSavingSettings: () => void;
-	saveUserDefinedClassNames: ( classPresets: CombinedClassPreset[] ) => void;
+	saveUserDefinedClassNames: (
+		classPreset: ClassPreset,
+		userDefinedClassNames: CombinedClassPreset[],
+		previousClassPreset?: CombinedClassPreset
+	) => void;
 	createSuccessNotice: ( content: string ) => void;
 	createErrorNotice: ( content: string ) => void;
 	removeNotice: RemoveNotice;
@@ -135,13 +139,42 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 			};
 		},
 
-		async saveUserDefinedClassNames( classPresets: CombinedClassPreset[] ) {
+		async saveUserDefinedClassNames(
+			classPreset: ClassPreset,
+			userDefinedClassNames: CombinedClassPreset[],
+			previousClassPreset?: CombinedClassPreset
+		) {
+			let updatedClassNames: CombinedClassPreset[] = [];
+
+			if ( previousClassPreset ) {
+				updatedClassNames = userDefinedClassNames.map(
+					( item: CombinedClassPreset ) => {
+						if ( item.name === previousClassPreset.name ) {
+							return {
+								...classPreset,
+								id: previousClassPreset.id,
+							};
+						}
+
+						return item;
+					}
+				);
+			} else {
+				updatedClassNames = [
+					...userDefinedClassNames,
+					{
+						...classPreset,
+						id: nanoid(),
+					},
+				];
+			}
+
 			try {
 				await apiFetch( {
 					path: '/wp/v2/settings',
 					method: 'post',
 					data: {
-						css_class_manager_class_names: classPresets.map(
+						css_class_manager_class_names: updatedClassNames.map(
 							( { name, description } ) => ( {
 								name,
 								description,
@@ -150,29 +183,20 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 					},
 				} );
 
-				dispatch( 'core/notices' ).createSuccessNotice(
-					__( 'Class name added.', 'css-class-manager' ),
-					{
-						type: 'snackbar',
-					}
-				);
+				// Dispatch
+
+				return {
+					type: ACTION_TYPE.SAVE_USER_DEFINED_CLASS_NAMES,
+					userDefinedClassNames: updatedClassNames,
+				};
 			} catch ( error: unknown ) {
 				// @ts-ignore Not sure how to handle the unknown type here.
 				if ( error?.message ) {
-					dispatch( 'core/notices' ).createErrorNotice(
-						// @ts-ignore Related to above.
-						error.message,
-						{
-							type: 'snackbar',
-						}
-					);
+					// code goes here.
 				}
-			}
 
-			return {
-				type: ACTION_TYPE.SAVE_USER_DEFINED_CLASS_NAMES,
-				userDefinedClassNames: classPresets,
-			};
+				return {};
+			}
 		},
 
 		createSuccessNotice( content ) {

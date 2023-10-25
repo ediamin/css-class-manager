@@ -58,16 +58,11 @@ const AddCSSClassForm = () => {
 		newClassPreset: ClassPreset,
 		inputRef: RefObject< HTMLInputElement >
 	) => {
-		const updatedClassNames: CombinedClassPreset[] = [
-			...userDefinedClassNames,
-			{
-				...newClassPreset,
-				id: nanoid(),
-			},
-		];
-
 		startSavingSettings();
-		await saveUserDefinedClassNames( updatedClassNames );
+		await saveUserDefinedClassNames(
+			newClassPreset,
+			userDefinedClassNames
+		);
 		await completedSavingSettings();
 
 		inputRef.current?.focus();
@@ -113,22 +108,12 @@ const ClassList = () => {
 			newClassPreset: ClassPreset,
 			inputRef: RefObject< HTMLInputElement >
 		) => {
-			const updatedClassNames: CombinedClassPreset[] =
-				userDefinedClassNames.map(
-					( classPreset: CombinedClassPreset ) => {
-						if ( classPreset.name === previousClassPreset.name ) {
-							return {
-								...newClassPreset,
-								id: previousClassPreset.id,
-							};
-						}
-
-						return classPreset;
-					}
-				);
-
 			startSavingSettings();
-			await saveUserDefinedClassNames( updatedClassNames );
+			await saveUserDefinedClassNames(
+				newClassPreset,
+				userDefinedClassNames,
+				previousClassPreset
+			);
 			await completedSavingSettings();
 
 			inputRef.current?.focus();
