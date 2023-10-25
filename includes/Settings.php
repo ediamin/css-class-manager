@@ -73,6 +73,10 @@ class Settings
 				continue;
 			}
 
+			if ( empty( trim( $name ) ) ) {
+				continue;
+			}
+
 			$unique_names[] = $name;
 
 			$description = isset( $class_name['description'] )

@@ -41,6 +41,7 @@ const AddCSSClassForm = () => {
 		saveUserDefinedClassNames,
 		startSavingSettings,
 		completedSavingSettings,
+		createErrorNotice,
 	} = useDispatch( store );
 
 	const { userDefinedClassNames, isSavingSettings }: UseSelectReturn =
@@ -58,6 +59,15 @@ const AddCSSClassForm = () => {
 		newClassPreset: ClassPreset,
 		inputRef: RefObject< HTMLInputElement >
 	) => {
+		if ( ! newClassPreset.name.trim() ) {
+			createErrorNotice(
+				__( 'Class Name cannot be empty', 'css-class-manager' )
+			);
+
+			inputRef.current?.focus();
+			return;
+		}
+
 		startSavingSettings();
 		await saveUserDefinedClassNames(
 			newClassPreset,
@@ -88,6 +98,7 @@ const ClassList = () => {
 		saveUserDefinedClassNames,
 		startSavingSettings,
 		completedSavingSettings,
+		createErrorNotice,
 	} = useDispatch( store );
 
 	const {
@@ -108,6 +119,15 @@ const ClassList = () => {
 			newClassPreset: ClassPreset,
 			inputRef: RefObject< HTMLInputElement >
 		) => {
+			if ( ! newClassPreset.name.trim() ) {
+				createErrorNotice(
+					__( 'Class Name cannot be empty', 'css-class-manager' )
+				);
+
+				inputRef.current?.focus();
+				return;
+			}
+
 			startSavingSettings();
 			await saveUserDefinedClassNames(
 				newClassPreset,
