@@ -7,33 +7,46 @@ import { nanoid } from 'nanoid/non-secure';
 import { STORE_NAME } from '../constants';
 
 import type { ClassPreset, CombinedClassPreset } from '../types';
+import type { SnackbarListProps } from '@wordpress/components/src/snackbar/types';
 import type { ActionCreator } from '@wordpress/data/src/types';
+
+type Notices = SnackbarListProps[ 'notices' ];
+type RemoveNotice = SnackbarListProps[ 'onRemove' ];
 
 interface State {
 	isSavingSettings: boolean;
 	filteredClassNames: CombinedClassPreset[];
 	userDefinedClassNames: CombinedClassPreset[];
+	notices: Notices;
 }
 
 interface Actions extends Record< string, ActionCreator > {
 	startSavingSettings: () => void;
 	completedSavingSettings: () => void;
 	saveUserDefinedClassNames: ( classPresets: CombinedClassPreset[] ) => void;
+	createSuccessNotice: ( content: string ) => void;
+	createErrorNotice: ( content: string ) => void;
+	removeNotice: RemoveNotice;
 }
 
 export interface Selectors {
 	isSavingSettings: ( state: State ) => boolean;
 	getCssClassNames: ( state: State ) => CombinedClassPreset[];
 	getUserDefinedClassNames: ( state: State ) => CombinedClassPreset[];
+	getNotices: ( state: State ) => Notices;
 }
 
 interface ReducerAction extends State {
 	type: string;
+	notice: Notices[ number ];
+	noticeId: string;
 }
 
 const ACTION_TYPE = {
 	SAVING_SETTINGS: 'SAVING_SETTINGS',
 	SAVE_USER_DEFINED_CLASS_NAMES: 'SAVE_USER_DEFINED_CLASS_NAMES',
+	CREATE_NOTICE: 'CREATE_NOTICE',
+	REMOVE_NOTICE: 'REMOVE_NOTICE',
 };
 
 function withNanoId(
@@ -65,6 +78,7 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 			// @ts-ignore cssClassManager is a global variable.
 			cssClassManager?.userDefinedClassNames
 		),
+		notices: [],
 	},
 
 	reducer( state: State, action: ReducerAction ) {
@@ -80,6 +94,22 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 				state = {
 					...state,
 					userDefinedClassNames: action.userDefinedClassNames,
+				};
+				break;
+
+			case ACTION_TYPE.CREATE_NOTICE:
+				state = {
+					...state,
+					notices: [ ...state.notices, action.notice ],
+				};
+				break;
+
+			case ACTION_TYPE.REMOVE_NOTICE:
+				state = {
+					...state,
+					notices: state.notices.filter(
+						( notice ) => notice.id !== action.noticeId
+					),
 				};
 				break;
 
@@ -144,6 +174,36 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 				userDefinedClassNames: classPresets,
 			};
 		},
+
+		createSuccessNotice( content ) {
+			return {
+				type: ACTION_TYPE.CREATE_NOTICE,
+				notice: {
+					id: nanoid(),
+					content: `${ content } - ${ nanoid() }`,
+					status: 'success',
+				},
+			};
+		},
+
+		createErrorNotice( content ) {
+			return {
+				type: ACTION_TYPE.CREATE_NOTICE,
+				notice: {
+					id: nanoid(),
+					content,
+					status: 'error',
+					explicitDismiss: true,
+				},
+			};
+		},
+
+		removeNotice( id ) {
+			return {
+				type: ACTION_TYPE.REMOVE_NOTICE,
+				noticeId: id,
+			};
+		},
 	},
 
 	selectors: {
@@ -175,6 +235,10 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 				// Names are equal.
 				return 0;
 			} );
+		},
+
+		getNotices( state ) {
+			return state.notices;
 		},
 	},
 } );

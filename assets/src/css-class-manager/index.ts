@@ -5,6 +5,7 @@ import { registerPlugin } from '@wordpress/plugins';
 
 import InspectorControl from './inspector-control';
 import MenuItem from './menu-item';
+import Notices from './notices';
 import PreferencesModal from './preferences-modal';
 import store from './store';
 
@@ -28,4 +29,9 @@ registerPlugin( 'css-class-manager-preference-modal', {
 // The menu item in options menu.
 registerPlugin( 'css-class-manager-menu-item', {
 	render: MenuItem,
+} );
+
+// The snackbar notice list.
+registerPlugin( 'css-class-manager-notices', {
+	render: Notices,
 } );
