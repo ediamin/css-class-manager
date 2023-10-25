@@ -1,6 +1,8 @@
-import { createReduxStore } from '@wordpress/data';
+import apiFetch from '@wordpress/api-fetch';
+import { createReduxStore, dispatch } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
 // @ts-ignore Not sure why it shows the error.
-import { nanoid } from 'nanoid';
+import { nanoid } from 'nanoid/non-secure';
 
 import { STORE_NAME } from '../constants';
 
@@ -103,7 +105,40 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 			};
 		},
 
-		saveUserDefinedClassNames( classPresets: ClassPreset[] ) {
+		async saveUserDefinedClassNames( classPresets: CombinedClassPreset[] ) {
+			try {
+				await apiFetch( {
+					path: '/wp/v2/settings',
+					method: 'post',
+					data: {
+						css_class_manager_class_names: classPresets.map(
+							( { name, description } ) => ( {
+								name,
+								description,
+							} )
+						),
+					},
+				} );
+
+				dispatch( 'core/notices' ).createSuccessNotice(
+					__( 'Class name added.', 'css-class-manager' ),
+					{
+						type: 'snackbar',
+					}
+				);
+			} catch ( error: unknown ) {
+				// @ts-ignore Not sure how to handle the unknown type here.
+				if ( error?.message ) {
+					dispatch( 'core/notices' ).createErrorNotice(
+						// @ts-ignore Related to above.
+						error.message,
+						{
+							type: 'snackbar',
+						}
+					);
+				}
+			}
+
 			return {
 				type: ACTION_TYPE.SAVE_USER_DEFINED_CLASS_NAMES,
 				userDefinedClassNames: classPresets,
@@ -125,7 +160,7 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 				...state.filteredClassNames,
 				...state.userDefinedClassNames,
 			].sort( ( a, b ) => {
-				// Convert names to lowercase for case-insensitive sorting
+				// Convert names to lowercase for case-insensitive sorting.
 				const nameA = a.name.toLowerCase();
 				const nameB = b.name.toLowerCase();
 
@@ -137,7 +172,7 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 					return 1;
 				}
 
-				// names are equal
+				// Names are equal.
 				return 0;
 			} );
 		},

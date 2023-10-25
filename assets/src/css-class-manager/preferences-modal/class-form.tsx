@@ -7,13 +7,18 @@ import {
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
+import sanitizedHtmlClass from '../utils/sanitize-html-class';
+
 import type { ClassPreset, CombinedClassPreset } from '../types';
-import type { FC, FormEventHandler } from 'react';
+import type { FC, FormEventHandler, RefObject } from 'react';
 
 interface ClassFormProps {
 	classPreset?: CombinedClassPreset;
 	disabled: boolean;
-	onSubmit: ( classPreset: ClassPreset ) => void;
+	onSubmit: (
+		classPreset: ClassPreset,
+		inputRef: RefObject< HTMLInputElement >
+	) => void;
 }
 
 interface States extends ClassPreset {
@@ -46,7 +51,13 @@ const ClassForm: FC< ClassFormProps > = ( {
 
 	const onSubmitHandler: FormEventHandler< HTMLFormElement > = ( event ) => {
 		event.preventDefault();
-		onSubmit( { name: states.name, description: states.description } );
+
+		inputRef.current?.blur();
+
+		onSubmit(
+			{ name: states.name, description: states.description },
+			inputRef
+		);
 
 		if ( isNewForm ) {
 			setStates( {
@@ -54,8 +65,6 @@ const ClassForm: FC< ClassFormProps > = ( {
 				name: '',
 				description: '',
 			} );
-
-			inputRef.current?.focus();
 		}
 	};
 
@@ -113,7 +122,7 @@ const ClassForm: FC< ClassFormProps > = ( {
 					onChange={ ( nextValue ) =>
 						setStates( {
 							...states,
-							name: nextValue ?? '',
+							name: sanitizedHtmlClass( nextValue ?? '' ),
 						} )
 					}
 				/>

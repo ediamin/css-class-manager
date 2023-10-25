@@ -170,6 +170,9 @@
 
 		<!-- Don't want to impose this rule. -->
 		<exclude name="SlevomatCodingStandard.Files.FileLength.FileTooLong"/>
+
+		<!-- This is a bit hard to use. -->
+		<exclude name="SlevomatCodingStandard.Complexity.Cognitive"/>
 	</rule>
 
 	<!-- Allowed namespace(after the declare statement). -->

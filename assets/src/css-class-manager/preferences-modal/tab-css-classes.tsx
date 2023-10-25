@@ -23,6 +23,7 @@ import type {
 	ReduxStoreConfig,
 	StoreDescriptor,
 } from '@wordpress/data/src/types';
+import type { RefObject } from 'react';
 
 interface SelectFunctionParam
 	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
@@ -53,7 +54,10 @@ const AddCSSClassForm = () => {
 			};
 		}, [] );
 
-	const onSubmitHandler = ( newClassPreset: ClassPreset ) => {
+	const onSubmitHandler = async (
+		newClassPreset: ClassPreset,
+		inputRef: RefObject< HTMLInputElement >
+	) => {
 		const updatedClassNames: CombinedClassPreset[] = [
 			...userDefinedClassNames,
 			{
@@ -63,8 +67,10 @@ const AddCSSClassForm = () => {
 		];
 
 		startSavingSettings();
-		saveUserDefinedClassNames( updatedClassNames );
-		completedSavingSettings();
+		await saveUserDefinedClassNames( updatedClassNames );
+		await completedSavingSettings();
+
+		inputRef.current?.focus();
 	};
 
 	return (
@@ -103,7 +109,10 @@ const ClassList = () => {
 	}, [] );
 
 	const onSubmitHandler = ( previousClassPreset: CombinedClassPreset ) => {
-		return ( newClassPreset: ClassPreset ) => {
+		return async (
+			newClassPreset: ClassPreset,
+			inputRef: RefObject< HTMLInputElement >
+		) => {
 			const updatedClassNames: CombinedClassPreset[] =
 				userDefinedClassNames.map(
 					( classPreset: CombinedClassPreset ) => {
@@ -119,8 +128,10 @@ const ClassList = () => {
 				);
 
 			startSavingSettings();
-			saveUserDefinedClassNames( updatedClassNames );
-			completedSavingSettings();
+			await saveUserDefinedClassNames( updatedClassNames );
+			await completedSavingSettings();
+
+			inputRef.current?.focus();
 		};
 	};
 
