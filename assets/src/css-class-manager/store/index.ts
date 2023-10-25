@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import { createReduxStore, dispatch } from '@wordpress/data';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 // @ts-ignore Not sure why it shows the error.
 import { nanoid } from 'nanoid/non-secure';
 
@@ -51,6 +51,7 @@ const ACTION_TYPE = {
 	SAVE_USER_DEFINED_CLASS_NAMES: 'SAVE_USER_DEFINED_CLASS_NAMES',
 	CREATE_NOTICE: 'CREATE_NOTICE',
 	REMOVE_NOTICE: 'REMOVE_NOTICE',
+	NONE: 'NONE',
 };
 
 function withNanoId(
@@ -145,6 +146,7 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 			previousClassPreset?: CombinedClassPreset
 		) {
 			let updatedClassNames: CombinedClassPreset[] = [];
+			const actions = dispatch( STORE_NAME ) as Actions;
 
 			if ( previousClassPreset ) {
 				updatedClassNames = userDefinedClassNames.map(
@@ -183,7 +185,21 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 					},
 				} );
 
-				// Dispatch
+				let noticeContent = sprintf(
+					// translators: %s: Class name.
+					__( 'Added class: %s', 'css-class-manager' ),
+					classPreset.name
+				);
+
+				if ( previousClassPreset ) {
+					noticeContent = sprintf(
+						// translators: %s: Class name.
+						__( 'Updated class: %s', 'css-class-manager' ),
+						classPreset.name
+					);
+				}
+
+				actions.createSuccessNotice( noticeContent );
 
 				return {
 					type: ACTION_TYPE.SAVE_USER_DEFINED_CLASS_NAMES,
@@ -192,10 +208,13 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 			} catch ( error: unknown ) {
 				// @ts-ignore Not sure how to handle the unknown type here.
 				if ( error?.message ) {
-					// code goes here.
+					// @ts-ignore Related to the above.
+					actions.createErrorNotice( error.message );
 				}
 
-				return {};
+				return {
+					type: ACTION_TYPE.NONE,
+				};
 			}
 		},
 
@@ -204,7 +223,7 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 				type: ACTION_TYPE.CREATE_NOTICE,
 				notice: {
 					id: nanoid(),
-					content: `${ content } - ${ nanoid() }`,
+					content,
 					status: 'success',
 				},
 			};
