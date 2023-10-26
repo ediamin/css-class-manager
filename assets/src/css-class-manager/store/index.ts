@@ -20,23 +20,6 @@ interface State {
 	notices: Notices;
 }
 
-interface Actions extends Record< string, ActionCreator > {
-	startSavingSettings: () => void;
-	completedSavingSettings: () => void;
-	saveUserDefinedClassNames: (
-		classPreset: ClassPreset,
-		userDefinedClassNames: CombinedClassPreset[],
-		previousClassPreset?: CombinedClassPreset
-	) => void;
-	deleteUserDefinedClassName: (
-		classPreset: CombinedClassPreset,
-		userDefinedClassNames: CombinedClassPreset[]
-	) => void;
-	createSuccessNotice: ( content: string ) => void;
-	createErrorNotice: ( content: string ) => void;
-	removeNotice: RemoveNotice;
-}
-
 export interface Selectors {
 	isSavingSettings: ( state: State ) => boolean;
 	getCssClassNames: ( state: State ) => CombinedClassPreset[];
@@ -48,6 +31,23 @@ interface ReducerAction extends State {
 	type: string;
 	notice: Notices[ number ];
 	noticeId: string;
+}
+
+interface Actions extends Record< string, ActionCreator > {
+	createSuccessNotice: ( content: string ) => void;
+	createErrorNotice: ( content: string ) => void;
+	removeNotice: RemoveNotice;
+	startSavingSettings: () => void;
+	completedSavingSettings: () => void;
+	saveUserDefinedClassNames: (
+		classPreset: ClassPreset,
+		userDefinedClassNames: CombinedClassPreset[],
+		previousClassPreset?: CombinedClassPreset
+	) => void;
+	deleteUserDefinedClassName: (
+		classPreset: CombinedClassPreset,
+		userDefinedClassNames: CombinedClassPreset[]
+	) => void;
 }
 
 const ACTION_TYPE = {
@@ -90,6 +90,42 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 		notices: [],
 	},
 
+	selectors: {
+		isSavingSettings( state ) {
+			return state.isSavingSettings;
+		},
+
+		getUserDefinedClassNames( state ) {
+			return state.userDefinedClassNames;
+		},
+
+		getCssClassNames( state ) {
+			return [
+				...state.filteredClassNames,
+				...state.userDefinedClassNames,
+			].sort( ( a, b ) => {
+				// Convert names to lowercase for case-insensitive sorting.
+				const nameA = a.name.toLowerCase();
+				const nameB = b.name.toLowerCase();
+
+				if ( nameA < nameB ) {
+					return -1;
+				}
+
+				if ( nameA > nameB ) {
+					return 1;
+				}
+
+				// Names are equal.
+				return 0;
+			} );
+		},
+
+		getNotices( state ) {
+			return state.notices;
+		},
+	},
+
 	reducer( state: State, action: ReducerAction ) {
 		switch ( action.type ) {
 			case ACTION_TYPE.SAVING_SETTINGS:
@@ -130,6 +166,36 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 	},
 
 	actions: {
+		createSuccessNotice( content ) {
+			return {
+				type: ACTION_TYPE.CREATE_NOTICE,
+				notice: {
+					id: nanoid(),
+					content,
+					status: 'success',
+				},
+			};
+		},
+
+		createErrorNotice( content ) {
+			return {
+				type: ACTION_TYPE.CREATE_NOTICE,
+				notice: {
+					id: nanoid(),
+					content,
+					status: 'error',
+					explicitDismiss: true,
+				},
+			};
+		},
+
+		removeNotice( id ) {
+			return {
+				type: ACTION_TYPE.REMOVE_NOTICE,
+				noticeId: id,
+			};
+		},
+
 		startSavingSettings() {
 			return {
 				type: ACTION_TYPE.SAVING_SETTINGS,
@@ -270,72 +336,6 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 					type: ACTION_TYPE.NONE,
 				};
 			}
-		},
-
-		createSuccessNotice( content ) {
-			return {
-				type: ACTION_TYPE.CREATE_NOTICE,
-				notice: {
-					id: nanoid(),
-					content,
-					status: 'success',
-				},
-			};
-		},
-
-		createErrorNotice( content ) {
-			return {
-				type: ACTION_TYPE.CREATE_NOTICE,
-				notice: {
-					id: nanoid(),
-					content,
-					status: 'error',
-					explicitDismiss: true,
-				},
-			};
-		},
-
-		removeNotice( id ) {
-			return {
-				type: ACTION_TYPE.REMOVE_NOTICE,
-				noticeId: id,
-			};
-		},
-	},
-
-	selectors: {
-		isSavingSettings( state ) {
-			return state.isSavingSettings;
-		},
-
-		getUserDefinedClassNames( state ) {
-			return state.userDefinedClassNames;
-		},
-
-		getCssClassNames( state ) {
-			return [
-				...state.filteredClassNames,
-				...state.userDefinedClassNames,
-			].sort( ( a, b ) => {
-				// Convert names to lowercase for case-insensitive sorting.
-				const nameA = a.name.toLowerCase();
-				const nameB = b.name.toLowerCase();
-
-				if ( nameA < nameB ) {
-					return -1;
-				}
-
-				if ( nameA > nameB ) {
-					return 1;
-				}
-
-				// Names are equal.
-				return 0;
-			} );
-		},
-
-		getNotices( state ) {
-			return state.notices;
 		},
 	},
 } );
