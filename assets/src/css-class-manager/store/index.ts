@@ -28,6 +28,10 @@ interface Actions extends Record< string, ActionCreator > {
 		userDefinedClassNames: CombinedClassPreset[],
 		previousClassPreset?: CombinedClassPreset
 	) => void;
+	deleteUserDefinedClassName: (
+		classPreset: CombinedClassPreset,
+		userDefinedClassNames: CombinedClassPreset[]
+	) => void;
 	createSuccessNotice: ( content: string ) => void;
 	createErrorNotice: ( content: string ) => void;
 	removeNotice: RemoveNotice;
@@ -198,6 +202,56 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 						classPreset.name
 					);
 				}
+
+				actions.createSuccessNotice( noticeContent );
+
+				return {
+					type: ACTION_TYPE.SAVE_USER_DEFINED_CLASS_NAMES,
+					userDefinedClassNames: updatedClassNames,
+				};
+			} catch ( error: unknown ) {
+				// @ts-ignore Not sure how to handle the unknown type here.
+				if ( error?.message ) {
+					// @ts-ignore Related to the above.
+					actions.createErrorNotice( error.message );
+				}
+
+				return {
+					type: ACTION_TYPE.NONE,
+				};
+			}
+		},
+
+		async deleteUserDefinedClassName(
+			classPreset: CombinedClassPreset,
+			userDefinedClassNames: CombinedClassPreset[]
+		) {
+			const actions = dispatch( STORE_NAME ) as Actions;
+			const updatedClassNames = userDefinedClassNames.filter(
+				( item ) => {
+					return item.name !== classPreset.name;
+				}
+			);
+
+			try {
+				await apiFetch( {
+					path: '/wp/v2/settings',
+					method: 'post',
+					data: {
+						css_class_manager_class_names: updatedClassNames.map(
+							( { name, description } ) => ( {
+								name,
+								description,
+							} )
+						),
+					},
+				} );
+
+				const noticeContent = sprintf(
+					// translators: %s: Class name.
+					__( 'Deleted class: %s', 'css-class-manager' ),
+					classPreset.name
+				);
 
 				actions.createSuccessNotice( noticeContent );
 

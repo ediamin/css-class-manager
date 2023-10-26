@@ -96,6 +96,7 @@ const ClassList = () => {
 
 	const {
 		saveUserDefinedClassNames,
+		deleteUserDefinedClassName,
 		startSavingSettings,
 		completedSavingSettings,
 		createErrorNotice,
@@ -140,6 +141,18 @@ const ClassList = () => {
 		};
 	};
 
+	const onDeleteHandler = async (
+		classPreset: CombinedClassPreset | undefined
+	) => {
+		if ( ! classPreset ) {
+			return;
+		}
+
+		startSavingSettings();
+		await deleteUserDefinedClassName( classPreset, userDefinedClassNames );
+		await completedSavingSettings();
+	};
+
 	return (
 		<PreferencesModalSection
 			title={ __( 'Class List', 'css-class-manager' ) }
@@ -177,6 +190,7 @@ const ClassList = () => {
 											onSubmit={ onSubmitHandler(
 												classPreset
 											) }
+											onDelete={ onDeleteHandler }
 										/>
 									</PanelRow>
 								</PanelBody>

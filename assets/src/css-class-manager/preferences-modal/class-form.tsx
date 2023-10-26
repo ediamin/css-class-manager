@@ -19,6 +19,7 @@ interface ClassFormProps {
 		classPreset: ClassPreset,
 		inputRef: RefObject< HTMLInputElement >
 	) => void;
+	onDelete?: ( classPreset: CombinedClassPreset | undefined ) => void;
 }
 
 interface States extends ClassPreset {
@@ -29,6 +30,7 @@ const ClassForm: FC< ClassFormProps > = ( {
 	classPreset,
 	disabled,
 	onSubmit,
+	onDelete = () => {},
 } ) => {
 	const [ states, setStates ] = useState< States >( {
 		name: classPreset?.name ?? '',
@@ -96,7 +98,10 @@ const ClassForm: FC< ClassFormProps > = ( {
 					</Button>
 				) : (
 					<>
-						<Button isDestructive>
+						<Button
+							isDestructive
+							onClick={ () => onDelete( classPreset ) }
+						>
 							{ __( 'Confirm Delete', 'css-class-manager' ) }
 						</Button>
 						<Button onClick={ () => toggleConfirmationMsg() }>
