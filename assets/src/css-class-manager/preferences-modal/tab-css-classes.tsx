@@ -5,7 +5,7 @@ import {
 	SearchControl,
 } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useState } from '@wordpress/element';
+import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 // @ts-ignore Not sure why it shows the error.
 import { nanoid } from 'nanoid';
@@ -115,6 +115,26 @@ const ClassList = () => {
 		};
 	}, [] );
 
+	const filteredClassList = useMemo( () => {
+		return cssClassNames.filter( ( classItem ) => {
+			if ( ! search.trim() ) {
+				return true;
+			}
+
+			return (
+				classItem.name.includes( search ) ||
+				classItem.description?.includes( search )
+			);
+		} );
+	}, [ cssClassNames, search ] );
+
+	// Searching for items causes sudden height-shrinking jerks.
+	// Setting a minimum height for the container can fix this issue.
+	const listMinHeight = useMemo( () => {
+		const HEIGHT_PER_ITEM = 50;
+		return `${ cssClassNames.length * HEIGHT_PER_ITEM }px`;
+	}, [ cssClassNames ] );
+
 	const onSubmitHandler = ( previousClassPreset: CombinedClassPreset ) => {
 		return async (
 			newClassPreset: ClassPreset,
@@ -174,30 +194,32 @@ const ClassList = () => {
 					className="edit-post-block-manager__search"
 				/>
 
-				<Panel>
-					{ cssClassNames.map(
-						( classPreset: CombinedClassPreset ) => {
-							return (
-								<PanelBody
-									key={ classPreset.id }
-									title={ classPreset.name }
-									initialOpen={ false }
-								>
-									<PanelRow>
-										<ClassForm
-											classPreset={ classPreset }
-											disabled={ isSavingSettings }
-											onSubmit={ onSubmitHandler(
-												classPreset
-											) }
-											onDelete={ onDeleteHandler }
-										/>
-									</PanelRow>
-								</PanelBody>
-							);
-						}
-					) }
-				</Panel>
+				<div style={ { minHeight: listMinHeight } }>
+					<Panel>
+						{ filteredClassList.map(
+							( classPreset: CombinedClassPreset ) => {
+								return (
+									<PanelBody
+										key={ classPreset.id }
+										title={ classPreset.name }
+										initialOpen={ false }
+									>
+										<PanelRow>
+											<ClassForm
+												classPreset={ classPreset }
+												disabled={ isSavingSettings }
+												onSubmit={ onSubmitHandler(
+													classPreset
+												) }
+												onDelete={ onDeleteHandler }
+											/>
+										</PanelRow>
+									</PanelBody>
+								);
+							}
+						) }
+					</Panel>
+				</div>
 			</div>
 		</PreferencesModalSection>
 	);
