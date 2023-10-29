@@ -4,10 +4,13 @@ import { useMemo } from '@wordpress/element';
 import { STORE_NAME } from '../constants';
 
 import type { ClassPreset, DropdownOption } from '../types';
+import type { OptionsOrGroups, Props as ReactSelectProps } from 'react-select';
+
+type ClassNameList = ReactSelectProps< DropdownOption, true >[ 'options' ];
 
 function useClassNameList(
 	attributeClassName: string | undefined
-): DropdownOption[] {
+): ClassNameList {
 	const classNames: ClassPreset[] = useMemo( () => {
 		return (
 			attributeClassName
