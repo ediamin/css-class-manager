@@ -1,15 +1,13 @@
-import { select } from '@wordpress/data';
 import { useMemo } from '@wordpress/element';
 
-import { STORE_NAME } from '../constants';
-
 import type { ClassPreset, DropdownOption } from '../types';
-import type { OptionsOrGroups, Props as ReactSelectProps } from 'react-select';
+import type { Props as ReactSelectProps } from 'react-select';
 
 type ClassNameList = ReactSelectProps< DropdownOption, true >[ 'options' ];
 
 function useClassNameList(
-	attributeClassName: string | undefined
+	attributeClassName: string | undefined,
+	cssClassNames: any
 ): ClassNameList {
 	const classNames: ClassPreset[] = useMemo( () => {
 		return (
@@ -20,8 +18,6 @@ function useClassNameList(
 	}, [ attributeClassName ] );
 
 	return useMemo( () => {
-		const cssClassNames = select( STORE_NAME ).getCssClassNames();
-
 		return classNames
 			.concat( cssClassNames )
 			.sort()
@@ -30,7 +26,7 @@ function useClassNameList(
 				label: item.name,
 				...item,
 			} ) );
-	}, [ classNames ] );
+	}, [ classNames, cssClassNames ] );
 }
 
 export default useClassNameList;
