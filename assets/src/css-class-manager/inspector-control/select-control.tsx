@@ -107,6 +107,7 @@ const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
 			id="css-class-manager__select"
 			className="css-class-manager__react-select"
 			classNamePrefix="css-class-manager__react-select"
+			menuPlacement="auto"
 			isMulti
 			options={ classNameList }
 			onChange={ onChangeHandler }
