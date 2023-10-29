@@ -11,6 +11,7 @@ import type { Props as ReactSelectProps } from 'react-select';
 type SelectProps = ReactSelectProps< DropdownOption, true >;
 type OnChangeHandler = SelectProps[ 'onChange' ];
 type FormatOptionLabel = SelectProps[ 'formatOptionLabel' ];
+type FilterOption = SelectProps[ 'filterOption' ];
 
 interface SelectControlProps {
 	className: string;
@@ -23,7 +24,7 @@ const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
 			? className.split( ' ' ).map( ( item ) => ( {
 					value: item,
 					label: item,
-					name: '',
+					name: item,
 					description: '',
 			  } ) )
 			: [];
@@ -39,12 +40,12 @@ const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
 		data,
 		formatOptionLabelMeta
 	) => {
-		const { value, description } = data;
+		const { name, description } = data;
 		const { context } = formatOptionLabelMeta;
 
 		return context === 'menu' ? (
 			<>
-				{ value }
+				{ name }
 				{ description && (
 					<p className="css-class-manager__react-select__option__description">
 						{ description }
@@ -52,7 +53,17 @@ const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
 				) }
 			</>
 		) : (
-			<div>{ value }</div>
+			<div>{ name }</div>
+		);
+	};
+
+	const filterOption: FilterOption = ( option, inputValue ) => {
+		const { name, description } = option.data;
+
+		return (
+			name.includes( inputValue ) ||
+			( description && description.includes( inputValue ) ) ||
+			false
 		);
 	};
 
@@ -76,6 +87,7 @@ const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
 			closeMenuOnSelect={ false }
 			noOptionsMessage={ noOptionsMessage }
 			formatOptionLabel={ formatOptionLabel }
+			filterOption={ filterOption }
 			placeholder={ __( 'Select class names', 'css-class-manager' ) }
 			components={ {
 				DropdownIndicator: null,
