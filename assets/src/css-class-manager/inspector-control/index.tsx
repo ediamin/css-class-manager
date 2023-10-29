@@ -1,24 +1,26 @@
 import { InspectorControls } from '@wordpress/block-editor';
 import { hasBlockSupport } from '@wordpress/blocks';
-import { FormTokenField } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { useDispatch } from '@wordpress/data';
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import Select from 'react-select';
 
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
-import getClassNames from '../utils/get-class-names';
+import useClassNameList from '../hooks/use-class-name-list';
 
-import getRenderItem from './get-render-item';
+import OptionTemplate from './option';
 
-import type { BlockEditProps } from '../types';
-import type { FormTokenFieldProps } from '@wordpress/components/build-types/form-token-field/types';
+import type { BlockEditProps, DropdownOption } from '../types';
 import type { FC, MouseEvent } from 'react';
+import type { Props as ReactSelectProps } from 'react-select';
 
 interface Attributes {
 	className: string;
 }
 
 type BlockEditType = FC< BlockEditProps< Attributes > >;
+type OnChangeHandler = ReactSelectProps< DropdownOption, true >[ 'onChange' ];
 
 const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 	BlockEditType,
@@ -28,18 +30,33 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 		const { name, isSelected, attributes, setAttributes } = props;
 		const { className } = attributes;
 
-		const { openModal } = useDispatch( INTERFACE_STORE );
+		const selectedValue = useMemo( () => {
+			return typeof className === 'string'
+				? className.split( ' ' ).map( ( item ) => ( {
+						value: item,
+						label: item,
+						name: '',
+						description: '',
+				  } ) )
+				: [];
+		}, [ className ] );
 
-		const handleOnChangeFormtoken: FormTokenFieldProps[ 'onChange' ] = (
-			value
-		) => {
+		const { openModal } = useDispatch( INTERFACE_STORE );
+		const classNameList = useClassNameList( className );
+
+		const onChangeHandler: OnChangeHandler = ( newValue ) => {
 			setAttributes( {
-				className: value.length ? value.join( ' ' ) : undefined,
+				className: newValue.length
+					? newValue.map( ( item ) => item.value ).join( ' ' )
+					: undefined,
 			} );
 		};
 
-		const renderItem: FormTokenFieldProps[ '__experimentalRenderItem' ] =
-			( { item } ) => getRenderItem( item );
+		const noOptionsMessage = () => {
+			return (
+				<div>{ __( 'No class name found.', 'css-class-manager' ) }</div>
+			);
+		};
 
 		const openManager = ( event: MouseEvent< HTMLAnchorElement > ) => {
 			event.preventDefault();
@@ -61,33 +78,52 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 				<BlockEdit { ...props } />
 				{ /* @ts-ignore 3RD_PARTY_PACKAGE_IS_MISSING_TYPE */ }
 				<InspectorControls group="advanced">
-					<div className="components-base-control">
-						<FormTokenField
-							__experimentalAutoSelectFirstMatch
-							__experimentalExpandOnFocus
-							label={ __(
+					<div className="css-class-manager__inspector-control">
+						<label
+							htmlFor="css-class-manager__select"
+							className="css-class-manager__inspector-control__label"
+						>
+							{ __(
 								'Additional CSS class(es)',
 								'css-class-manager'
 							) }
-							onChange={ handleOnChangeFormtoken }
-							suggestions={ getClassNames( className ) }
-							value={ className?.split( ' ' ) ?? [] }
-							__experimentalRenderItem={ renderItem }
-						/>
-						<a
-							href="#open-css-class-manager"
-							onClick={ openManager }
-							style={ {
-								display: 'block',
-								marginTop: '-0.7em',
-								fontSize: '12px',
-							} }
-						>
-							{ __(
-								'Open CSS Class Manager',
+						</label>
+						<Select
+							id="css-class-manager__select"
+							className="css-class-manager__react-select"
+							classNamePrefix="css-class-manager__react-select"
+							isMulti
+							options={ classNameList }
+							onChange={ onChangeHandler }
+							value={ selectedValue }
+							closeMenuOnSelect={ false }
+							noOptionsMessage={ noOptionsMessage }
+							placeholder={ __(
+								'Select class names',
 								'css-class-manager'
 							) }
-						</a>
+							components={ {
+								DropdownIndicator: null,
+								Option: OptionTemplate,
+							} }
+						/>
+						<p className="css-class-manager__inspector-control__help-text">
+							{ __(
+								'Click on the dropdown box and select one or more class names.',
+								'css-class-manager'
+							) }
+						</p>
+						<p className="css-class-manager__inspector-control__help-text">
+							<a
+								href="#open-css-class-manager"
+								onClick={ openManager }
+							>
+								{ __(
+									'Open Class Manager',
+									'css-class-manager'
+								) }
+							</a>
+						</p>
 					</div>
 				</InspectorControls>
 			</>

@@ -21,3 +21,8 @@ export interface ModalTab {
 	tabLabel: string;
 	content: ReactNode;
 }
+
+export interface DropdownOption extends ClassPreset {
+	label: string;
+	value: string;
+}
