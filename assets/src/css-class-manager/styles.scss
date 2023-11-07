@@ -122,3 +122,28 @@
 		}
 	}
 }
+
+.components-button {
+
+	&.ccm-is-full-width {
+		width: 100%;
+		justify-content: center;
+	}
+
+	&.ccm-is-big {
+		padding: 18px 15px;
+		height: auto;
+		font-size: 1.1em;
+	}
+}
+
+.components-radio-control {
+
+	&.ccm-radio-control {
+		margin-bottom: 8px;
+
+		.components-flex {
+			row-gap: 8px;
+		}
+	}
+}

@@ -6,7 +6,7 @@ import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 
 import PreferencesModalTabs from './preferences-modal-tabs';
 import tabCssClass from './tab-css-classes';
-import tabImportExport from './tab-import-export';
+import tabImportExport from './tabs/import-export';
 
 import type {
 	MapSelect,
