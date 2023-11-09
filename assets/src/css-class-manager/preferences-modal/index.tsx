@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 
 import PreferencesModalTabs from './preferences-modal-tabs';
-import tabCssClass from './tab-css-classes';
+import tabCssClass from './tabs/css-classes';
 import tabImportExport from './tabs/import-export';
 
 import type {

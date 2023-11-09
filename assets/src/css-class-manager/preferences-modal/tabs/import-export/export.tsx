@@ -2,12 +2,12 @@ import { Button, RadioControl } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
-import { STORE_NAME } from '../../../../constants';
-import useStates from '../../../../hooks/use-states';
-import downloadJSON from '../../../../utils/download-json';
+import { STORE_NAME } from '../../../constants';
+import useStates from '../../../hooks/use-states';
+import downloadJSON from '../../../utils/download-json';
 
-import type { Selectors } from '../../../../store';
-import type { ClassPreset } from '../../../../types';
+import type { Selectors } from '../../../store';
+import type { ClassPreset } from '../../../types';
 import type {
 	MapSelect,
 	ReduxStoreConfig,

@@ -4,11 +4,11 @@ import { __ } from '@wordpress/i18n';
 // @ts-ignore Not sure why it shows the error.
 import { nanoid } from 'nanoid/non-secure';
 
-import { STORE_NAME } from '../../../../constants';
-import store from '../../../../store';
+import { STORE_NAME } from '../../../constants';
+import store from '../../../store';
 
-import type { Selectors } from '../../../../store';
-import type { ClassPreset, CombinedClassPreset } from '../../../../types';
+import type { Selectors } from '../../../store';
+import type { ClassPreset, CombinedClassPreset } from '../../../types';
 import type {
 	MapSelect,
 	ReduxStoreConfig,

@@ -7,9 +7,9 @@ import {
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
-import sanitizedHtmlClass from '../utils/sanitize-html-class';
+import sanitizedHtmlClass from '../../../utils/sanitize-html-class';
 
-import type { ClassPreset, CombinedClassPreset } from '../types';
+import type { ClassPreset, CombinedClassPreset } from '../../../types';
 import type { FC, FormEventHandler, RefObject } from 'react';
 
 interface ClassFormProps {
