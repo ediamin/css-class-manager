@@ -1,18 +1,10 @@
 import { Button, RadioControl } from '@wordpress/components';
-import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 
-import { STORE_NAME } from '../../../constants';
-import useStates from '../../../hooks/use-states';
+import { useStates, useStore } from '../../../hooks';
 import downloadJSON from '../../../utils/download-json';
 
-import type { Selectors } from '../../../store';
 import type { ClassPreset } from '../../../types';
-import type {
-	MapSelect,
-	ReduxStoreConfig,
-	StoreDescriptor,
-} from '@wordpress/data/src/types';
 
 type ExportType = 'both' | 'userDefinedOnly' | 'filteredClassOnly';
 
@@ -23,13 +15,6 @@ interface ExportTypeOption {
 
 interface States {
 	exportType: ExportType;
-}
-
-interface SelectFunctionParam
-	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
-
-interface UseSelectReturn {
-	cssClassNames: ReturnType< Selectors[ 'getCssClassNames' ] >;
 }
 
 const exportTypeOptions: ExportTypeOption[] = [
@@ -55,17 +40,7 @@ const Export = () => {
 		exportType: 'both',
 	} );
 
-	const { cssClassNames }: UseSelectReturn = useSelect< MapSelect >(
-		( select ) => {
-			const dataStore = select< SelectFunctionParam >(
-				STORE_NAME as any
-			);
-			return {
-				cssClassNames: dataStore.getCssClassNames(),
-			};
-		},
-		[]
-	);
+	const { cssClassNames } = useStore();
 
 	const setExportType = ( value: string ) => {
 		setState( { exportType: value as ExportType } );

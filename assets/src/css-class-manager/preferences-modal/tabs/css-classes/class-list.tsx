@@ -4,61 +4,30 @@ import {
 	PanelRow,
 	SearchControl,
 } from '@wordpress/components';
-import { useDispatch, useSelect } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-// @ts-ignore Not sure why it shows the error.
-import { nanoid } from 'nanoid';
 
-import { STORE_NAME } from '../../../constants';
-import store from '../../../store';
+import { useStore } from '../../../hooks';
 import PreferencesModalSection from '../../preferences-modal-section';
 
 import ClassForm from './class-form';
 
-import type { Selectors } from '../../../store';
 import type { ClassPreset, CombinedClassPreset } from '../../../types';
-import type {
-	MapSelect,
-	ReduxStoreConfig,
-	StoreDescriptor,
-} from '@wordpress/data/src/types';
 import type { RefObject } from 'react';
-
-interface SelectFunctionParam
-	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
-
-interface UseSelectReturn {
-	cssClassNames: ReturnType< Selectors[ 'getCssClassNames' ] >;
-	isSavingSettings: ReturnType< Selectors[ 'isSavingSettings' ] >;
-	userDefinedClassNames: ReturnType<
-		Selectors[ 'getUserDefinedClassNames' ]
-	>;
-}
 
 const ClassList = () => {
 	const [ search, setSearch ] = useState< string >( '' );
 
 	const {
+		cssClassNames,
+		userDefinedClassNames,
+		isSavingSettings,
 		saveUserDefinedClassNames,
 		deleteUserDefinedClassName,
 		startSavingSettings,
 		completedSavingSettings,
 		createErrorNotice,
-	} = useDispatch( store );
-
-	const {
-		cssClassNames,
-		userDefinedClassNames,
-		isSavingSettings,
-	}: UseSelectReturn = useSelect< MapSelect >( ( select ) => {
-		const dataStore = select< SelectFunctionParam >( STORE_NAME as any );
-		return {
-			userDefinedClassNames: dataStore.getUserDefinedClassNames(),
-			cssClassNames: dataStore.getCssClassNames(),
-			isSavingSettings: dataStore.isSavingSettings(),
-		};
-	}, [] );
+	} = useStore();
 
 	const filteredClassList = useMemo( () => {
 		return cssClassNames.filter( ( classItem ) => {

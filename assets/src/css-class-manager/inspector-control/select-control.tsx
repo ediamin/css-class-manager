@@ -1,18 +1,10 @@
-import { useSelect } from '@wordpress/data';
 import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import Select from 'react-select';
 
-import { STORE_NAME } from '../constants';
-import useClassNameList from '../hooks/use-class-name-list';
+import { useClassNameList, useStore } from '../hooks';
 
-import type { Selectors } from '../store';
 import type { DropdownOption } from '../types';
-import type {
-	MapSelect,
-	ReduxStoreConfig,
-	StoreDescriptor,
-} from '@wordpress/data/src/types';
 import type { FC } from 'react';
 import type { Props as ReactSelectProps } from 'react-select';
 
@@ -24,13 +16,6 @@ type FilterOption = SelectProps[ 'filterOption' ];
 interface SelectControlProps {
 	className: string;
 	onChange: ( newValue: string | undefined ) => void;
-}
-
-interface SelectFunctionParam
-	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
-
-interface UseSelectReturn {
-	cssClassNames: ReturnType< Selectors[ 'getCssClassNames' ] >;
 }
 
 const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
@@ -45,17 +30,7 @@ const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
 			: [];
 	}, [ className ] );
 
-	const { cssClassNames }: UseSelectReturn = useSelect< MapSelect >(
-		( select ) => {
-			const dataStore = select< SelectFunctionParam >(
-				STORE_NAME as any
-			);
-			return {
-				cssClassNames: dataStore.getCssClassNames(),
-			};
-		},
-		[]
-	);
+	const { cssClassNames } = useStore();
 
 	const classNameList = useClassNameList( className, cssClassNames );
 

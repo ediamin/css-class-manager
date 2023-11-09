@@ -1,51 +1,23 @@
 import { Button, FormFileUpload } from '@wordpress/components';
-import { useDispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 // @ts-ignore Not sure why it shows the error.
 import { nanoid } from 'nanoid/non-secure';
 
-import { STORE_NAME } from '../../../constants';
-import store from '../../../store';
+import { useStore } from '../../../hooks';
 
-import type { Selectors } from '../../../store';
 import type { ClassPreset, CombinedClassPreset } from '../../../types';
-import type {
-	MapSelect,
-	ReduxStoreConfig,
-	StoreDescriptor,
-} from '@wordpress/data/src/types';
 import type { FormEvent } from 'react';
-
-interface SelectFunctionParam
-	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
-
-interface UseSelectReturn {
-	cssClassNames: ReturnType< Selectors[ 'getCssClassNames' ] >;
-	isSavingSettings: ReturnType< Selectors[ 'isSavingSettings' ] >;
-	userDefinedClassNames: ReturnType<
-		Selectors[ 'getUserDefinedClassNames' ]
-	>;
-}
 
 const Import = () => {
 	const {
+		userDefinedClassNames,
+		isSavingSettings,
 		saveUserDefinedClassNames,
 		startSavingSettings,
 		completedSavingSettings,
 		createErrorNotice,
 		createSuccessNotice,
-	} = useDispatch( store );
-
-	const { userDefinedClassNames, isSavingSettings }: UseSelectReturn =
-		useSelect< MapSelect >( ( select ) => {
-			const dataStore = select< SelectFunctionParam >(
-				STORE_NAME as any
-			);
-			return {
-				userDefinedClassNames: dataStore.getUserDefinedClassNames(),
-				isSavingSettings: dataStore.isSavingSettings(),
-			};
-		}, [] );
+	} = useStore();
 
 	const onFileLoadHandler = async ( event: ProgressEvent< FileReader > ) => {
 		const fileData = event.target?.result;
