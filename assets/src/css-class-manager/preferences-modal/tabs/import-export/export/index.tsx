@@ -22,7 +22,6 @@ interface ExportTypeOption {
 }
 
 interface States {
-	showOptions: boolean;
 	exportType: ExportType;
 }
 
@@ -53,7 +52,6 @@ const exportTypeOptions: ExportTypeOption[] = [
 
 const Export = () => {
 	const [ states, setState ] = useStates< States >( {
-		showOptions: false,
 		exportType: 'both',
 	} );
 
@@ -99,30 +97,21 @@ const Export = () => {
 	};
 
 	return (
-		<div>
-			{ ! states.showOptions ? (
-				<Button
-					className="ccm-is-big ccm-is-full-width"
-					variant="primary"
-					onClick={ () => setState( { showOptions: true } ) }
-				>
-					{ __( 'Export Class List', 'css-class-manager' ) }
+		<>
+			<RadioControl
+				className="ccm-radio-control"
+				label={ __( 'Class List Type', 'css-class-manager' ) }
+				hideLabelFromVision
+				onChange={ setExportType }
+				options={ exportTypeOptions }
+				selected={ states.exportType }
+			/>
+			<p>
+				<Button variant="primary" onClick={ exportList }>
+					{ __( 'Export', 'css-class-manager' ) }
 				</Button>
-			) : (
-				<>
-					<RadioControl
-						className="ccm-radio-control"
-						label={ __( 'Class List Type', 'css-class-manager' ) }
-						onChange={ setExportType }
-						options={ exportTypeOptions }
-						selected={ states.exportType }
-					/>
-					<Button variant="primary" onClick={ exportList }>
-						{ __( 'Export', 'css-class-manager' ) }
-					</Button>
-				</>
-			) }
-		</div>
+			</p>
+		</>
 	);
 };
 

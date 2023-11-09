@@ -241,6 +241,19 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 				];
 			}
 
+			const uniqueClassNames: Record< string, boolean > = {};
+
+			// Upload non-empty and unique class names.
+			updatedClassNames = updatedClassNames.filter( ( { name } ) => {
+				if ( ! name ) return false;
+
+				if ( uniqueClassNames[ name ] ) return false;
+
+				uniqueClassNames[ name ] = true;
+
+				return true;
+			} );
+
 			try {
 				await apiFetch( {
 					path: '/wp/v2/settings',
@@ -255,11 +268,15 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 					},
 				} );
 
-				let noticeContent = sprintf(
-					// translators: %s: Class name.
-					__( 'Added class: %s', 'css-class-manager' ),
-					classPreset.name
-				);
+				let noticeContent;
+
+				if ( classPreset.name ) {
+					noticeContent = sprintf(
+						// translators: %s: Class name.
+						__( 'Added class: %s', 'css-class-manager' ),
+						classPreset.name
+					);
+				}
 
 				if ( previousClassPreset ) {
 					noticeContent = sprintf(
@@ -269,7 +286,9 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 					);
 				}
 
-				actions.createSuccessNotice( noticeContent );
+				if ( noticeContent ) {
+					actions.createSuccessNotice( noticeContent );
+				}
 
 				return {
 					type: ACTION_TYPE.SAVE_USER_DEFINED_CLASS_NAMES,
