@@ -64,12 +64,20 @@ class Settings
 		}
 
 		$class_names  = [];
-		$unique_names = [];
+		$unique_names = array_reduce(
+			css_class_manager()->get_filtered_class_names(),
+			static function ( $acc, $item ) {
+				$acc[ $item['name'] ] = true;
+
+				return $acc;
+			},
+			[]
+		);
 
 		foreach ( $value as $class_name ) {
 			$name = sanitize_html_class( $class_name['name'] );
 
-			if ( in_array( $name, $unique_names, true ) ) {
+			if ( isset( $unique_names[ $name ] ) ) {
 				continue;
 			}
 
@@ -77,7 +85,7 @@ class Settings
 				continue;
 			}
 
-			$unique_names[] = $name;
+			$unique_names[ $name ] = true;
 
 			$description = isset( $class_name['description'] )
 				? sanitize_text_field( $class_name['description'] )

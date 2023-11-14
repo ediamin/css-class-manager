@@ -1,5 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
-import { createReduxStore, dispatch } from '@wordpress/data';
+import { createReduxStore, dispatch, select } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
 // @ts-ignore Not sure why it shows the error.
 import { nanoid } from 'nanoid/non-secure';
@@ -23,6 +23,7 @@ interface State {
 export interface Selectors {
 	isSavingSettings: ( state: State ) => boolean;
 	getCssClassNames: ( state: State ) => CombinedClassPreset[];
+	getFilteredClassNames: ( state: State ) => CombinedClassPreset[];
 	getUserDefinedClassNames: ( state: State ) => CombinedClassPreset[];
 	getNotices: ( state: State ) => Notices;
 }
@@ -93,6 +94,10 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 	selectors: {
 		isSavingSettings( state ) {
 			return state.isSavingSettings;
+		},
+
+		getFilteredClassNames( state ) {
+			return state.filteredClassNames;
 		},
 
 		getUserDefinedClassNames( state ) {
@@ -241,18 +246,33 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 				];
 			}
 
-			const uniqueClassNames: Record< string, boolean > = {};
+			const filteredClassNames: CombinedClassPreset[] =
+				select( STORE_NAME ).getFilteredClassNames();
+
+			const uniqueClassNames: Record< string, boolean > =
+				filteredClassNames.reduce< Record< string, boolean > >(
+					function ( acc, item ) {
+						acc[ item.name ] = true;
+						return acc;
+					},
+					{}
+				);
 
 			// Upload non-empty and unique class names.
-			updatedClassNames = updatedClassNames.filter( ( { name } ) => {
-				if ( ! name ) return false;
+			updatedClassNames = updatedClassNames.filter(
+				( { name, isFilteredClassName } ) => {
+					if ( ! name ) return false;
 
-				if ( uniqueClassNames[ name ] ) return false;
+					// Do not include the classes added using PHP filter.
+					if ( isFilteredClassName ) return false;
 
-				uniqueClassNames[ name ] = true;
+					if ( uniqueClassNames[ name ] ) return false;
 
-				return true;
-			} );
+					uniqueClassNames[ name ] = true;
+
+					return true;
+				}
+			);
 
 			try {
 				await apiFetch( {
