@@ -12,7 +12,7 @@ import type { BlockEditProps } from '../types';
 import type { FC, MouseEvent } from 'react';
 
 interface Attributes {
-	className: string;
+	className: string | undefined;
 }
 
 type BlockEditType = FC< BlockEditProps< Attributes > >;
@@ -63,7 +63,7 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 						</label>
 
 						<SelectControl
-							className={ className }
+							className={ className ?? '' }
 							onChange={ onChangeHandler }
 						/>
 

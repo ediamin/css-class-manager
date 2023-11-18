@@ -10,11 +10,11 @@ function useClassNameList(
 	cssClassNames: any
 ): ClassNameList {
 	const classNames: ClassPreset[] = useMemo( () => {
-		return (
-			attributeClassName
-				?.split( ' ' )
-				.map( ( item ) => ( { name: item } ) ) ?? []
-		);
+		return attributeClassName?.length
+			? attributeClassName
+					.split( ' ' )
+					.map( ( item ) => ( { name: item } ) )
+			: [];
 	}, [ attributeClassName ] );
 
 	return useMemo( () => {

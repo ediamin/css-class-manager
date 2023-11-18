@@ -20,13 +20,16 @@ interface SelectControlProps {
 
 const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
 	const selectedValue = useMemo( () => {
-		return typeof className === 'string'
-			? className.split( ' ' ).map( ( item ) => ( {
-					value: item,
-					label: item,
-					name: item,
-					description: '',
-			  } ) )
+		return className.length
+			? className
+					.split( ' ' )
+					.filter( ( str ) => str.trim().length )
+					.map( ( item ) => ( {
+						value: item,
+						label: item,
+						name: item,
+						description: '',
+					} ) )
 			: [];
 	}, [ className ] );
 
@@ -63,8 +66,8 @@ const SelectControl: FC< SelectControlProps > = ( { className, onChange } ) => {
 		const { name, description } = option.data;
 
 		return (
-			name.includes( inputValue ) ||
-			( description && description.includes( inputValue ) ) ||
+			name?.includes( inputValue ) ||
+			description?.includes( inputValue ) ||
 			false
 		);
 	};

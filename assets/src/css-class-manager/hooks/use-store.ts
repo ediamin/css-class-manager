@@ -9,6 +9,7 @@ import type {
 	ReduxStoreConfig,
 	StoreDescriptor,
 } from '@wordpress/data/src/types';
+
 interface SelectFunctionParam
 	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
 

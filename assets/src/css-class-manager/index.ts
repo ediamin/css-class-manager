@@ -22,10 +22,10 @@ addFilter(
 );
 
 // Remove the default CSS Class name inspector control.
-removeFilter(
-	'editor.BlockEdit',
-	'core/editor/custom-class-name/with-inspector-controls'
-);
+// removeFilter(
+// 	'editor.BlockEdit',
+// 	'core/editor/custom-class-name/with-inspector-controls'
+// );
 
 // The preference or settings modal.
 registerPlugin( 'css-class-manager-preference-modal', {
