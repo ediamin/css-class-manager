@@ -25,4 +25,5 @@ export interface ModalTab {
 export interface DropdownOption extends ClassPreset {
 	label: string;
 	value: string;
+	__isNew__?: boolean;
 }
