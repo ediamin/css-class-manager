@@ -1,5 +1,5 @@
 import { register } from '@wordpress/data';
-import { addFilter, removeFilter } from '@wordpress/hooks';
+import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 
@@ -20,12 +20,6 @@ addFilter(
 	'css-class-manager/block-editor/inspector-control',
 	InspectorControl
 );
-
-// Remove the default CSS Class name inspector control.
-// removeFilter(
-// 	'editor.BlockEdit',
-// 	'core/editor/custom-class-name/with-inspector-controls'
-// );
 
 // The preference or settings modal.
 registerPlugin( 'css-class-manager-preference-modal', {

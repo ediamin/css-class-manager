@@ -1,4 +1,4 @@
-import { useMemo } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import CreatableSelect from 'react-select/creatable';
 
@@ -79,6 +79,21 @@ const SelectControl: FC< SelectControlProps > = ( {
 	const { cssClassNames } = useStore();
 
 	const classNameList = useClassNameList( className, cssClassNames );
+
+	useEffect( () => {
+		// Hide the default CSS class name control.
+		const labels = Array.from(
+			document.querySelectorAll( '.components-base-control__label' )
+		).filter(
+			( label ) => label.textContent === 'Additional CSS class(es)'
+		);
+
+		if ( ! labels.length ) {
+			return;
+		}
+
+		labels[ 0 ]?.parentElement?.parentElement?.classList.add( 'hidden' );
+	}, [] );
 
 	const onChangeHandler: OnChangeHandler = ( newValue, actionMeta ) => {
 		if ( actionMeta.action === 'create-option' ) {
