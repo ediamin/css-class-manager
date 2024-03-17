@@ -11,6 +11,7 @@ vendor
 wp-core
 wp-phpunit
 dist
+languages
 .wp-env.override.json
 phpcs-report.txt
 coverage.xml

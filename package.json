@@ -33,6 +33,7 @@
 		"react-select": "5.7.7"
 	},
 	"scripts": {
+		"prepare": "husky install",
 		"env:start": "wp-env start --xdebug=debug",
 		"env:stop": "wp-env stop",
 		"format": "wp-scripts format",
@@ -42,6 +43,6 @@
 		"build": "wp-scripts build",
 		"clean": "rimraf assets/dist",
 		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer analyze",
-		"prepare": "husky install"
+		"make-pot": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli wp i18n make-pot . languages/css-class-manager.pot --include=includes,assets/dist"
 	}
 }
