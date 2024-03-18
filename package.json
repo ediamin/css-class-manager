@@ -14,23 +14,23 @@
 		"url": "https://github.com/ediamin/css-class-manager/issues"
 	},
 	"engines": {
-		"node": ">=18.0.0",
-		"npm": ">=9.5.1"
+		"node": ">=20.10.0",
+		"npm": ">=10.2.3"
 	},
 	"devDependencies": {
-		"@types/wordpress__block-editor": "11.5.5",
-		"@types/wordpress__edit-post": "7.5.3",
-		"@wordpress/base-styles": "4.35.0",
-		"@wordpress/components": "25.9.0",
-		"@wordpress/data": "9.13.1",
-		"@wordpress/env": "8.9.0",
-		"@wordpress/icons": "9.34.0",
-		"@wordpress/plugins": "6.11.0",
-		"@wordpress/scripts": "26.14.0",
-		"husky": "8.0.3",
-		"lint-staged": "14.0.1",
-		"nanoid": "5.0.2",
-		"react-select": "5.7.7"
+		"@types/wordpress__block-editor": "11.5.12",
+		"@types/wordpress__edit-post": "7.5.6",
+		"@wordpress/base-styles": "4.44.0",
+		"@wordpress/components": "27.1.0",
+		"@wordpress/data": "9.23.0",
+		"@wordpress/env": "9.5.0",
+		"@wordpress/icons": "9.44.0",
+		"@wordpress/plugins": "6.21.0",
+		"@wordpress/scripts": "27.4.0",
+		"husky": "9.0.11",
+		"lint-staged": "15.2.2",
+		"nanoid": "5.0.6",
+		"react-select": "5.8.0"
 	},
 	"scripts": {
 		"prepare": "husky install",
