@@ -17,6 +17,7 @@ phpcs-report.txt
 coverage.xml
 .phpunit.result.cache
 composer.lock
+css-class-manager.zip
 
 # TypeScript
 build

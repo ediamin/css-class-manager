@@ -43,6 +43,7 @@
 		"build": "wp-scripts build",
 		"clean": "rimraf assets/dist",
 		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer analyze",
-		"make-pot": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli wp i18n make-pot . languages/css-class-manager.pot --include=includes,assets/dist"
+		"make-pot": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli wp i18n make-pot . languages/css-class-manager.pot --include=includes,assets/dist",
+		"zip": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli php zip.php"
 	}
 }
