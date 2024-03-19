@@ -61,19 +61,7 @@ class Plugin
 	 */
 	public function get_filtered_class_names(): array
 	{
-		return apply_filters(
-			'css_class_manager_filtered_class_names',
-			[
-				[
-					'description' => 'Hide element',
-					'name'        => 'flex',
-				],
-				[
-					'description' => 'Hide element',
-					'name'        => 'hidden',
-				],
-			]
-		);
+		return apply_filters( 'css_class_manager_filtered_class_names', [] );
 	}
 
 	/**
