@@ -1,13 +1,15 @@
-@import '@wordpress/base-styles/colors';
+@import "@wordpress/base-styles/colors";
 
 .css-class-manager {
 
 	&__tab-class-list {
 
+		/* stylelint-disable-next-line selector-class-pattern */
 		.edit-post-block-manager__search {
 			margin-top: 0;
 		}
 
+		/* stylelint-disable-next-line selector-class-pattern */
 		.components-panel__body {
 
 			&:focus-within {
@@ -27,6 +29,7 @@
 
 			&:disabled {
 
+				/* stylelint-disable-next-line selector-class-pattern */
 				.components-input-control__container {
 					opacity: 0.4;
 				}
@@ -79,7 +82,7 @@
 
 			&--is-focused {
 				border-color: var(--wp-admin-theme-color) !important;
-				box-shadow: 0 0 0 .5px var(--wp-admin-theme-color) !important;
+				box-shadow: 0 0 0 0.5px var(--wp-admin-theme-color) !important;
 			}
 		}
 
