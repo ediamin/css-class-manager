@@ -71,6 +71,10 @@ class Plugin
 	 */
 	public function get_user_defined_class_names(): array
 	{
-		return get_option( Settings::OPTION_CLASS_NAMES, [] );
+		// phpcs:ignore Generic.Commenting.DocComment.MissingShort
+		/** @var array<array<string,string>> $option Settings from the option table */
+		$option = get_option( Settings::OPTION_CLASS_NAMES, [] );
+
+		return $option;
 	}
 }

@@ -54,8 +54,8 @@ class Settings
 	/**
 	 * Sanitize user defined class names settings.
 	 *
-	 * @param array<array<string, mixed>> $value Settings value to be sanitized.
-	 * @return array<array<string, mixed>>
+	 * @param array<array<string,string>> $value Settings value to be sanitized.
+	 * @return array<array<string,string>>
 	 */
 	public static function sanitize_class_names( array $value ): array
 	{
