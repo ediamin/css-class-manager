@@ -87,6 +87,22 @@ const ClassList = () => {
 		await completedSavingSettings();
 	};
 
+	if ( filteredClassList.length === 0 ) {
+		return (
+			<PreferencesModalSection
+				title={ __( 'Class List', 'css-class-manager' ) }
+				description={ '' }
+			>
+				<p className="css-class-manager__tab-class-list-empty">
+					{ __(
+						'No classes found. Please add a new class from above form or use "css_class_manager_filtered_class_names" PHP filter.',
+						'css-class-manager'
+					) }
+				</p>
+			</PreferencesModalSection>
+		);
+	}
+
 	return (
 		<PreferencesModalSection
 			title={ __( 'Class List', 'css-class-manager' ) }

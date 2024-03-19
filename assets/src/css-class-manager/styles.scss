@@ -16,6 +16,13 @@
 				background-color: $gray-100;
 			}
 		}
+
+		&-empty {
+			text-align: center;
+			font-size: 0.9em;
+			font-style: italic;
+			color: $gray-600;
+		}
 	}
 
 	&__class-form {
