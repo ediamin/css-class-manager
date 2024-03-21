@@ -54,8 +54,6 @@ const ClassForm: FC< ClassFormProps > = ( {
 	const onSubmitHandler: FormEventHandler< HTMLFormElement > = ( event ) => {
 		event.preventDefault();
 
-		inputRef.current?.blur();
-
 		onSubmit(
 			{ name: states.name, description: states.description },
 			inputRef
