@@ -22,6 +22,8 @@ module.exports = {
 
 	plugins,
 
+	devtool: 'source-map',
+
 	entry: {
 		'css-class-manager': resolve(
 			'assets',
