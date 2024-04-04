@@ -48,7 +48,7 @@ export default function PreferencesModalTabs( { sections } ) {
 		if ( sections.length ) {
 			mappedTabs = sections.reduce(
 				( accumulator, { name, tabLabel: title, content } ) => {
-					accumulator.tabs.push( { name, title } );
+					accumulator.tabs.push( { name, title, className: 'preferences__tabs-tab' } );
 					accumulator.sectionsContentMap[ name ] = content;
 					return accumulator;
 				},
@@ -68,7 +68,7 @@ export default function PreferencesModalTabs( { sections } ) {
 	if ( isLargeViewport ) {
 		modalContent = (
 			<TabPanel
-				className="interface-preferences__tabs"
+				className="preferences__tabs"
 				tabs={ tabs }
 				initialTabName={
 					activeMenu !== PREFERENCES_MENU ? activeMenu : undefined
@@ -83,7 +83,7 @@ export default function PreferencesModalTabs( { sections } ) {
 		modalContent = (
 			<NavigatorProvider
 				initialPath="/"
-				className="interface-preferences__provider"
+				className="preferences__provider"
 			>
 				<NavigatorScreen path="/">
 					<Card isBorderless size="small">

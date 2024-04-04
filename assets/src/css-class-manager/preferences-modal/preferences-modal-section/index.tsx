@@ -4,13 +4,13 @@
 // Note: Since @wordpress/interface is bundled we cannot use this component directly.
 
 const Section = ( { description, title, children } ) => (
-	<fieldset className="interface-preferences-modal__section">
-		<legend className="interface-preferences-modal__section-legend">
-			<h2 className="interface-preferences-modal__section-title">
+	<fieldset className="preferences-modal__section">
+		<legend className="preferences-modal__section-legend">
+			<h2 className="preferences-modal__section-title">
 				{ title }
 			</h2>
 			{ description && (
-				<p className="interface-preferences-modal__section-description">
+				<p className="preferences-modal__section-description">
 					{ description }
 				</p>
 			) }

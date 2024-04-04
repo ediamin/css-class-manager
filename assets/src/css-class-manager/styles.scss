@@ -2,6 +2,23 @@
 
 .css-class-manager {
 
+	&__preferences-modal {
+
+		/* stylelint-disable-next-line selector-class-pattern */
+		.components-tab-panel__tabs {
+			left: 16px;
+			position: absolute;
+			top: 84px;
+			width: 160px;
+		}
+
+		/* stylelint-disable-next-line selector-class-pattern */
+		.components-tab-panel__tab-content {
+			margin-left: 160px;
+			padding-left: 24px;
+		}
+	}
+
 	&__tab-class-list {
 
 		/* stylelint-disable-next-line selector-class-pattern */

@@ -87,7 +87,7 @@ const ClassList = () => {
 		await completedSavingSettings();
 	};
 
-	if ( filteredClassList.length === 0 ) {
+	if ( filteredClassList.length === 0 && search.length === 0 ) {
 		return (
 			<PreferencesModalSection
 				title={ __( 'Class List', 'css-class-manager' ) }
@@ -113,7 +113,6 @@ const ClassList = () => {
 		>
 			<div className="css-class-manager__tab-class-list">
 				<SearchControl
-					__nextHasNoMarginBottom
 					label={ __( 'Search for a block', 'css-class-manager' ) }
 					placeholder={ __(
 						'Search css class name',
@@ -124,32 +123,40 @@ const ClassList = () => {
 					className="edit-post-block-manager__search"
 				/>
 
-				<div style={ { minHeight: listMinHeight } }>
-					<Panel>
-						{ filteredClassList.map(
-							( classPreset: CombinedClassPreset ) => {
-								return (
-									<PanelBody
-										key={ classPreset.id }
-										title={ classPreset.name }
-										initialOpen={ false }
-									>
-										<PanelRow>
-											<ClassForm
-												classPreset={ classPreset }
-												disabled={ isSavingSettings }
-												onSubmit={ onSubmitHandler(
-													classPreset
-												) }
-												onDelete={ onDeleteHandler }
-											/>
-										</PanelRow>
-									</PanelBody>
-								);
-							}
-						) }
-					</Panel>
-				</div>
+				{ search.length > 0 && filteredClassList.length === 0 ? (
+					<p className="css-class-manager__tab-class-list-empty">
+						{ __( 'No classes found.', 'css-class-manager' ) }
+					</p>
+				) : (
+					<div style={ { minHeight: listMinHeight } }>
+						<Panel>
+							{ filteredClassList.map(
+								( classPreset: CombinedClassPreset ) => {
+									return (
+										<PanelBody
+											key={ classPreset.id }
+											title={ classPreset.name }
+											initialOpen={ false }
+										>
+											<PanelRow>
+												<ClassForm
+													classPreset={ classPreset }
+													disabled={
+														isSavingSettings
+													}
+													onSubmit={ onSubmitHandler(
+														classPreset
+													) }
+													onDelete={ onDeleteHandler }
+												/>
+											</PanelRow>
+										</PanelBody>
+									);
+								}
+							) }
+						</Panel>
+					</div>
+				) }
 			</div>
 		</PreferencesModalSection>
 	);

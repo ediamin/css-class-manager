@@ -43,7 +43,7 @@ const PreferencesModal = () => {
 	return (
 		<Modal
 			// This class has been used by PreferencesModal component in @wordpress/interface.
-			className="interface-preferences-modal"
+			className="preferences-modal css-class-manager__preferences-modal"
 			title={ __( 'CSS Class Manager', 'css-class-manager' ) }
 			onRequestClose={ toggleModal }
 		>
