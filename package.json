@@ -1,7 +1,7 @@
 {
 	"name": "@ediamin/css-class-manager",
-	"version": "0.0.1",
-	"description": "CSS Class Manager for Blocks.",
+	"version": "1.0.0",
+	"description": "An advanced autocomple additional css class control for your blocks.",
 	"author": "Edi Amin <to.ediamin@gmail.com>",
 	"license": "GPL-2.0-or-later",
 	"keywords": [],

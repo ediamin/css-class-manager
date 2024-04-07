@@ -1,9 +1,9 @@
 {
 	"$schema": "https://getcomposer.org/schema.json",
 	"name": "ediamin/css-class-manager",
-	"description": "CSS Class Manager for Blocks.",
+	"description": "An advanced autocomple additional css class control for your blocks.",
 	"type": "wordpress-plugin",
-	"license": "GPL-2.0-or-later",
+	"license": "GPL-3.0-or-later",
 	"authors": [
 		{
 			"name": "Edi Amin",

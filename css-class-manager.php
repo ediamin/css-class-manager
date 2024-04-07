@@ -3,7 +3,7 @@
  * Plugin Name: CSS Class Manager
  * Plugin URI: https://github.com/ediamin/css-class-manager
  * Description: CSS Class Manager for WordPress Blocks.
- * Version: 0.0.1
+ * Version: 1.0.0
  * Author: Edi Amin
  * Author URI: https://github.com/ediamin
  * Text Domain: css-class-manager
