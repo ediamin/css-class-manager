@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "An advanced autocomple additional css class control for your blocks.",
 	"author": "Edi Amin <to.ediamin@gmail.com>",
-	"license": "GPL-2.0-or-later",
+	"license": "GPL-3.0",
 	"keywords": [],
 	"homepage": "https://github.com/ediamin/css-class-manager#readme",
 	"repository": {

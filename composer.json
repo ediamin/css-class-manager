@@ -3,7 +3,7 @@
 	"name": "ediamin/css-class-manager",
 	"description": "An advanced autocomple additional css class control for your blocks.",
 	"type": "wordpress-plugin",
-	"license": "GPL-3.0-or-later",
+	"license": "GPL-3.0",
 	"authors": [
 		{
 			"name": "Edi Amin",
