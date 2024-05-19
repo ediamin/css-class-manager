@@ -4,8 +4,12 @@
  * Plugin URI: https://github.com/ediamin/css-class-manager
  * Description: An advanced autocomplete additional css class control for your blocks.
  * Version: 1.0.0
+ * Requires at least: 6.5
+ * Requires PHP: 7.4
  * Author: Edi Amin
  * Author URI: https://github.com/ediamin
+ * License: GPL-3.0
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Text Domain: css-class-manager
  * Domain Path: /languages/
  *
