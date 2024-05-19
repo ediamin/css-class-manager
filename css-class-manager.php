@@ -2,7 +2,7 @@
 /**
  * Plugin Name: CSS Class Manager
  * Plugin URI: https://github.com/ediamin/css-class-manager
- * Description: An advanced autocomple additional css class control for your blocks.
+ * Description: An advanced autocomplete additional css class control for your blocks.
  * Version: 1.0.0
  * Author: Edi Amin
  * Author URI: https://github.com/ediamin

@@ -1,4 +1,4 @@
-CSS Class Manager - An advanced autocomple additional css class control for your blocks
+CSS Class Manager - An advanced autocomplete additional css class control for your blocks
 
 Copyright 2024 by Edi Amin <to.ediamin@gmail.com>
 

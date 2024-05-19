@@ -1,4 +1,4 @@
-=== CSS Class Manager - An advanced autocomple additional css class control for your blocks  ===
+=== CSS Class Manager - An advanced autocomplete additional css class control for your blocks  ===
 Contributors: ediamin
 Tags: gutenberg, editor, dropdown, styles, multiple
 Requires at least: 6.5
