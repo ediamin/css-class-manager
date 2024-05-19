@@ -43,6 +43,10 @@ There are two main motivations behind creating this plugins:
 
 == Frequently Asked Questions ==
 
+= Where can I find the JavaScript and CSS non-compiled source files? =
+
+Please checkout the [GitHub repository](https://github.com/ediamin/css-class-manager) of this plugin to see the sources.
+
 = How to open the manager modal? =
 
 Under the Additional CSS Class(es) control, you will see a link says Open Class Manager. Click on that to open the CSS Class Manager preferences modal.
@@ -67,9 +71,6 @@ function plugin_prefix_add_css_classes( $class_names ) {
 add_filter( 'css_class_manager_filtered_class_names', 'plugin_prefix_add_css_classes' );
 ```
 
-= Where can I see the sources of the JS and CSS files? =
-
-Please checkout the [GitHub repository](https://github.com/ediamin/css-class-manager) of this plugin to see the sources.
 
 == Changelog ==
 
