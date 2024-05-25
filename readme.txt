@@ -54,19 +54,19 @@ Under the Additional CSS Class(es) control, you will see a link says Open Class 
 = How to use the PHP filter? =
 
 Use `css_class_manager_filtered_class_names` filter to add class names from a PHP file. Example:
-```php
+```
 <?php
 function plugin_prefix_add_css_classes( $class_names ) {
-	$additional_css_names =  [
-		[
-			'name'        => 'flex',
-		],
-		[
-			'name'        => 'hidden',
-			'description' => 'Hide element',
-		],
-	];
-	return array_merge( $class_names, $additional_css_names );
+    $additional_css_names =  [
+        [
+            'name'        => 'flex',
+        ],
+        [
+            'name'        => 'hidden',
+            'description' => 'Hide element',
+        ],
+    ];
+    return array_merge( $class_names, $additional_css_names );
 }
 add_filter( 'css_class_manager_filtered_class_names', 'plugin_prefix_add_css_classes' );
 ```
