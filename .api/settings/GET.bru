@@ -1,0 +1,16 @@
+meta {
+  name: GET
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{rest_base}}/wp/v2/settings
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: {{user_name}}
+  password: {{user_pass}}
+}

@@ -1,0 +1,38 @@
+meta {
+  name: POST
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{rest_base}}/wp/v2/settings
+  body: json
+  auth: basic
+}
+
+auth:basic {
+  username: {{user_name}}
+  password: {{user_pass}}
+}
+
+body:json {
+  {
+      "css_class_manager_class_names": [
+          {
+              "name": "foo"
+          },
+          {
+              "name": "bizz",
+              "description": "descbar"
+          },
+          {
+              "name": "zxr",
+              "description": "some descriptionssss"
+          },
+          {
+              "name": "ds dsdslkkd",
+              "description": ""
+          }
+      ]
+  }
+}
