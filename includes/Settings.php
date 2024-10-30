@@ -75,7 +75,7 @@ class Settings
 		);
 
 		foreach ( $value as $class_name ) {
-			$name = sanitize_html_class( $class_name['name'] );
+			$name = css_class_manager_sanitize_html_class( $class_name['name'] );
 
 			if ( isset( $unique_names[ $name ] ) ) {
 				continue;
