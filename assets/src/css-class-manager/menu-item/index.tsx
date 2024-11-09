@@ -1,5 +1,5 @@
 import { useDispatch } from '@wordpress/data';
-import { PluginMoreMenuItem } from '@wordpress/edit-post';
+import { PluginMoreMenuItem } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
