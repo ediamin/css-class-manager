@@ -1,6 +1,5 @@
 import { register } from '@wordpress/data';
 import { addFilter } from '@wordpress/hooks';
-import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 
 import InspectorControl from './inspector-control';

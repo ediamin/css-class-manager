@@ -261,12 +261,18 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 			// Upload non-empty and unique class names.
 			updatedClassNames = updatedClassNames.filter(
 				( { name, isFilteredClassName } ) => {
-					if ( ! name ) return false;
+					if ( ! name ) {
+						return false;
+					}
 
 					// Do not include the classes added using PHP filter.
-					if ( isFilteredClassName ) return false;
+					if ( isFilteredClassName ) {
+						return false;
+					}
 
-					if ( uniqueClassNames[ name ] ) return false;
+					if ( uniqueClassNames[ name ] ) {
+						return false;
+					}
 
 					uniqueClassNames[ name ] = true;
 
