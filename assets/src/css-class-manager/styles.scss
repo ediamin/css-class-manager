@@ -10,6 +10,17 @@
 			position: absolute;
 			top: 84px;
 			width: 160px;
+
+			&-item {
+
+				&.is-active {
+					background-color: #f0f0f0;
+
+					&::after {
+						content: none;
+					}
+				}
+			}
 		}
 
 		/* stylelint-disable-next-line selector-class-pattern */
