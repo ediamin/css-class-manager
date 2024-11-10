@@ -1,7 +1,7 @@
 === CSS Class Manager - An advanced autocomplete additional css class control for your blocks  ===
 Contributors: ediamin
 Tags: gutenberg, editor, dropdown, styles, multiple
-Requires at least: 6.5
+Requires at least: 6.6
 Tested up to: 6.5.3
 Requires PHP: 7.4
 Stable tag: 1.0.0
