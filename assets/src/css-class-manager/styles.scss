@@ -1,4 +1,4 @@
-@import "@wordpress/base-styles/colors";
+@use "@wordpress/base-styles/colors" as colors;
 
 .css-class-manager {
 
@@ -30,7 +30,7 @@
 		.components-panel__body {
 
 			&:focus-within {
-				background-color: $gray-100;
+				background-color: colors.$gray-100;
 			}
 		}
 
@@ -38,7 +38,7 @@
 			text-align: center;
 			font-size: 0.9em;
 			font-style: italic;
-			color: $gray-600;
+			color: colors.$gray-600;
 		}
 	}
 
@@ -94,7 +94,7 @@
 			margin-bottom: 0;
 			font-size: 12px;
 			font-style: normal;
-			color: $gray-700;
+			color: colors.$gray-700;
 		}
 	}
 
@@ -102,7 +102,7 @@
 
 		&__control {
 			border-radius: 2px !important;
-			border: 1px solid $gray-600 !important;
+			border: 1px solid colors.$gray-600 !important;
 
 			&--is-focused {
 				border-color: var(--wp-admin-theme-color) !important;
@@ -129,15 +129,15 @@
 		}
 
 		&__menu {
-			box-shadow: 0 0 0 4px $gray-600;
-			border: 1px solid $gray-600;
+			box-shadow: 0 0 0 4px colors.$gray-600;
+			border: 1px solid colors.$gray-600;
 		}
 
 		&__option {
 
 			&--is-focused {
 				background-color: var(--wp-admin-theme-color) !important;
-				color: $white !important;
+				color: colors.$white !important;
 			}
 
 			&__description {
