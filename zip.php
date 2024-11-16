@@ -20,7 +20,7 @@ shell_exec( 'cp -r includes build/includes' );
 shell_exec( 'cp -r languages build/languages' );
 shell_exec( 'cp css-class-manager.php build' );
 shell_exec( 'cp index.php build' );
-shell_exec( 'cp LICENSE build' );
+shell_exec( 'cp license.txt build' );
 shell_exec( 'cp readme.txt build' );
 
 // WP CLI commands to read composer.json, remove `repositories`, `require-dev`
