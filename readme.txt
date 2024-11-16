@@ -56,7 +56,7 @@ Under the Additional CSS Class(es) control, you will see a link says Open Class 
 = How to use the PHP filter? =
 
 Use `css_class_manager_filtered_class_names` filter to add class names from a PHP file. Example:
-```
+```php
 <?php
 function plugin_prefix_add_css_classes( $class_names ) {
     $additional_css_names =  [
@@ -75,6 +75,14 @@ add_filter( 'css_class_manager_filtered_class_names', 'plugin_prefix_add_css_cla
 
 
 == Changelog ==
+
+= 1.1.0  - November 16, 2024 =
+* Allow colon in class names.
+* Fix preference modal tab background color.
+* Bump the minimum WordPress version requirement to 6.6 from 6.5.
+* Import PluginMoreMenuItem from wp-editor package.
+* Update scss file and use the @use instead of @import.
+* Upgrade the npm packages to the latest.
 
 = 1.0.0  - May 25, 2024 =
 * Initial release.
