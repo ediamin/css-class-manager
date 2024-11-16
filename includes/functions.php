@@ -31,8 +31,16 @@ function css_class_manager_sanitize_html_class( string $class_name ): string
 	// Strip out any percent-encoded characters.
 	$sanitized = preg_replace( '|%[a-fA-F0-9][a-fA-F0-9]|', '', $class_name );
 
+	if ( gettype( $sanitized ) !== 'string' ) {
+		return '';
+	}
+
 	// Limit to A-Z, a-z, 0-9, '_', '-' and ':'.
 	$sanitized = preg_replace( '/[^A-Za-z0-9_:-]/', '', $sanitized );
+
+	if ( gettype( $sanitized ) !== 'string' ) {
+		return '';
+	}
 
 	return $sanitized;
 }
