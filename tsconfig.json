@@ -4,7 +4,7 @@
 		"allowJs": false,
 		"checkJs": false,
 		"allowSyntheticDefaultImports": false,
-		"jsx": "react-native",
+		"jsx": "react-jsx",
 		"target": "esnext",
 		"module": "NodeNext",
 		"lib": [ "dom", "esnext" ],
