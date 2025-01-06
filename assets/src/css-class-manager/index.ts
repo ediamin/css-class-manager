@@ -2,6 +2,7 @@ import { register } from '@wordpress/data';
 import { addFilter } from '@wordpress/hooks';
 import { registerPlugin } from '@wordpress/plugins';
 
+import HideCoreInspectorControl from './hide-core-inspector-control';
 import InspectorControl from './inspector-control';
 import MenuItem from './menu-item';
 import Notices from './notices';
@@ -18,6 +19,13 @@ addFilter(
 	'editor.BlockEdit',
 	'css-class-manager/block-editor/inspector-control',
 	InspectorControl
+);
+
+// Hide the core additional CSS classes inspector control.
+addFilter(
+	'editor.BlockEdit',
+	'css-class-manager/block-editor/hide-core-inspector-control',
+	HideCoreInspectorControl
 );
 
 // The preference or settings modal.

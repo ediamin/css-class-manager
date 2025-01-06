@@ -3,7 +3,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { STORE_NAME } from '../constants';
 import store from '../store';
 
-import type { Selectors } from '../store';
+import type { Selectors, UserSettings } from '../store';
 import type {
 	MapSelect,
 	ReduxStoreConfig,
@@ -20,6 +20,8 @@ interface UseSelectReturn {
 		Selectors[ 'getUserDefinedClassNames' ]
 	>;
 	notices: ReturnType< Selectors[ 'getNotices' ] >;
+	userSettings: UserSettings;
+	panelLabel: string;
 }
 
 function useStore() {
@@ -31,6 +33,7 @@ function useStore() {
 		completedSavingSettings,
 		saveUserDefinedClassNames,
 		deleteUserDefinedClassName,
+		updateUserSettings,
 	} = useDispatch( store );
 
 	const {
@@ -38,6 +41,8 @@ function useStore() {
 		userDefinedClassNames,
 		isSavingSettings,
 		notices,
+		userSettings,
+		panelLabel,
 	}: UseSelectReturn = useSelect< MapSelect >( ( select ) => {
 		const dataStore = select< SelectFunctionParam >( STORE_NAME as any );
 		return {
@@ -45,6 +50,8 @@ function useStore() {
 			cssClassNames: dataStore.getCssClassNames(),
 			isSavingSettings: dataStore.isSavingSettings(),
 			notices: dataStore.getNotices(),
+			userSettings: dataStore.getUserSettings(),
+			panelLabel: dataStore.getPanelLabel(),
 		};
 	}, [] );
 
@@ -53,6 +60,8 @@ function useStore() {
 		userDefinedClassNames,
 		isSavingSettings,
 		notices,
+		userSettings,
+		panelLabel,
 		createSuccessNotice,
 		createErrorNotice,
 		removeNotice,
@@ -60,6 +69,7 @@ function useStore() {
 		completedSavingSettings,
 		saveUserDefinedClassNames,
 		deleteUserDefinedClassName,
+		updateUserSettings,
 	};
 }
 

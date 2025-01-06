@@ -7,6 +7,7 @@ import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 import PreferencesModalTabs from './preferences-modal-tabs';
 import tabCssClass from './tabs/css-classes';
 import tabImportExport from './tabs/import-export';
+import tabPreferences from './tabs/preferences';
 
 import type {
 	MapSelect,
@@ -38,7 +39,7 @@ const PreferencesModal = () => {
 		return null;
 	}
 
-	const sections = [ tabCssClass, tabImportExport ];
+	const sections = [ tabCssClass, tabPreferences, tabImportExport ];
 
 	return (
 		<Modal

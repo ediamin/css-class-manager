@@ -1,5 +1,9 @@
 import { InspectorControls } from '@wordpress/block-editor';
 import { hasBlockSupport } from '@wordpress/blocks';
+import {
+	PanelBody,
+	__experimentalUseSlotFills as useSlotFills,
+} from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
@@ -29,12 +33,19 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 		const { openModal } = useDispatch( INTERFACE_STORE );
 		const {
 			userDefinedClassNames,
+			userSettings,
 			isSavingSettings,
+			panelLabel,
 			saveUserDefinedClassNames,
 			startSavingSettings,
 			completedSavingSettings,
 			createErrorNotice,
 		} = useStore();
+
+		const settingsFills = [
+			...( useSlotFills( 'InspectorControls' ) || [] ),
+			...( useSlotFills( 'InspectorControlsPosition' ) || [] ),
+		];
 
 		const openManager = ( event: MouseEvent< HTMLAnchorElement > ) => {
 			event.preventDefault();
@@ -72,47 +83,58 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 			return <BlockEdit { ...props } />;
 		}
 
+		let controlGroup = 'advanced';
+
+		if ( userSettings.inspectorControlPosition === 'own-panel' ) {
+			if ( settingsFills.length ) {
+				controlGroup = 'default';
+			} else {
+				controlGroup = 'styles';
+			}
+		}
+
+		const inspectorControlContent = (
+			<>
+				<SelectControl
+					className={ className ?? '' }
+					isSaving={ isSavingSettings }
+					onChange={ onChangeHandler }
+					onCreateNew={ onCreateNewHandler }
+				/>
+
+				<p className="css-class-manager__inspector-control__help-text">
+					{ __(
+						'Select one or more class names from the dropdown by clicking on the options.',
+						'css-class-manager'
+					) }
+				</p>
+				<p className="css-class-manager__inspector-control__help-text">
+					<a href="#open-css-class-manager" onClick={ openManager }>
+						{ __( 'Open Class Manager', 'css-class-manager' ) }
+					</a>
+				</p>
+			</>
+		);
+
 		return (
 			<>
 				<BlockEdit { ...props } />
-				{ /* @ts-ignore 3RD_PARTY_PACKAGE_IS_MISSING_TYPE */ }
-				<InspectorControls group="advanced">
-					<div className="css-class-manager__inspector-control">
-						<label
-							htmlFor="css-class-manager__select"
-							className="css-class-manager__inspector-control__label"
-						>
-							{ __(
-								'Additional CSS class(es)',
-								'css-class-manager'
-							) }
-						</label>
-
-						<SelectControl
-							className={ className ?? '' }
-							isSaving={ isSavingSettings }
-							onChange={ onChangeHandler }
-							onCreateNew={ onCreateNewHandler }
-						/>
-
-						<p className="css-class-manager__inspector-control__help-text">
-							{ __(
-								'Select one or more class names from the dropdown by clicking on the options.',
-								'css-class-manager'
-							) }
-						</p>
-						<p className="css-class-manager__inspector-control__help-text">
-							<a
-								href="#open-css-class-manager"
-								onClick={ openManager }
+				<InspectorControls group={ controlGroup }>
+					{ controlGroup === 'advanced' ? (
+						<div className="css-class-manager__inspector-control">
+							<label
+								htmlFor="css-class-manager__select"
+								className="css-class-manager__inspector-control__label"
 							>
-								{ __(
-									'Open Class Manager',
-									'css-class-manager'
-								) }
-							</a>
-						</p>
-					</div>
+								{ panelLabel }
+							</label>
+							{ inspectorControlContent }
+						</div>
+					) : (
+						<PanelBody title={ panelLabel } initialOpen={ true }>
+							{ inspectorControlContent }
+						</PanelBody>
+					) }
 				</InspectorControls>
 			</>
 		);

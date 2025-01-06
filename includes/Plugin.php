@@ -77,4 +77,15 @@ class Plugin
 
 		return $option;
 	}
+
+	/**
+	 * Get the user settings.
+	 *
+	 * @param int $user_id User ID.
+	 * @return array<string,string>
+	 */
+	public function get_user_settings( int $user_id ): array
+	{
+		return get_user_meta( $user_id, UserSettings::META_KEY, true );
+	}
 }

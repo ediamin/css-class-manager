@@ -40,15 +40,6 @@ class Enqueue
 			$asset['version'],
 			true
 		);
-
-		wp_localize_script(
-			self::SCRIPT_HANDLE,
-			'cssClassManager',
-			[
-				'filteredClassNames'    => css_class_manager()->get_filtered_class_names(),
-				'userDefinedClassNames' => css_class_manager()->get_user_defined_class_names(),
-			]
-		);
 	}
 
 	/**
@@ -58,5 +49,17 @@ class Enqueue
 	{
 		wp_enqueue_style( self::STYLE_HANDLE );
 		wp_enqueue_script( self::SCRIPT_HANDLE );
+
+		wp_localize_script(
+			self::SCRIPT_HANDLE,
+			'cssClassManager',
+			[
+				'filteredClassNames'    => css_class_manager()->get_filtered_class_names(),
+                // phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- We need to use the default domain.
+				'panelLabel'            => __( 'Additional CSS class(es)' ),
+				'userDefinedClassNames' => css_class_manager()->get_user_defined_class_names(),
+				'userSettings'          => css_class_manager()->get_user_settings( get_current_user_id() ),
+			]
+		);
 	}
 }
