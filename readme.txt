@@ -22,6 +22,7 @@ There are two main motivations behind creating this plugins:
 
 - **Advanced Autocomplete Control:** Streamline block styling with autocomplete functionality for CSS classes.
 - **Effortless Class Management:** Easily add, edit, or remove CSS classes directly within the manager interface.
+- **Show the control in its own panel:** User specific settings to show the Addional CSS Class(es) control in its own panel.
 - **Import and Export:** Seamlessly transfer custom CSS class names to ensure consistency across projects.
 
 == Getting Started ==
@@ -56,23 +57,7 @@ Under the Additional CSS Class(es) control, you will see a link says Open Class 
 
 = How to use the PHP filter? =
 
-Use `css_class_manager_filtered_class_names` filter to add class names from a PHP file. Example:
-```php
-<?php
-function plugin_prefix_add_css_classes( $class_names ) {
-    $additional_css_names =  [
-        [
-            'name'        => 'flex',
-        ],
-        [
-            'name'        => 'hidden',
-            'description' => 'Hide element',
-        ],
-    ];
-    return array_merge( $class_names, $additional_css_names );
-}
-add_filter( 'css_class_manager_filtered_class_names', 'plugin_prefix_add_css_classes' );
-```
+Use the `css_class_manager_filtered_class_names` filter to add your class names from your plugin or theme. Check out the example code in this [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-use-the-php-filter) for more details.
 
 
 == Changelog ==
