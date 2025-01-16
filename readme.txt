@@ -41,7 +41,8 @@ There are two main motivations behind creating this plugins:
 3. The CSS Class Manager preference modal window.
 4. The class names saved in the class list will show up in the control dropdown.
 5. Delete saved class name so they won't show in the dropdown anymore.
-6. Import or export your class list.
+6. User settings to show the control in its own panel.
+7. Import or export your class list.
 
 == Frequently Asked Questions ==
 
