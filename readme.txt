@@ -2,9 +2,9 @@
 Contributors: ediamin
 Tags: gutenberg, editor, dropdown, styles, multiple
 Requires at least: 6.6
-Tested up to: 6.7
+Tested up to: 6.7.1
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -61,6 +61,9 @@ Use the `css_class_manager_filtered_class_names` filter to add your class names 
 
 
 == Changelog ==
+
+= 1.1.1  - January 16, 2025 =
+* Add user preference to display the control in its own panel.
 
 = 1.1.0  - November 16, 2024 =
 * Allow colon in class names.
