@@ -1,11 +1,9 @@
 import { InspectorControls } from '@wordpress/block-editor';
 import { hasBlockSupport } from '@wordpress/blocks';
-import {
-	PanelBody,
-	__experimentalUseSlotFills as useSlotFills,
-} from '@wordpress/components';
+import { PanelBody } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { useDispatch } from '@wordpress/data';
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
@@ -33,7 +31,7 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 		const { openModal } = useDispatch( INTERFACE_STORE );
 		const {
 			userDefinedClassNames,
-			userSettings,
+			userSettings: { inspectorControlPosition },
 			isSavingSettings,
 			panelLabel,
 			saveUserDefinedClassNames,
@@ -41,11 +39,6 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 			completedSavingSettings,
 			createErrorNotice,
 		} = useStore();
-
-		const settingsFills = [
-			...( useSlotFills( 'InspectorControls' ) || [] ),
-			...( useSlotFills( 'InspectorControlsPosition' ) || [] ),
-		];
 
 		const openManager = ( event: MouseEvent< HTMLAnchorElement > ) => {
 			event.preventDefault();
@@ -73,24 +66,26 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 			await completedSavingSettings();
 		};
 
-		const hasCustomClassName = hasBlockSupport(
-			name,
-			'customClassName',
-			true
+		const hasCustomClassNameSupport = useMemo(
+			() => hasBlockSupport( name, 'customClassName', true ),
+			[ name ]
 		);
 
-		if ( ! isSelected || ! hasCustomClassName ) {
-			return <BlockEdit { ...props } />;
-		}
-
-		let controlGroup = 'advanced';
-
-		if ( userSettings.inspectorControlPosition === 'own-panel' ) {
-			if ( settingsFills.length ) {
-				controlGroup = 'default';
-			} else {
-				controlGroup = 'styles';
+		const controlGroup = useMemo( () => {
+			if ( inspectorControlPosition === 'own-panel' ) {
+				if (
+					hasBlockSupport( name, 'layout' as any ) ||
+					hasBlockSupport( name, '__experimentalLayout' as any )
+				) {
+					return 'default';
+				}
+				return 'styles';
 			}
+			return 'advanced';
+		}, [ name, inspectorControlPosition ] );
+
+		if ( ! isSelected || ! hasCustomClassNameSupport ) {
+			return <BlockEdit { ...props } />;
 		}
 
 		const inspectorControlContent = (
