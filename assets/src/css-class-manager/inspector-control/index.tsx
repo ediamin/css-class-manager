@@ -1,14 +1,15 @@
 import { InspectorControls } from '@wordpress/block-editor';
-import { hasBlockSupport } from '@wordpress/blocks';
+import { getBlockSupport, hasBlockSupport } from '@wordpress/blocks';
 import { PanelBody } from '@wordpress/components';
 import { createHigherOrderComponent } from '@wordpress/compose';
 import { useDispatch } from '@wordpress/data';
-import { useMemo } from '@wordpress/element';
+import { useEffect, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 import { useStore } from '../hooks';
 
+import { hasStyleSupport } from './block-support';
 import SelectControl from './select-control';
 
 import type { BlockEditProps } from '../types';
@@ -66,23 +67,65 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 			await completedSavingSettings();
 		};
 
+		// Check if the block supports custom class name.
 		const hasCustomClassNameSupport = useMemo(
 			() => hasBlockSupport( name, 'customClassName', true ),
 			[ name ]
 		);
 
+		// Determine the control group to render.
 		const controlGroup = useMemo( () => {
-			if ( inspectorControlPosition === 'own-panel' ) {
+			if ( inspectorControlPosition === 'own-panel' && isSelected ) {
+				const layoutSupport = getBlockSupport(
+					name,
+					'layout' as any
+				) as boolean | { allowEditing: boolean };
+
+				let hasLayoutSupport: boolean = false;
+
+				if ( typeof layoutSupport === 'boolean' ) {
+					hasLayoutSupport = layoutSupport;
+				} else if ( typeof layoutSupport === 'object' ) {
+					if ( layoutSupport.allowEditing === undefined ) {
+						hasLayoutSupport = true;
+					} else {
+						hasLayoutSupport = layoutSupport?.allowEditing;
+					}
+				}
+
 				if (
-					hasBlockSupport( name, 'layout' as any ) ||
+					! hasStyleSupport( name ) ||
+					hasLayoutSupport ||
 					hasBlockSupport( name, '__experimentalLayout' as any )
 				) {
 					return 'default';
 				}
+
 				return 'styles';
 			}
 			return 'advanced';
-		}, [ name, inspectorControlPosition ] );
+		}, [ inspectorControlPosition, isSelected, name ] );
+
+		// Check if the tablist is present in the inspector controls.
+		const [ hasTablist, setHasTablist ] = useState( false );
+		useEffect( () => {
+			if ( ! isSelected ) {
+				return;
+			}
+
+			setHasTablist( false );
+
+			// This is not a perfect solution, but it works for now.
+			setTimeout( () => {
+				const tabListElement = document.querySelector(
+					'.block-editor-block-inspector__tabs > [role=tablist]'
+				);
+
+				if ( tabListElement && controlGroup === 'styles' ) {
+					setHasTablist( true );
+				}
+			}, 100 );
+		}, [ controlGroup, isSelected ] );
 
 		if ( ! isSelected || ! hasCustomClassNameSupport ) {
 			return <BlockEdit { ...props } />;
@@ -114,7 +157,9 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 		return (
 			<>
 				<BlockEdit { ...props } />
-				<InspectorControls group={ controlGroup }>
+				<InspectorControls
+					group={ hasTablist ? 'default' : controlGroup }
+				>
 					{ controlGroup === 'advanced' ? (
 						<div className="css-class-manager__inspector-control">
 							<label
