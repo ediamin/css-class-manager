@@ -140,6 +140,7 @@
 		}
 
 		&__menu {
+			z-index: 2 !important;
 			box-shadow: 0 0 0 4px colors.$gray-600;
 			border: 1px solid colors.$gray-600;
 		}
