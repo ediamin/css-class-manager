@@ -86,6 +86,10 @@ class Plugin
 	 */
 	public function get_user_settings( int $user_id ): array
 	{
-		return get_user_meta( $user_id, UserSettings::META_KEY, true );
+		$settings = get_user_meta( $user_id, UserSettings::META_KEY, true );
+
+		return is_array( $settings )
+			? $settings
+			: [];
 	}
 }
