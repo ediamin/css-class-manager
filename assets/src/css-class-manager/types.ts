@@ -1,4 +1,5 @@
 import type { BlockEditProps as CoreBlockEditProps } from '@wordpress/blocks';
+import type { FuseResultMatch } from 'fuse.js';
 import type { ReactNode } from 'react';
 
 export interface ClassPreset {
@@ -26,4 +27,5 @@ export interface DropdownOption extends ClassPreset {
 	label: string;
 	value: string;
 	__isNew__?: boolean;
+	matches?: ReadonlyArray< FuseResultMatch >;
 }

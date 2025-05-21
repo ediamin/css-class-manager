@@ -1,16 +1,20 @@
-import { useMemo } from '@wordpress/element';
-import { __, sprintf } from '@wordpress/i18n';
+import { useMemo, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import CreatableSelect from 'react-select/creatable';
 
 import { useClassNameList, useStore } from '../hooks';
 
+import NoOptionsMessage from './no-options-message';
+import OptionLabel from './option-label';
+
 import type { DropdownOption } from '../types';
 import type { FC } from 'react';
-import type { Props as ReactSelectProps } from 'react-select';
+import type { InputActionMeta, Props as ReactSelectProps } from 'react-select';
 
 type SelectProps = ReactSelectProps< DropdownOption, true >;
 type OnChangeHandler = SelectProps[ 'onChange' ];
 type FormatOptionLabel = SelectProps[ 'formatOptionLabel' ];
+type FilterOptionOption = SelectProps[ 'filterOption' ];
 
 interface SelectControlProps {
 	className: string;
@@ -19,38 +23,15 @@ interface SelectControlProps {
 	onCreateNew: ( newClassName: string ) => void;
 }
 
-const noOptionsMessage = () => {
-	return <div>{ __( 'No class name found.', 'css-class-manager' ) }</div>;
-};
-
 const formatOptionLabel: FormatOptionLabel = (
 	data,
 	formatOptionLabelMeta
 ) => {
-	const { name, description, value } = data;
+	const { name } = data;
 	const { context } = formatOptionLabelMeta;
 
 	return context === 'menu' ? (
-		<>
-			{ data.__isNew__ ? (
-				<div>
-					{ sprintf(
-						// translators: %s: New class name.
-						__( 'Create "%s"', 'css-class-manager' ),
-						value.replaceAll( ' ', '-' )
-					) }
-				</div>
-			) : (
-				<>
-					{ name }
-					{ description && (
-						<p className="css-class-manager__react-select__option__description">
-							{ description }
-						</p>
-					) }
-				</>
-			) }
-		</>
+		<OptionLabel { ...data } />
 	) : (
 		<div>{ name }</div>
 	);
@@ -62,6 +43,10 @@ const SelectControl: FC< SelectControlProps > = ( {
 	onChange,
 	onCreateNew,
 } ) => {
+	const [ searchStr, setSearchStr ] = useState( '' );
+	const { cssClassNames, cssUniqueClassNames } = useStore();
+	const classNameList = useClassNameList( searchStr, cssClassNames );
+
 	const selectedValue = useMemo( () => {
 		return className.length
 			? className
@@ -75,10 +60,6 @@ const SelectControl: FC< SelectControlProps > = ( {
 					} ) )
 			: [];
 	}, [ className ] );
-
-	const { cssClassNames } = useStore();
-
-	const classNameList = useClassNameList( className, cssClassNames );
 
 	const onChangeHandler: OnChangeHandler = ( newValue, actionMeta ) => {
 		if ( actionMeta.action === 'create-option' ) {
@@ -95,6 +76,29 @@ const SelectControl: FC< SelectControlProps > = ( {
 		);
 	};
 
+	const onInputChangeHandler = (
+		newValue: string,
+		actionMeta: InputActionMeta
+	) => {
+		if ( actionMeta.action === 'input-change' ) {
+			setSearchStr( newValue );
+			return;
+		}
+
+		setSearchStr( '' );
+	};
+
+	const filterOption: FilterOptionOption = ( option, inputValue ) => {
+		if (
+			option.data.__isNew__ &&
+			cssUniqueClassNames[ inputValue.trim().replaceAll( ' ', '-' ) ]
+		) {
+			return false;
+		}
+
+		return true;
+	};
+
 	return (
 		<CreatableSelect
 			id="css-class-manager__select"
@@ -108,8 +112,10 @@ const SelectControl: FC< SelectControlProps > = ( {
 			onChange={ onChangeHandler }
 			value={ selectedValue }
 			closeMenuOnSelect={ false }
-			noOptionsMessage={ noOptionsMessage }
+			noOptionsMessage={ NoOptionsMessage }
 			formatOptionLabel={ formatOptionLabel }
+			filterOption={ filterOption }
+			onInputChange={ onInputChangeHandler }
 			placeholder={ __( 'Select class names', 'css-class-manager' ) }
 			components={ {
 				DropdownIndicator: null,

@@ -15,6 +15,10 @@ const lines = [
 		line: 30,
 	},
 	{
+		file: 'package.json',
+		line: 3,
+	},
+	{
 		file: 'package-lock.json',
 		line: 3,
 	},

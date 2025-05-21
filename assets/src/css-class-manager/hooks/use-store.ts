@@ -1,4 +1,5 @@
 import { useDispatch, useSelect } from '@wordpress/data';
+import { useMemo } from '@wordpress/element';
 
 import { STORE_NAME } from '../constants';
 import store from '../store';
@@ -55,8 +56,21 @@ function useStore() {
 		};
 	}, [] );
 
+	const cssUniqueClassNames = useMemo( () => {
+		const uniqueClasses: Record< string, boolean > = {};
+
+		if ( cssClassNames && Array.isArray( cssClassNames ) ) {
+			cssClassNames.forEach( ( item ) => {
+				uniqueClasses[ item.name ] = true;
+			} );
+		}
+
+		return uniqueClasses;
+	}, [ cssClassNames ] );
+
 	return {
 		cssClassNames,
+		cssUniqueClassNames,
 		userDefinedClassNames,
 		isSavingSettings,
 		notices,

@@ -1,6 +1,6 @@
 {
 	"name": "@ediamin/css-class-manager",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "An advanced autocomplete additional css class control for your blocks.",
 	"author": "Edi Amin <to.ediamin@gmail.com>",
 	"license": "GPL-3.0",
@@ -28,6 +28,7 @@
 		"@wordpress/plugins": "7.16.0",
 		"@wordpress/scripts": "30.9.0",
 		"ajv": "8.17.1",
+		"fuse.js": "7.1.0",
 		"husky": "9.1.7",
 		"lint-staged": "15.4.0",
 		"nanoid": "3.3.8",

@@ -1,32 +1,45 @@
 import { useMemo } from '@wordpress/element';
+import Fuse from 'fuse.js';
 
-import type { ClassPreset, DropdownOption } from '../types';
+import type {
+	ClassPreset,
+	CombinedClassPreset,
+	DropdownOption,
+} from '../types';
 import type { Props as ReactSelectProps } from 'react-select';
 
 type ClassNameList = ReactSelectProps< DropdownOption, true >[ 'options' ];
 
 function useClassNameList(
-	attributeClassName: string | undefined,
-	cssClassNames: any
+	searchStr: string,
+	cssClassNames: CombinedClassPreset[]
 ): ClassNameList {
-	const classNames: ClassPreset[] = useMemo( () => {
-		return attributeClassName?.length
-			? attributeClassName
-					.split( ' ' )
-					.map( ( item ) => ( { name: item } ) )
-			: [];
-	}, [ attributeClassName ] );
-
 	return useMemo( () => {
-		return classNames
-			.concat( cssClassNames )
-			.sort()
-			.map( ( item ) => ( {
+		if ( ! searchStr ) {
+			return cssClassNames.map( ( item ) => ( {
+				...item,
 				value: item.name,
 				label: item.name,
-				...item,
 			} ) );
-	}, [ classNames, cssClassNames ] );
+		}
+
+		const options = {
+			keys: [ 'name' ],
+			includeMatches: true,
+			threshold: 0.3,
+		};
+
+		const fuse = new Fuse< ClassPreset >( cssClassNames, options );
+
+		const result = fuse.search( searchStr );
+
+		return result.map( ( itemObj ) => ( {
+			...itemObj.item,
+			value: itemObj.item.name,
+			label: itemObj.item.name,
+			matches: itemObj.matches,
+		} ) );
+	}, [ cssClassNames, searchStr ] );
 }
 
 export default useClassNameList;
