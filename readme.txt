@@ -2,7 +2,7 @@
 Contributors: ediamin
 Tags: gutenberg, editor, dropdown, styles, multiple
 Requires at least: 6.6
-Tested up to: 6.7.1
+Tested up to: 6.8.1
 Requires PHP: 7.4
 Stable tag: 1.3.0
 License: GPL-3.0
