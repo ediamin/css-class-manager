@@ -27,7 +27,7 @@ class Plugin
 	/**
 	 * Plugin version number.
 	 */
-	public const VERSION = '1.2.1';
+	public const VERSION = '1.3.0';
 
 	/**
 	 * Plugin ID to use in script handles, actions, filters etc.
