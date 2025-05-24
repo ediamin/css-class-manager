@@ -62,13 +62,17 @@ Use the `css_class_manager_filtered_class_names` filter to add your class names 
 
 == Changelog ==
 
-= 1.2.1  - January 26, 2025 =
+= 1.3.0 - May 24, 2025 =
+* Implement fuzzy search with fuse.js.
+* Fix overlapping typography sizes onto class list dropdown.
+
+= 1.2.1 - January 26, 2025 =
 * Improved the determination of control groups for own panel settings.
 
-= 1.2.0  - January 17, 2025 =
+= 1.2.0 - January 17, 2025 =
 * Add user preference to display the control in its own panel.
 
-= 1.1.0  - November 16, 2024 =
+= 1.1.0 - November 16, 2024 =
 * Allow colon in class names.
 * Fix preference modal tab background color.
 * Bump the minimum WordPress version requirement to 6.6 from 6.5.
@@ -76,5 +80,5 @@ Use the `css_class_manager_filtered_class_names` filter to add your class names 
 * Update scss file and use the @use instead of @import.
 * Upgrade the npm packages to the latest.
 
-= 1.0.0  - May 25, 2024 =
+= 1.0.0 - May 25, 2024 =
 * Initial release.
