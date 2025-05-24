@@ -6,6 +6,7 @@ import {
 } from '@wordpress/components';
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import Fuse from 'fuse.js';
 
 import { useStore } from '../../../hooks';
 import PreferencesModalSection from '../../preferences-modal-section';
@@ -13,7 +14,12 @@ import PreferencesModalSection from '../../preferences-modal-section';
 import ClassForm from './class-form';
 
 import type { ClassPreset, CombinedClassPreset } from '../../../types';
+import type { FuseResultMatch } from 'fuse.js';
 import type { RefObject } from 'react';
+
+interface FilteredClassList extends CombinedClassPreset {
+	matches?: ReadonlyArray< FuseResultMatch >;
+}
 
 const ClassList = () => {
 	const [ search, setSearch ] = useState< string >( '' );
@@ -29,17 +35,24 @@ const ClassList = () => {
 		createErrorNotice,
 	} = useStore();
 
-	const filteredClassList = useMemo( () => {
-		return cssClassNames.filter( ( classItem ) => {
-			if ( ! search.trim() ) {
-				return true;
-			}
+	const filteredClassList: FilteredClassList[] = useMemo( () => {
+		if ( ! search.trim() ) {
+			return cssClassNames;
+		}
 
-			return (
-				classItem.name.includes( search ) ||
-				classItem.description?.includes( search )
-			);
-		} );
+		const options = {
+			keys: [ 'name', 'description' ],
+			includeMatches: true,
+			threshold: 0.3,
+		};
+
+		const fuse = new Fuse< CombinedClassPreset >( cssClassNames, options );
+		const result = fuse.search( search );
+
+		return result.map( ( itemObj ) => ( {
+			...itemObj.item,
+			matches: itemObj.matches,
+		} ) );
 	}, [ cssClassNames, search ] );
 
 	// Searching for items causes sudden height-shrinking jerks.
@@ -131,7 +144,7 @@ const ClassList = () => {
 					<div style={ { minHeight: listMinHeight } }>
 						<Panel>
 							{ filteredClassList.map(
-								( classPreset: CombinedClassPreset ) => {
+								( classPreset: FilteredClassList ) => {
 									return (
 										<PanelBody
 											key={ classPreset.id }
