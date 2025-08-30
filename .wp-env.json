@@ -1,5 +1,5 @@
 {
-	"core": "WordPress/WordPress#6.8.1",
+	"core": "WordPress/WordPress#6.8.2",
 	"phpVersion": "7.4",
 	"mappings": {
 		"wp-content/plugins/css-class-manager": "./",
