@@ -29,6 +29,9 @@ class Hooks
 		add_action( 'init', [ UserSettings::class, 'register_settings' ] );
 		add_action( 'rest_api_init', [ Settings::class, 'register_settings' ] );
 
+		// Body classes.
+		add_action( 'init', [ BodyClasses::class, 'register_post_meta' ] );
+
 		// General assets.
 		add_action( 'init', [ Enqueue::class, 'register_scripts' ] );
 		add_action( 'enqueue_block_editor_assets', [ Enqueue::class, 'enqueue_block_editor_assets' ] );

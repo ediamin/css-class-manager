@@ -2,6 +2,7 @@ import { register } from '@wordpress/data';
 import { addFilter } from '@wordpress/hooks';
 import { registerPlugin } from '@wordpress/plugins';
 
+import BodyClassControlPanel from './body-class-control-panel';
 import HideCoreInspectorControl from './hide-core-inspector-control';
 import InspectorControl from './inspector-control';
 import MenuItem from './menu-item';
@@ -27,6 +28,11 @@ addFilter(
 	'css-class-manager/block-editor/hide-core-inspector-control',
 	HideCoreInspectorControl
 );
+
+// The body class control panel.
+registerPlugin( 'css-class-manager-body-class-control-panel', {
+	render: BodyClassControlPanel,
+} );
 
 // The preference or settings modal.
 registerPlugin( 'css-class-manager-preference-modal', {
