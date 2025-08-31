@@ -31,6 +31,7 @@ class Hooks
 
 		// Body classes.
 		add_action( 'init', [ BodyClasses::class, 'register_post_meta' ] );
+		add_filter( 'body_class', [ BodyClasses::class, 'add_body_classes' ] );
 
 		// General assets.
 		add_action( 'init', [ Enqueue::class, 'register_scripts' ] );

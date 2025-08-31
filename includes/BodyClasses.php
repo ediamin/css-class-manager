@@ -52,8 +52,8 @@ class BodyClasses
 			return '';
 		}
 
-		// Split by spaces and commas, then sanitize each class.
-		$class_array = preg_split( '/[\s,]+/', $classes );
+		// Split by spaces then sanitize each class.
+		$class_array = preg_split( '/\s+/', $classes );
 		$sanitized   = [];
 
 		foreach ( $class_array as $class ) {
@@ -67,5 +67,29 @@ class BodyClasses
 		}
 
 		return implode( ' ', array_unique( $sanitized ) );
+	}
+
+	/**
+	 * Filters the list of CSS body class names for the current post or page.
+	 *
+	 * @param array<string> $classes   An array of body class names.
+	 */
+	public static function add_body_classes( array $classes ): array
+	{
+		$post_id = get_the_ID();
+
+		if ( ! $post_id ) {
+			return $classes;
+		}
+
+		$custom_classes = get_post_meta( $post_id, self::META_KEY, true );
+
+		if ( empty( $custom_classes ) ) {
+			return $classes;
+		}
+
+		$custom_classes_array = explode( ' ', $custom_classes );
+
+		return array_merge( $classes, $custom_classes_array );
 	}
 }
