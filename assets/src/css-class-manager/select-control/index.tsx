@@ -1,14 +1,16 @@
+import { useDispatch } from '@wordpress/data';
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import CreatableSelect from 'react-select/creatable';
 
+import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 import { useClassNameList, useStore } from '../hooks';
 
 import NoOptionsMessage from './no-options-message';
 import OptionLabel from './option-label';
 
 import type { DropdownOption } from '../types';
-import type { FC } from 'react';
+import type { FC, MouseEvent } from 'react';
 import type { InputActionMeta, Props as ReactSelectProps } from 'react-select';
 
 type SelectProps = ReactSelectProps< DropdownOption, true >;
@@ -19,8 +21,8 @@ type FilterOptionOption = SelectProps[ 'filterOption' ];
 interface SelectControlProps {
 	className: string;
 	isSaving: boolean;
+	helpText: string;
 	onChange: ( newValue: string | undefined ) => void;
-	onCreateNew: ( newClassName: string ) => void;
 }
 
 const formatOptionLabel: FormatOptionLabel = (
@@ -40,8 +42,8 @@ const formatOptionLabel: FormatOptionLabel = (
 const SelectControl: FC< SelectControlProps > = ( {
 	className,
 	isSaving,
+	helpText,
 	onChange,
-	onCreateNew,
 } ) => {
 	const [ searchStr, setSearchStr ] = useState( '' );
 	const { cssClassNames, cssUniqueClassNames } = useStore();
@@ -61,9 +63,41 @@ const SelectControl: FC< SelectControlProps > = ( {
 			: [];
 	}, [ className ] );
 
+	const { openModal } = useDispatch( INTERFACE_STORE );
+
+	const {
+		userDefinedClassNames,
+		saveUserDefinedClassNames,
+		startSavingSettings,
+		completedSavingSettings,
+		createErrorNotice,
+	} = useStore();
+
+	const openManager = ( event: MouseEvent< HTMLAnchorElement > ) => {
+		event.preventDefault();
+		openModal( MANAGER_MODAL_NAME );
+	};
+
+	const onCreateNewHandler = async ( newClassName: string ) => {
+		if ( ! newClassName.trim() ) {
+			createErrorNotice(
+				__( 'Class Name cannot be empty', 'css-class-manager' )
+			);
+
+			return;
+		}
+
+		startSavingSettings();
+		await saveUserDefinedClassNames(
+			{ name: newClassName.replaceAll( ' ', '-' ), description: '' },
+			userDefinedClassNames
+		);
+		await completedSavingSettings();
+	};
+
 	const onChangeHandler: OnChangeHandler = ( newValue, actionMeta ) => {
 		if ( actionMeta.action === 'create-option' ) {
-			onCreateNew( actionMeta.option.value );
+			onCreateNewHandler( actionMeta.option.value );
 		}
 
 		onChange(
@@ -100,27 +134,37 @@ const SelectControl: FC< SelectControlProps > = ( {
 	};
 
 	return (
-		<CreatableSelect
-			id="css-class-manager__select"
-			className="css-class-manager__react-select"
-			classNamePrefix="css-class-manager__react-select"
-			menuPlacement="auto"
-			isMulti
-			isDisabled={ isSaving }
-			isLoading={ isSaving }
-			options={ classNameList }
-			onChange={ onChangeHandler }
-			value={ selectedValue }
-			closeMenuOnSelect={ false }
-			noOptionsMessage={ NoOptionsMessage }
-			formatOptionLabel={ formatOptionLabel }
-			filterOption={ filterOption }
-			onInputChange={ onInputChangeHandler }
-			placeholder={ __( 'Select class names', 'css-class-manager' ) }
-			components={ {
-				DropdownIndicator: null,
-			} }
-		/>
+		<>
+			<CreatableSelect
+				id="css-class-manager__select"
+				className="css-class-manager__react-select"
+				classNamePrefix="css-class-manager__react-select"
+				menuPlacement="auto"
+				isMulti
+				isDisabled={ isSaving }
+				isLoading={ isSaving }
+				options={ classNameList }
+				onChange={ onChangeHandler }
+				value={ selectedValue }
+				closeMenuOnSelect={ false }
+				noOptionsMessage={ NoOptionsMessage }
+				formatOptionLabel={ formatOptionLabel }
+				filterOption={ filterOption }
+				onInputChange={ onInputChangeHandler }
+				placeholder={ __( 'Select class names', 'css-class-manager' ) }
+				components={ {
+					DropdownIndicator: null,
+				} }
+			/>
+			<p className="css-class-manager__inspector-control__help-text">
+				{ helpText }
+			</p>
+			<p className="css-class-manager__inspector-control__help-text">
+				<a href="#open-css-class-manager" onClick={ openManager }>
+					{ __( 'Open Class Manager', 'css-class-manager' ) }
+				</a>
+			</p>
+		</>
 	);
 };
 
