@@ -24,7 +24,7 @@ class BodyClasses
 	/**
 	 * Cache for supported post types.
 	 *
-	 * @var array<string, array{has_archive: bool}>
+	 * @var string[]
 	 */
 	private static array $cached_supported_post_types = [];
 
@@ -121,7 +121,12 @@ class BodyClasses
 
 		// Split by spaces then sanitize each class.
 		$class_array = preg_split( '/\s+/', $classes );
-		$sanitized   = [];
+
+		if ( empty( $class_array ) ) {
+			return '';
+		}
+
+		$sanitized = [];
 
 		foreach ( $class_array as $class ) {
 			$clean_class = css_class_manager_sanitize_html_class( $class );
@@ -155,6 +160,7 @@ class BodyClasses
 	 * Filters the list of CSS body class names for the current post or page.
 	 *
 	 * @param string[] $classes   An array of body class names.
+	 * @return string[] Modified array of body class names.
 	 */
 	public static function add_body_classes( array $classes ): array
 	{
@@ -170,7 +176,7 @@ class BodyClasses
 
 		$custom_classes = get_post_meta( $post->ID, self::META_KEY_BODY_CLASSES, true );
 
-		if ( empty( $custom_classes ) ) {
+		if ( empty( $custom_classes ) || ! is_string( $custom_classes ) ) {
 			return $classes;
 		}
 
@@ -196,7 +202,7 @@ class BodyClasses
 		$custom_classes   = get_post_meta( $post->ID, self::META_KEY_BODY_CLASSES, true );
 		$use_in_post_loop = get_post_meta( $post->ID, self::META_KEY_USE_IN_POST_LOOP, true );
 
-		if ( empty( $custom_classes ) || ! $use_in_post_loop ) {
+		if ( empty( $custom_classes ) || ! is_string( $custom_classes ) || ! $use_in_post_loop ) {
 			return $classes;
 		}
 
