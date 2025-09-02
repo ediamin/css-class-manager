@@ -1,5 +1,5 @@
 {
-	"core": "WordPress/WordPress#6.8.1",
+	"core": "WordPress/WordPress#6.8.2",
 	"phpVersion": "7.4",
 	"mappings": {
 		"wp-content/plugins/css-class-manager": "./",
@@ -13,7 +13,8 @@
 	},
 	"env": {
 		"development": {
-			"port": 8888
+			"port": 8888,
+			"phpmyadminPort": 9001
 		},
 		"tests": {
 			"port": 8889

@@ -1,7 +1,8 @@
 import { register } from '@wordpress/data';
-import { addFilter } from '@wordpress/hooks';
+import { addFilter, createHooks } from '@wordpress/hooks';
 import { registerPlugin } from '@wordpress/plugins';
 
+import { AttributeObserver, SettingsPanel } from './body-classes';
 import HideCoreInspectorControl from './hide-core-inspector-control';
 import InspectorControl from './inspector-control';
 import MenuItem from './menu-item';
@@ -11,8 +12,21 @@ import store from './store';
 
 import './styles.scss';
 
+// Create action and filter constructor hooks.
+cssClassManager.hooks = createHooks();
+
 // Register data store.
 register( store );
+
+// The body class settings panel.
+registerPlugin( 'css-class-manager-body-class-settings-panel', {
+	render: SettingsPanel,
+} );
+
+// The body class attribute observer.
+registerPlugin( 'css-class-manager-body-class-attribute-observer', {
+	render: AttributeObserver,
+} );
 
 // The inspector control for the blocks.
 addFilter(

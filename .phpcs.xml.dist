@@ -168,6 +168,9 @@
 		<!-- Ignoring the documentation for array return type. -->
 		<exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification"/>
 
+		<!-- Allow string[] type annotations. -->
+		<exclude name="SlevomatCodingStandard.TypeHints.DisallowArrayTypeHintSyntax.DisallowedArrayTypeHintSyntax"/>
+
 		<!-- Don't want to impose this rule. -->
 		<exclude name="SlevomatCodingStandard.Files.FileLength.FileTooLong"/>
 
@@ -189,6 +192,7 @@
 		<properties>
 			<property name="namespacesRequiredToUse" type="array">
 				<element value="CSSClassManager"/>
+				<element value="WP_Post"/>
 			</property>
 		</properties>
 	</rule>

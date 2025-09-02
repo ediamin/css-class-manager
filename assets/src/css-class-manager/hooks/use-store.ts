@@ -4,7 +4,8 @@ import { useMemo } from '@wordpress/element';
 import { STORE_NAME } from '../constants';
 import store from '../store';
 
-import type { Selectors, UserSettings } from '../store';
+import type { Selectors } from '../store';
+import type { UserSettings } from '../types';
 import type {
 	MapSelect,
 	ReduxStoreConfig,
