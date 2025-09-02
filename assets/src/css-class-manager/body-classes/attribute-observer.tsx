@@ -1,3 +1,13 @@
+/**
+ * This component updates the body class of the iframe inside the block editor
+ * so you can see the applied styles in real-time. Make sure all registered blocks
+ * have a Block API version 3 or higher. Otherwise, iframe will not be generated
+ * and the preview won't work. You can also install and activate the latest Gutenberg
+ * plugin to make it work.
+ *
+ * @see https://github.com/WordPress/gutenberg/issues/53511#issuecomment-1672785421
+ * @see https://make.wordpress.org/core/2023/07/18/miscellaneous-editor-changes-in-wordpress-6-3/#post-editor-iframed
+ */
 import { useEntityProp } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
 import { PluginPostStatusInfo, store as editorStore } from '@wordpress/editor';
