@@ -60,7 +60,7 @@ class Enqueue
 					// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- We need to use the default domain.
 					'panelLabel'            => __( 'Additional CSS class(es)' ),
 					'userDefinedClassNames' => css_class_manager()->get_user_defined_class_names(),
-					'userSettings'          => css_class_manager()->get_user_settings( get_current_user_id() ),
+					'userSettings'          => css_class_manager()->get_user_settings(),
 				]
 			)
 		);

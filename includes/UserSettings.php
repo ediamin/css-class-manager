@@ -17,13 +17,6 @@ class UserSettings
 	public const META_KEY = 'css_class_manager_user_settings';
 
 	/**
-	 * Settings keys.
-	 */
-	public const SETTING_OPTIONS = [
-		'inspectorControlPosition',
-	];
-
-	/**
 	 * Register plugin custom settings.
 	 *
 	 * @see UserSettings interface in the JavaScript.
@@ -35,11 +28,16 @@ class UserSettings
 			self::META_KEY,
 			[
 				'default'      => [
-					'inspectorControlPosition' => 'default',
+					'hideThemeJSONGeneratedClasses' => false,
+					'inspectorControlPosition'      => 'default',
 				],
 				'show_in_rest' => [
 					'schema' => [
 						'properties' => [
+							'hideThemeJSONGeneratedClasses' => [
+								'default' => true,
+								'type'    => 'boolean',
+							],
 							'inspectorControlPosition' => [
 								'default' => 'default',
 								'enum'    => [ 'default', 'own-panel' ],

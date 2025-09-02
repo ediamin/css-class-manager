@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace CSSClassManager;
+
+/**
+ * Manages theme.json generated classes.
+ */
+class ThemeClasses
+{
+	/**
+	 * Add theme.json generated classes to class list.
+	 *
+	 * @param array<array<string,string>> $classes List of existing classes.
+	 * @return array<array<string,string>> Updated list of classes.
+	 */
+	public static function add_theme_classes( array $classes ): array
+	{
+		$user_settings = css_class_manager()->get_user_settings();
+
+		if ( $user_settings['hideThemeJSONGeneratedClasses'] ) {
+			return $classes;
+		}
+
+		$declarations  = wp_get_global_stylesheet( [ 'presets' ] );
+		$declarations .= wp_get_global_stylesheet( [ 'custom-css' ] );
+
+		$class_names = preg_replace( '/\{.+?\}/', ' ', $declarations );
+
+		if ( empty( $class_names ) ) {
+			return $classes;
+		}
+
+		$class_names = explode( ' ', $class_names );
+
+		foreach ( $class_names as $class_name ) {
+			$class_name = trim( $class_name );
+			$class_name = preg_replace( '/^\./', '', $class_name );
+
+			if ( empty( $class_name ) ) {
+				continue;
+			}
+
+			$classes[] = [
+				'name' => $class_name,
+			];
+		}
+
+		return $classes;
+	}
+}

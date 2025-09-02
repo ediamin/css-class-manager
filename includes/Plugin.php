@@ -84,9 +84,18 @@ class Plugin
 	 * @param int $user_id User ID.
 	 * @return array<string,string>
 	 */
-	public function get_user_settings( int $user_id ): array
+	public function get_user_settings( ?int $user_id = null ): array
 	{
-		$settings = get_user_meta( $user_id, UserSettings::META_KEY, true );
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+
+		$settings   = get_metadata_default( 'user', $user_id, UserSettings::META_KEY, true );
+		$raw_values = get_metadata_raw( 'user', $user_id, UserSettings::META_KEY, true );
+
+		if ( ! empty( $raw_values ) && is_array( $raw_values ) && is_array( $settings ) ) {
+			return wp_parse_args( $raw_values, $settings );
+		}
 
 		return is_array( $settings )
 			? $settings
