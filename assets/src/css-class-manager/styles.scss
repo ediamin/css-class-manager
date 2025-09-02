@@ -22,6 +22,8 @@
 			position: absolute;
 			top: 84px;
 			width: 160px;
+			background-color: transparent;
+			border: 0;
 
 			&-item {
 
@@ -39,6 +41,14 @@
 		.components-tab-panel__tab-content {
 			margin-left: 160px;
 			padding-left: 24px;
+		}
+
+		/* stylelint-disable-next-line selector-class-pattern */
+		.preferences-modal__section {
+
+			&-legend {
+				padding: 0;
+			}
 		}
 	}
 
@@ -73,6 +83,8 @@
 			display: flex;
 			flex-direction: column;
 			row-gap: 16px;
+			border: 0;
+			padding: 0;
 
 			&:disabled {
 
@@ -81,6 +93,11 @@
 					opacity: 0.4;
 				}
 			}
+		}
+
+		/* stylelint-disable-next-line selector-class-pattern */
+		label.components-input-control__label {
+			margin-bottom: 0;
 		}
 
 		&__info {

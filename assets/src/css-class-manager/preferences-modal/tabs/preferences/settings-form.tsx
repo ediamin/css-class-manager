@@ -60,7 +60,7 @@ const SettingsForm = () => {
 					'css-class-manager'
 				) }
 				help={ __(
-					'This will hide the automatically generated CSS classes from theme.json files. Please refresh your browser if you change this setting.',
+					'This will hide the automatically generated CSS classes from theme.json. Please refresh your browser if you change this setting.',
 					'css-class-manager'
 				) }
 				onChange={ ( isChecked ) =>
