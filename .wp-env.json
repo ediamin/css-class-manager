@@ -13,7 +13,8 @@
 	},
 	"env": {
 		"development": {
-			"port": 8888
+			"port": 8888,
+			"phpmyadminPort": 9001
 		},
 		"tests": {
 			"port": 8889

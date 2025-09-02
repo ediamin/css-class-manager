@@ -119,6 +119,15 @@
 			font-style: normal;
 			color: var(--css-class-manager-color-gray-700);
 		}
+
+		&__use-in-post-loop {
+			margin-top: 1rem;
+
+			/* stylelint-disable-next-line selector-class-pattern */
+			.components-toggle-control__help {
+				margin-left: 0;
+			}
+		}
 	}
 
 	&__react-select {

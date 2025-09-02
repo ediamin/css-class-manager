@@ -21,8 +21,8 @@ type FilterOptionOption = SelectProps[ 'filterOption' ];
 interface SelectControlProps {
 	className: string;
 	isSaving: boolean;
-	helpText: string;
 	onChange: ( newValue: string | undefined ) => void;
+	children?: React.ReactNode;
 }
 
 const formatOptionLabel: FormatOptionLabel = (
@@ -42,8 +42,8 @@ const formatOptionLabel: FormatOptionLabel = (
 const SelectControl: FC< SelectControlProps > = ( {
 	className,
 	isSaving,
-	helpText,
 	onChange,
+	children,
 } ) => {
 	const [ searchStr, setSearchStr ] = useState( '' );
 	const { cssClassNames, cssUniqueClassNames } = useStore();
@@ -156,9 +156,7 @@ const SelectControl: FC< SelectControlProps > = ( {
 					DropdownIndicator: null,
 				} }
 			/>
-			<p className="css-class-manager__inspector-control__help-text">
-				{ helpText }
-			</p>
+			{ children }
 			<p className="css-class-manager__inspector-control__help-text">
 				<a href="#open-css-class-manager" onClick={ openManager }>
 					{ __( 'Open Class Manager', 'css-class-manager' ) }

@@ -43,6 +43,9 @@ declare global {
 		userDefinedClassNames: ClassPreset[];
 		userSettings: UserSettings;
 		panelLabel: string;
+		bodyClasses: {
+			supportedPostTypes: string[];
+		};
 		hooks: ReturnType< typeof createHooks >;
 	};
 }

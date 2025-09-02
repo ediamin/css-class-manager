@@ -106,11 +106,14 @@ const withCSSClassManagerInspectorControl = createHigherOrderComponent<
 				className={ className ?? '' }
 				isSaving={ isSavingSettings }
 				onChange={ onChangeHandler }
-				helpText={ __(
-					'Select one or more class names from the dropdown by clicking on the options.',
-					'css-class-manager'
-				) }
-			/>
+			>
+				<p className="css-class-manager__inspector-control__help-text">
+					{ __(
+						'Select one or more class names from the dropdown by clicking on the options.',
+						'css-class-manager'
+					) }
+				</p>
+			</SelectControl>
 		);
 
 		return (
