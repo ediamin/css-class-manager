@@ -75,6 +75,9 @@ Use the `css_class_manager_filtered_class_names` filter to add your class names 
 
 == Changelog ==
 
+= 1.4.1 - September 03, 2025 =
+* Fix body classes not adding in pages.
+
 = 1.4.0 - September 03, 2025 =
 * Add Body Classes and Post Classes controls to the post editor for managing body_class and post_class filters.
 * Integrate theme.json generated class names into the class suggestions dropdown.
