@@ -26,7 +26,7 @@ class ThemeClasses
 		$declarations  = wp_get_global_stylesheet( [ 'presets' ] );
 		$declarations .= wp_get_global_stylesheet( [ 'custom-css' ] );
 
-		$class_names = preg_replace( '/\{.+?\}/', ' ', $declarations );
+		$class_names = preg_replace( '/\{.+?\}/s', ' ', $declarations );
 
 		if ( empty( $class_names ) ) {
 			return $classes;
@@ -36,6 +36,12 @@ class ThemeClasses
 
 		foreach ( $class_names as $class_name ) {
 			$class_name = trim( $class_name );
+
+			// If only starts with a dot.
+			if ( substr( $class_name, 0, 1 ) !== '.' ) {
+				continue;
+			}
+
 			$class_name = preg_replace( '/^\./', '', $class_name );
 
 			if ( empty( $class_name ) ) {
