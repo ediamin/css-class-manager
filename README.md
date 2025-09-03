@@ -31,25 +31,28 @@ There are two main motivations behind creating this plugins:
 ## Screenshots
 
 1. The advanced inspector control is located in the Advanced block settings section.
-   ![Advanced inspector control](.wp-org/screenshot-1.png)
+	![Advanced inspector control](.wp-org/screenshot-1.png)
 
 2. Multi-select tag like input control instead of plain text field.
-   ![Multi-select input](.wp-org/screenshot-2.png)
+	![Multi-select input](.wp-org/screenshot-2.png)
 
-3. The CSS Class Manager preference modal window.
-   ![Preference modal](.wp-org/screenshot-3.png)
+3. Add body classes to your posts, pages or custom post types with the Body Classes control located in the Post Tab in the post editor.
+	![Body classes control](.wp-org/screenshot-3.png)
 
-4. The class names saved in the class list will show up in the control dropdown.
-   ![Class list dropdown](.wp-org/screenshot-4.png)
+4. Fuzzy searching with fuse.js.
+	![Fuzzy searching](.wp-org/screenshot-4.png)
 
-5. Delete saved class name so they won't show in the dropdown anymore.
-   ![Delete class name](.wp-org/screenshot-5.png)
+5. You can add your CSS classes and their descriptions in the CSS Class Manager modal.
+	![Add CSS classes](.wp-org/screenshot-5.png)
 
-6. User settings to show the control in its own panel.
-   ![User settings](.wp-org/screenshot-6.png)
+6. Edit your CSS classes and their descriptions in the CSS Class Manager modal.
+	![Edit CSS classes](.wp-org/screenshot-6.png)
 
-7. Import or export your class list.
-   ![Import/Export](.wp-org/screenshot-7.png)
+7. User-specific settings for the plugin.
+	![User settings](.wp-org/screenshot-7.png)
+
+8. Import or export your classes right from the manager modal.
+	![Import/Export](.wp-org/screenshot-8.png)
 
 ## Frequently Asked Questions
 

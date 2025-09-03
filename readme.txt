@@ -39,11 +39,12 @@ There are two main motivations behind creating this plugins:
 
 1. The advanced inspector control is located in the Advanced block settings section.
 2. Multi-select tag like input control instead of plain text field.
-3. The CSS Class Manager preference modal window.
-4. The class names saved in the class list will show up in the control dropdown.
-5. Delete saved class name so they won't show in the dropdown anymore.
-6. User settings to show the control in its own panel.
-7. Import or export your class list.
+3. Add body classes to your posts, pages or custom post types with the Body Classes control located in the Post Tab in the post editor.
+4. Fuzzy searching with fuse.js.
+5. You can add your CSS classes and their descriptions in the CSS Class Manager modal.
+6. Edit your CSS classes and their descriptions in the CSS Class Manager modal.
+7. User-specific settings for the plugin.
+8. Import or export your classes right from the manager modal.
 
 == Frequently Asked Questions ==
 
