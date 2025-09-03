@@ -4,7 +4,7 @@ Tags: gutenberg, editor, dropdown, styles, multiple
 Requires at least: 6.6
 Tested up to: 6.8.2
 Requires PHP: 7.4
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -62,7 +62,7 @@ Under the Additional CSS Class(es) control, you will see a link says Open Class 
 
 = How do the Body Classes and Post Classes work? =
 
-The Body Classes control adds class names to the post's body element using WordPress's body_class filter, while Post Classes adds them to post containers using the post_class filter. These controls are available in the Post tab of the post editor and require the post type to support custom-fields. Note that,
+The Body Classes control adds class names to the post's body element using WordPress's body_class filter, while Post Classes adds them to post containers using the post_class filter. These controls are available in the Post tab of the post editor and require the post type to support custom-fields.
 
 = Can I disable theme.json generated classes? =
 
@@ -74,6 +74,9 @@ Use the `css_class_manager_filtered_class_names` filter to add your class names 
 
 
 == Changelog ==
+
+= 1.4.2 - September 03, 2025 =
+* Fix broken theme class generator when css contains line breaks.
 
 = 1.4.1 - September 03, 2025 =
 * Fix body classes not adding in pages.
