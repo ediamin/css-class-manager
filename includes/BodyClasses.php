@@ -167,7 +167,7 @@ class BodyClasses
 		global $post;
 
 		if (
-			! is_single()
+			! is_singular()
 			|| ! $post instanceof WP_Post
 			|| ! in_array( $post->post_type, self::get_supported_post_types(), true )
 		) {
