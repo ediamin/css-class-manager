@@ -16,6 +16,8 @@ There are two main motivations behind creating this plugins:
 
 - **Advanced Autocomplete Control:** Streamline block styling with autocomplete functionality for CSS classes.
 - **Effortless Class Management:** Easily add, edit, or remove CSS classes directly within the manager interface.
+- **Body and Post Classes:** Add custom class names to post body and post containers using body_class and post_class filters directly from the post editor.
+- **Theme.json Integration:** Automatically include global class names generated from theme.json settings in your class suggestions.
 - **Show the control in its own panel:** User specific settings to show the Addional CSS Class(es) control in its own panel.
 - **Import and Export:** Seamlessly transfer custom CSS class names to ensure consistency across projects.
 
@@ -24,9 +26,11 @@ There are two main motivations behind creating this plugins:
 1. Activate the plugin within your WordPress setup.
 2. The advanced control will replace the default "Additional CSS Class(es)" and can be found in the "Advance" block settings section.
 3. Adding and selecting classes in the autocomplete field is similar to the tags and categories fields.
-4. To edit and manage class names, click the "Open Class Manager" link or select "CSS Class Manager" from the More Menu.
-5. Import/Export can be done from the manager modal.
-6. Use `css_class_manager_filtered_class_names` filter to add class names with PHP files.
+4. To add body or post classes, look for the "Body Classes" and "Post Classes" controls in the Post tab of the post editor (requires custom-fields support). [See the limitations](https://github.com/ediamin/css-class-manager/wiki/Known-Issues#body-classes-preview-in-block-editor)
+5. To edit and manage class names, click the "Open Class Manager" link or select "CSS Class Manager" from the More Menu.
+6. Import/Export can be done from the manager modal.
+7. Theme.json generated classes are automatically included and can be disabled from the Preferences in the manager modal.
+8. Use `css_class_manager_filtered_class_names` filter to add class names with PHP files.
 
 ## Screenshots
 
@@ -56,11 +60,20 @@ There are two main motivations behind creating this plugins:
 
 ## Frequently Asked Questions
 
+### Where can I find the JavaScript and CSS non-compiled source files?
+Please checkout the [GitHub repository](https://github.com/ediamin/css-class-manager) of this plugin to see the sources.
+
 ### How to open the manager modal?
 Under the Additional CSS Class(es) control, you will see a link says Open Class Manager. Click on that to open the CSS Class Manager preferences modal.
 
+### How do the Body Classes and Post Classes work?
+The Body Classes control adds class names to the post's body element using WordPress's body_class filter, while Post Classes adds them to post containers using the post_class filter. These controls are available in the Post tab of the post editor and require the post type to support custom-fields.
+
+### Can I disable theme.json generated classes?
+Yes, you can disable theme.json generated class names from appearing in the dropdown by adjusting the preferences in the CSS Class Manager modal.
+
 ### How to use the PHP filter?
-Use the `css_class_manager_filtered_class_names` filter to add your class names from your plugin or theme. Check out the example code in this [wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-use-the-php-filter) for more details.
+Use the `css_class_manager_filtered_class_names` filter to add your class names from your plugin or theme. Check out the example code in this [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-use-the-php-filter) for more details.
 
 ## Requirements
 
