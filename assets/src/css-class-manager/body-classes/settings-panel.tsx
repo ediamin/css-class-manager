@@ -79,7 +79,7 @@ const SettingsPanel = () => {
 
 		setMeta( {
 			...meta,
-			css_class_manager_body_classes: newValue,
+			css_class_manager_body_classes: newValue ?? '',
 		} );
 
 		cssClassManager.hooks.doAction( 'bodyClasses.settingsPanel.changed', {
