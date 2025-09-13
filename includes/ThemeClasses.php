@@ -23,31 +23,13 @@ class ThemeClasses
 			return $classes;
 		}
 
-		$declarations  = wp_get_global_stylesheet( [ 'presets' ] );
-		$declarations .= wp_get_global_stylesheet( [ 'custom-css' ] );
+		$css  = wp_get_global_stylesheet( [ 'presets' ] );
+		$css .= wp_get_global_stylesheet( [ 'custom-css' ] );
 
-		$class_names = preg_replace( '/\{.+?\}/s', ' ', $declarations );
-
-		if ( empty( $class_names ) ) {
-			return $classes;
-		}
-
-		$class_names = explode( ' ', $class_names );
+		$parser      = new ClassNameParser( $css );
+		$class_names = $parser->get_classes();
 
 		foreach ( $class_names as $class_name ) {
-			$class_name = trim( $class_name );
-
-			// If only starts with a dot.
-			if ( substr( $class_name, 0, 1 ) !== '.' ) {
-				continue;
-			}
-
-			$class_name = preg_replace( '/^\./', '', $class_name );
-
-			if ( empty( $class_name ) ) {
-				continue;
-			}
-
 			$classes[] = [
 				'name' => $class_name,
 			];

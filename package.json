@@ -37,7 +37,7 @@
 	},
 	"scripts": {
 		"prepare": "husky install",
-		"env:start": "wp-env start --xdebug=debug",
+		"env:start": "wp-env start --xdebug=debug,coverage",
 		"env:stop": "wp-env stop",
 		"format": "wp-scripts format",
 		"lint": "npm run composer phpcs . && npm run lint:js && npm run lint:css",
@@ -48,6 +48,8 @@
 		"build": "wp-scripts build",
 		"clean": "rimraf assets/dist",
 		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer analyze",
+		"test:php": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' tests-wordpress vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover coverage.xml --verbose && npm run php:coverage:fix-path",
+		"php:coverage:fix-path": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' tests-wordpress sed -i 's|/var/www/html/wp-content/plugins/css-class-manager/||g' coverage.xml",
 		"make-pot": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli wp i18n make-pot . languages/css-class-manager.pot --include=includes,assets/dist",
 		"zip": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli php zip.php",
 		"make-dist-zip": "npm run clean && npm run make-pot && npm run build && npm run zip"

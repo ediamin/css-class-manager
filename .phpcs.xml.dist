@@ -128,6 +128,9 @@
 		<!-- Not sure about this one. Why do we have to declare a class either abstract or final? -->
 		<exclude name="SlevomatCodingStandard.Classes.RequireAbstractOrFinal.ClassNeitherAbstractNorFinal"/>
 
+		<!-- Ignoring class length restrictions. -->
+		<exclude name="SlevomatCodingStandard.Classes.ClassLength.ClassTooLong"/>
+
 		<!-- Prefer PSR12 - No empty space after or before class braces. -->
 		<exclude name="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces.NoEmptyLineAfterOpeningBrace"/>
 		<exclude name="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces.NoEmptyLineBeforeClosingBrace"/>
@@ -176,6 +179,25 @@
 
 		<!-- This is a bit hard to use. -->
 		<exclude name="SlevomatCodingStandard.Complexity.Cognitive"/>
+
+		<!-- Switch-Case statement -->
+		<exclude name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountAfterControlStructure"/>
+		<exclude name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountBeforeControlStructure"/>
+
+		<!-- Allow post increment operator. -->
+		<exclude name="SlevomatCodingStandard.Operators.DisallowIncrementAndDecrementOperators.DisallowedPostIncrementOperator"/>
+
+		<!-- Allow pre increment operator. -->
+		<exclude name="SlevomatCodingStandard.Operators.DisallowIncrementAndDecrementOperators.DisallowedPreIncrementOperator"/>
+
+		<!-- Allow post decrement operator. -->
+		<exclude name="SlevomatCodingStandard.Operators.DisallowIncrementAndDecrementOperators.DisallowedPreDecrementOperator"/>
+
+		<!-- Allow fully qualified exceptions. -->
+		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedExceptions.NonFullyQualifiedException"/>
+
+		<!-- Allow arrow functions. -->
+		<exclude name="SlevomatCodingStandard.Functions.DisallowArrowFunction.DisallowedArrowFunction"/>
 	</rule>
 
 	<!-- Allowed namespace(after the declare statement). -->
@@ -183,6 +205,7 @@
 		<properties>
 			<property name="rootNamespaces" type="array">
 				<element key="includes" value="CSSClassManager"/>
+				<element key="tests/php/includes" value="CSSClassManager\Tests"/>
 			</property>
 		</properties>
 	</rule>
@@ -193,6 +216,7 @@
 			<property name="namespacesRequiredToUse" type="array">
 				<element value="CSSClassManager"/>
 				<element value="WP_Post"/>
+				<element value="Exception"/>
 			</property>
 		</properties>
 	</rule>
@@ -205,4 +229,33 @@
 		</properties>
 	</rule>
 
+	<!-- Ignore class comment for test classes. -->
+	<rule ref="Squiz.Commenting.ClassComment.Missing">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Ignore function comment for test classes. -->
+	<rule ref="Squiz.Commenting.FunctionComment.Missing">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Allow side effects only in plugin main file. -->
+	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+		<exclude-pattern>css-class-manager.php</exclude-pattern>
+		<exclude-pattern>tests/bootstrap.php</exclude-pattern>
+	</rule>
+
+	<!-- Ignore non-fully qualified class names in test classes. -->
+	<rule ref="SlevomatCodingStandard.Namespaces.UseOnlyWhitelistedNamespaces.NonFullyQualified">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<!-- Ignore line length for test classes. -->
+	<rule ref="Generic.Files.LineLength.TooLong">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
+
+	<rule ref="SlevomatCodingStandard.Files.LineLength.LineTooLong">
+		<exclude-pattern>tests/*</exclude-pattern>
+	</rule>
 </ruleset>
