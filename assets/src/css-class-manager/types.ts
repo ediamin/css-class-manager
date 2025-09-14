@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 export interface ClassPreset {
 	name: string;
 	description?: string;
+	isDynamic?: boolean;
 }
 
 export interface CombinedClassPreset extends ClassPreset {

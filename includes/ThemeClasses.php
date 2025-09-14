@@ -31,7 +31,8 @@ class ThemeClasses
 
 		foreach ( $class_names as $class_name ) {
 			$classes[] = [
-				'name' => $class_name,
+				'isDynamic' => true,
+				'name'      => $class_name,
 			];
 		}
 

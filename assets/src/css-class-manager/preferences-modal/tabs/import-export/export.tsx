@@ -49,6 +49,10 @@ const Export = () => {
 	const exportList = () => {
 		const classList: ClassPreset[] = cssClassNames
 			.filter( ( cssClass ) => {
+				if ( cssClass.isDynamic ) {
+					return false;
+				}
+
 				switch ( states.exportType ) {
 					case 'userDefinedOnly':
 						return ! cssClass.isFilteredClassName;
