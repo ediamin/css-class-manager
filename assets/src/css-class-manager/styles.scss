@@ -206,6 +206,21 @@
 			}
 		}
 	}
+
+	&__inline-element-classes {
+
+		&__popover {
+
+			/* stylelint-disable-next-line selector-class-pattern */
+			> .components-popover__content {
+				overflow: visible !important;
+			}
+		}
+
+		&__settings-panel {
+			min-width: 300px;
+		}
+	}
 }
 
 .components-button {
