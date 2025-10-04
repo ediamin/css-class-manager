@@ -198,6 +198,9 @@
 
 		<!-- Allow arrow functions. -->
 		<exclude name="SlevomatCodingStandard.Functions.DisallowArrowFunction.DisallowedArrowFunction"/>
+
+		<!-- Allow inline doc comments without assignment. -->
+		<exclude name="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration.NoAssignment"/>
 	</rule>
 
 	<!-- Allowed namespace(after the declare statement). -->
@@ -217,6 +220,7 @@
 				<element value="CSSClassManager"/>
 				<element value="WP_Post"/>
 				<element value="Exception"/>
+				<element value="JsonSerializable"/>
 			</property>
 		</properties>
 	</rule>

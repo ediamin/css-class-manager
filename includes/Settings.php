@@ -67,6 +67,17 @@ class Settings
 		$unique_names = array_reduce(
 			css_class_manager()->get_filtered_class_names(),
 			static function ( $acc, $item ) {
+				if ( $item instanceof ClassPreset ) {
+					$acc[ $item->get_name() ] = true;
+
+					return $acc;
+				}
+
+				/**
+				 * Support array formatted class presets as backwards compatibility.
+				 *
+				 * @var array{name: string, description?: string, isDynamic?: bool} $item
+				 */
 				$acc[ $item['name'] ] = true;
 
 				return $acc;

@@ -12,8 +12,8 @@ class ThemeClasses
 	/**
 	 * Add theme.json generated classes to class list.
 	 *
-	 * @param array<array<string,string>> $classes List of existing classes.
-	 * @return array<array<string,string>> Updated list of classes.
+	 * @param array<\CSSClassManager\ClassPreset> $classes List of existing classes.
+	 * @return array<\CSSClassManager\ClassPreset> Updated list of classes.
 	 */
 	public static function add_theme_classes( array $classes ): array
 	{
@@ -37,10 +37,7 @@ class ThemeClasses
 		$class_names = $parser->get_classes();
 
 		foreach ( $class_names as $class_name ) {
-			$classes[] = [
-				'isDynamic' => true,
-				'name'      => $class_name,
-			];
+			$classes[] = new ClassPreset( $class_name, null, true );
 		}
 
 		return $classes;

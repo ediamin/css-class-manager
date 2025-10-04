@@ -11,3 +11,7 @@ parameters:
 		-
 			message: '#Strict comparison using === between 33\|int<0, 9>\|int<11, 31>\|int<35, 38>\|int<42, 91>\|int<93, 255> and 10 will always evaluate to false.#'
 			path: includes/CSSParser/Parser.php
+		-
+			message: '#Unreachable statement - code above always terminates.#'
+			path: includes/Settings.php
+			count: 1

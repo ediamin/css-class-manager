@@ -57,7 +57,7 @@ class Plugin
 	/**
 	 * Get the filtered class names provided by themes and plugins.
 	 *
-	 * @return array<array<string,string>>
+	 * @return array<\CSSClassManager\ClassPreset>
 	 */
 	public function get_filtered_class_names(): array
 	{
@@ -67,12 +67,12 @@ class Plugin
 	/**
 	 * Get the user defined class names.
 	 *
-	 * @return array<array<string,string>>
+	 * @return array<\CSSClassManager\ClassPreset>
 	 */
 	public function get_user_defined_class_names(): array
 	{
 		// phpcs:ignore Generic.Commenting.DocComment.MissingShort
-		/** @var array<array<string,string>> $option Settings from the option table */
+		/** @var array<\CSSClassManager\ClassPreset> $option Settings from the option table */
 		$option = get_option( Settings::OPTION_CLASS_NAMES, [] );
 
 		return $option;
