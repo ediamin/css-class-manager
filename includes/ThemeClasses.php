@@ -26,6 +26,13 @@ class ThemeClasses
 		$css  = wp_get_global_stylesheet( [ 'presets' ] );
 		$css .= wp_get_global_stylesheet( [ 'custom-css' ] );
 
+		/**
+		 * Filter the CSS used to extract theme.json generated classes.
+		 *
+		 * @param string $css The stylesheet in CSS format.
+		 */
+		$css = apply_filters( 'css_class_manager_theme_classes_css', $css );
+
 		$parser      = new ClassNameParser( $css );
 		$class_names = $parser->get_classes();
 
