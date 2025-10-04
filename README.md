@@ -43,20 +43,23 @@ There are two main motivations behind creating this plugins:
 3. Add body classes to your posts, pages or custom post types with the Body Classes control located in the Post Tab in the post editor.
 	![Body classes control](.wp-org/screenshot-3.png)
 
-4. Fuzzy searching with fuse.js.
+4. Add inline classes to the selected text from the text formatting tools options.
 	![Fuzzy searching](.wp-org/screenshot-4.png)
 
-5. You can add your CSS classes and their descriptions in the CSS Class Manager modal.
-	![Add CSS classes](.wp-org/screenshot-5.png)
+5. Fuzzy searching with fuse.js.
+	![Fuzzy searching](.wp-org/screenshot-5.png)
 
-6. Edit your CSS classes and their descriptions in the CSS Class Manager modal.
-	![Edit CSS classes](.wp-org/screenshot-6.png)
+6. You can add your CSS classes and their descriptions in the CSS Class Manager modal.
+	![Add CSS classes](.wp-org/screenshot-6.png)
 
-7. User-specific settings for the plugin.
-	![User settings](.wp-org/screenshot-7.png)
+7. Edit your CSS classes and their descriptions in the CSS Class Manager modal.
+	![Edit CSS classes](.wp-org/screenshot-7.png)
 
-8. Import or export your classes right from the manager modal.
-	![Import/Export](.wp-org/screenshot-8.png)
+8. User-specific settings for the plugin.
+	![User settings](.wp-org/screenshot-8.png)
+
+9. Import or export your classes right from the manager modal.
+	![Import/Export](.wp-org/screenshot-9.png)
 
 ## Frequently Asked Questions
 
