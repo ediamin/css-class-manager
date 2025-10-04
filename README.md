@@ -17,6 +17,7 @@ There are two main motivations behind creating this plugins:
 - **Advanced Autocomplete Control:** Streamline block styling with autocomplete functionality for CSS classes.
 - **Effortless Class Management:** Easily add, edit, or remove CSS classes directly within the manager interface.
 - **Body and Post Classes:** Add custom class names to post body and post containers using body_class and post_class filters directly from the post editor.
+- **Inline CSS Classes:** Add custom class names to any selected text inside paragraph, heading and other blocks that support Rich Text.
 - **Theme.json Integration:** Automatically include global class names generated from theme.json settings in your class suggestions.
 - **Show the control in its own panel:** User specific settings to show the Addional CSS Class(es) control in its own panel.
 - **Import and Export:** Seamlessly transfer custom CSS class names to ensure consistency across projects.
@@ -27,10 +28,11 @@ There are two main motivations behind creating this plugins:
 2. The advanced control will replace the default "Additional CSS Class(es)" and can be found in the "Advance" block settings section.
 3. Adding and selecting classes in the autocomplete field is similar to the tags and categories fields.
 4. To add body or post classes, look for the "Body Classes" and "Post Classes" controls in the Post tab of the post editor (requires custom-fields support). [See the limitations](https://github.com/ediamin/css-class-manager/wiki/Known-Issues#body-classes-preview-in-block-editor)
-5. To edit and manage class names, click the "Open Class Manager" link or select "CSS Class Manager" from the More Menu.
-6. Import/Export can be done from the manager modal.
-7. Theme.json generated classes are automatically included and can be disabled from the Preferences in the manager modal.
-8. Use `css_class_manager_filtered_class_names` filter to add class names with PHP files.
+5. To add inline classes to the selected text, use the block format tool control in the text formatting tools options (available in blocks that support Rich Text).
+6. To edit and manage class names, click the "Open Class Manager" link or select "CSS Class Manager" from the More Menu.
+7. Import/Export can be done from the manager modal.
+8. Theme.json generated classes are automatically included and can be disabled from the Preferences in the manager modal.
+9. Use `css_class_manager_filtered_class_names` filter to add class names with PHP files.
 
 ## Screenshots
 
