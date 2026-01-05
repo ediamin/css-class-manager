@@ -18,22 +18,22 @@
 		"npm": ">=10.9.2"
 	},
 	"devDependencies": {
-		"@types/wordpress__block-editor": "11.5.17",
-		"@wordpress/api-fetch": "7.29.0",
-		"@wordpress/components": "30.2.0",
-		"@wordpress/data": "9.28.0",
-		"@wordpress/editor": "14.29.0",
-		"@wordpress/env": "10.29.0",
-		"@wordpress/icons": "10.29.0",
-		"@wordpress/plugins": "7.29.0",
-		"@wordpress/scripts": "30.22.0",
+		"@types/wordpress__block-editor": "14.21.8",
+		"@wordpress/api-fetch": "7.37.0",
+		"@wordpress/components": "31.0.0",
+		"@wordpress/data": "10.37.0",
+		"@wordpress/editor": "14.37.0",
+		"@wordpress/env": "10.37.0",
+		"@wordpress/icons": "11.4.0",
+		"@wordpress/plugins": "7.37.0",
+		"@wordpress/scripts": "31.2.0",
 		"ajv": "8.17.1",
 		"fuse.js": "7.1.0",
 		"husky": "9.1.7",
-		"lint-staged": "16.1.5",
+		"lint-staged": "16.2.7",
 		"nanoid": "3.3.11",
 		"react-select": "5.10.2",
-		"typescript": "5.9.2"
+		"typescript": "5.9.3"
 	},
 	"scripts": {
 		"prepare": "husky install",
