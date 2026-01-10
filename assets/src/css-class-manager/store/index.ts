@@ -1,15 +1,16 @@
 import apiFetch from '@wordpress/api-fetch';
+import { SnackbarList } from '@wordpress/components';
 import { createReduxStore, dispatch, select } from '@wordpress/data';
 import { __, sprintf } from '@wordpress/i18n';
-// @ts-ignore Not sure why it shows the error.
 import { nanoid } from 'nanoid/non-secure';
 
 import { STORE_NAME } from '../constants';
 
 import type { ClassPreset, CombinedClassPreset, UserSettings } from '../types';
-import type { SnackbarListProps } from '@wordpress/components/src/snackbar/types';
-import type { ActionCreator } from '@wordpress/data/src/types';
+import type { ActionCreator } from '@wordpress/data';
+import type { ComponentProps } from 'react';
 
+type SnackbarListProps = ComponentProps< typeof SnackbarList >;
 type Notices = SnackbarListProps[ 'notices' ];
 type RemoveNotice = SnackbarListProps[ 'onRemove' ];
 

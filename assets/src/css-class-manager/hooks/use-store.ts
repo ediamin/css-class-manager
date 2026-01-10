@@ -5,12 +5,41 @@ import { STORE_NAME } from '../constants';
 import store from '../store';
 
 import type { Selectors } from '../store';
-import type { UserSettings } from '../types';
+import type { ClassPreset, CombinedClassPreset, UserSettings } from '../types';
 import type {
 	MapSelect,
 	ReduxStoreConfig,
 	StoreDescriptor,
-} from '@wordpress/data/src/types';
+} from '@wordpress/data';
+
+interface UseStore {
+	cssClassNames: ReturnType< Selectors[ 'getCssClassNames' ] >;
+	cssUniqueClassNames: Record< string, boolean >;
+	userDefinedClassNames: ReturnType<
+		Selectors[ 'getUserDefinedClassNames' ]
+	>;
+	isSavingSettings: ReturnType< Selectors[ 'isSavingSettings' ] >;
+	notices: ReturnType< Selectors[ 'getNotices' ] >;
+	userSettings: UserSettings;
+	panelLabel: string;
+	createSuccessNotice: ( message: string ) => void;
+	createErrorNotice: ( message: string ) => void;
+	removeNotice: ( id: string ) => void;
+	startSavingSettings: () => void;
+	completedSavingSettings: () => void;
+	saveUserDefinedClassNames: (
+		classPreset: ClassPreset,
+		userDefinedClassNames: ReturnType<
+			Selectors[ 'getUserDefinedClassNames' ]
+		>,
+		previousClassPreset?: CombinedClassPreset
+	) => void;
+	deleteUserDefinedClassName: (
+		classPreset: CombinedClassPreset,
+		userDefinedClassNames: CombinedClassPreset[]
+	) => void;
+	updateUserSettings: ( userSettings: UserSettings ) => void;
+}
 
 interface SelectFunctionParam
 	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
@@ -26,7 +55,7 @@ interface UseSelectReturn {
 	panelLabel: string;
 }
 
-function useStore() {
+function useStore(): UseStore {
 	const {
 		createSuccessNotice,
 		createErrorNotice,

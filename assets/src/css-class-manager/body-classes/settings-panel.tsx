@@ -14,7 +14,7 @@ import type {
 	MapSelect,
 	ReduxStoreConfig,
 	StoreDescriptor,
-} from '@wordpress/data/src/types';
+} from '@wordpress/data';
 
 interface Selectors {
 	getCurrentPostType: ( state: Object ) => string;

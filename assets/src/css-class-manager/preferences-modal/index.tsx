@@ -13,7 +13,7 @@ import type {
 	MapSelect,
 	ReduxStoreConfig,
 	StoreDescriptor,
-} from '@wordpress/data/src/types';
+} from '@wordpress/data';
 
 interface Selectors {
 	isModalActive: ( state: any, modalName: string ) => boolean;
