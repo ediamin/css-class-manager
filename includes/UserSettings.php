@@ -28,12 +28,17 @@ class UserSettings
 			self::META_KEY,
 			[
 				'default'      => [
-					'hideThemeJSONGeneratedClasses' => false,
-					'inspectorControlPosition'      => 'default',
+					'allowAddingClassNamesWithoutCreating' => false,
+					'hideThemeJSONGeneratedClasses'        => false,
+					'inspectorControlPosition'             => 'default',
 				],
 				'show_in_rest' => [
 					'schema' => [
 						'properties' => [
+							'allowAddingClassNamesWithoutCreating' => [
+								'default' => false,
+								'type'    => 'boolean',
+							],
 							'hideThemeJSONGeneratedClasses' => [
 								'default' => true,
 								'type'    => 'boolean',
