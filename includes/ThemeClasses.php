@@ -27,7 +27,7 @@ class ThemeClasses
 		$css .= wp_get_global_stylesheet( [ 'custom-css' ] );
 
 		/**
-		 * Filter the CSS used to extract theme.json generated classes.
+		 * The CSS from which class names are extracted.
 		 *
 		 * @param string $css The stylesheet in CSS format.
 		 */

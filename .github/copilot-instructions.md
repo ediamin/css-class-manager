@@ -285,6 +285,8 @@ __( 'Text to translate', 'css-class-manager' )
 ### Filters & Actions
 - `css_class_manager_filtered_class_names`: Add custom class names
 - `css_class_manager_localized_data`: Modify localized JavaScript data
+- `css_class_manager_body_class_unsupported_post_types`: Modify unsupported post types for body classes.
+- `css_class_manager_theme_classes_css`: The CSS from which class names are extracted.
 - `css_class_manager_before_init`: Hook before plugin initialization
 - `css_class_manager_init`: Hook after plugin initialization
 
