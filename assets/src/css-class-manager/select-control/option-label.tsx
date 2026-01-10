@@ -1,12 +1,10 @@
-import { __, sprintf } from '@wordpress/i18n';
-
 import type { DropdownOption } from '../types';
 import type { FC } from 'react';
 
 const OptionLabel: FC< DropdownOption > = ( {
 	name,
+	label,
 	description,
-	value,
 	__isNew__,
 	matches,
 } ) => {
@@ -47,13 +45,7 @@ const OptionLabel: FC< DropdownOption > = ( {
 	return (
 		<>
 			{ __isNew__ ? (
-				<div>
-					{ sprintf(
-						// translators: %s: New class name.
-						__( 'Create "%s"', 'css-class-manager' ),
-						value.replaceAll( ' ', '-' )
-					) }
-				</div>
+				<div>{ label }</div>
 			) : (
 				<>
 					{ renderHighlightedName() }

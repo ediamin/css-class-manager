@@ -53,7 +53,6 @@ const SettingsForm = () => {
 			/>
 
 			<ToggleControl
-				__nextHasNoMarginBottom
 				checked={ userSettings.hideThemeJSONGeneratedClasses }
 				label={ __(
 					'Hide theme.json generated classes.',
@@ -71,6 +70,30 @@ const SettingsForm = () => {
 						  )
 						: updateSettings(
 								'hideThemeJSONGeneratedClasses',
+								false
+						  )
+				}
+			/>
+
+			<ToggleControl
+				__nextHasNoMarginBottom
+				checked={ userSettings.allowAddingClassNamesWithoutCreating }
+				label={ __(
+					'Press Space to add class names without creating them.',
+					'css-class-manager'
+				) }
+				help={ __(
+					'This will allow you to add CSS classes directly without saving them to the class manager list.',
+					'css-class-manager'
+				) }
+				onChange={ ( isChecked ) =>
+					isChecked
+						? updateSettings(
+								'allowAddingClassNamesWithoutCreating',
+								true
+						  )
+						: updateSettings(
+								'allowAddingClassNamesWithoutCreating',
 								false
 						  )
 				}

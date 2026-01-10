@@ -8,7 +8,7 @@ Stable tag: 1.5.0
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Enhance WordPress block editor with advanced autocomplete CSS class control, inline text styling, body/post classes, and powerful class management tools.
+Advanced autocomplete CSS class control for blocks with inline styling, body/post classes, and powerful management tools.
 
 == Description ==
 

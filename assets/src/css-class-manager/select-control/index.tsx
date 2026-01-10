@@ -6,6 +6,7 @@ import CreatableSelect from 'react-select/creatable';
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
 import { useClassNameList, useStore } from '../hooks';
 
+import getNewOptionData from './get-new-option-data';
 import NoOptionsMessage from './no-options-message';
 import OptionLabel from './option-label';
 
@@ -45,8 +46,9 @@ const SelectControl: FC< SelectControlProps > = ( {
 	onChange,
 	children,
 } ) => {
+	const [ inputValue, setInputValue ] = useState( '' );
 	const [ searchStr, setSearchStr ] = useState( '' );
-	const { cssClassNames, cssUniqueClassNames } = useStore();
+	const { cssClassNames, cssUniqueClassNames, userSettings } = useStore();
 	const classNameList = useClassNameList( searchStr, cssClassNames );
 
 	const selectedValue = useMemo( () => {
@@ -114,7 +116,27 @@ const SelectControl: FC< SelectControlProps > = ( {
 		newValue: string,
 		actionMeta: InputActionMeta
 	) => {
+		// Keep updating the inputValue.
+		setInputValue( newValue );
+
 		if ( actionMeta.action === 'input-change' ) {
+			if (
+				// Use Space to add class name without creating it.
+				userSettings.allowAddingClassNamesWithoutCreating &&
+				// Check if last character is space.
+				newValue.slice( -1 ) === ' '
+			) {
+				setInputValue( '' );
+
+				onChange(
+					newValue.length
+						? className + ' ' + newValue.trim()
+						: className
+				);
+				setSearchStr( '' );
+				return;
+			}
+
 			setSearchStr( newValue );
 			return;
 		}
@@ -122,10 +144,10 @@ const SelectControl: FC< SelectControlProps > = ( {
 		setSearchStr( '' );
 	};
 
-	const filterOption: FilterOptionOption = ( option, inputValue ) => {
+	const filterOption: FilterOptionOption = ( option, inputVal ) => {
 		if (
 			option.data.__isNew__ &&
-			cssUniqueClassNames[ inputValue.trim().replaceAll( ' ', '-' ) ]
+			cssUniqueClassNames[ inputVal.trim().replaceAll( ' ', '-' ) ]
 		) {
 			return false;
 		}
@@ -150,7 +172,15 @@ const SelectControl: FC< SelectControlProps > = ( {
 				noOptionsMessage={ NoOptionsMessage }
 				formatOptionLabel={ formatOptionLabel }
 				filterOption={ filterOption }
+				inputValue={ inputValue }
 				onInputChange={ onInputChangeHandler }
+				getNewOptionData={ ( inputVal, optionLabel ) =>
+					getNewOptionData(
+						inputVal,
+						optionLabel,
+						userSettings.allowAddingClassNamesWithoutCreating
+					)
+				}
 				placeholder={ __( 'Select class names', 'css-class-manager' ) }
 				components={ {
 					DropdownIndicator: null,
