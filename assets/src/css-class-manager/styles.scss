@@ -50,6 +50,14 @@
 				padding: 0;
 			}
 		}
+
+		&__rate-plugin {
+			width: 165px;
+			position: absolute;
+			left: 16px;
+			bottom: 0;
+			margin-bottom: 1rem;
+		}
 	}
 
 	&__tab-class-list {

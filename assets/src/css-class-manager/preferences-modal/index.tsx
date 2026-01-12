@@ -1,5 +1,6 @@
 import { Modal } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 import { INTERFACE_STORE, MANAGER_MODAL_NAME } from '../constants';
@@ -22,7 +23,11 @@ interface Selectors {
 interface SelectFunctionParam
 	extends StoreDescriptor< ReduxStoreConfig< any, any, Selectors > > {}
 
+const HAS_CLICKED_RATING = 'css_class_manager_has_clicked_rating';
+
 const PreferencesModal = () => {
+	const [ hasRated, setHasRated ] = useState< boolean >( false );
+
 	const isModalActive: boolean = useSelect< MapSelect >( ( select ) => {
 		return select< SelectFunctionParam >(
 			INTERFACE_STORE as any
@@ -30,6 +35,16 @@ const PreferencesModal = () => {
 	}, [] );
 
 	const { openModal, closeModal } = useDispatch( INTERFACE_STORE );
+
+	useEffect( () => {
+		const rated = localStorage.getItem( HAS_CLICKED_RATING );
+		setHasRated( rated === 'true' );
+	}, [] );
+
+	const handleRatingClick = () => {
+		localStorage.setItem( HAS_CLICKED_RATING, 'true' );
+		setHasRated( true );
+	};
 
 	const toggleModal = () => {
 		return isModalActive ? closeModal() : openModal( MANAGER_MODAL_NAME );
@@ -49,6 +64,19 @@ const PreferencesModal = () => {
 			onRequestClose={ toggleModal }
 		>
 			<PreferencesModalTabs sections={ sections } />
+			{ ! hasRated && (
+				<p className="css-class-manager__preferences-modal__rate-plugin">
+					<a
+						href="https://wordpress.org/support/plugin/css-class-manager/reviews/?rate=5#new-post"
+						target="_blank"
+						rel="noreferrer"
+						onClick={ handleRatingClick }
+						className="css-class-manager__rating-link"
+					>
+						{ __( 'Rate the plugin', 'css-class-manager' ) } ★★★★★
+					</a>
+				</p>
+			) }
 		</Modal>
 	);
 };
