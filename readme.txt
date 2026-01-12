@@ -2,7 +2,7 @@
 Contributors: ediamin
 Tags: gutenberg, editor, dropdown, styles, multiple
 Requires at least: 6.6
-Tested up to: 6.8.3
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 1.5.0
 License: GPL-3.0
@@ -26,6 +26,7 @@ There are two main motivations behind creating this plugins:
 - **Inline CSS Classes:** Add custom class names to any selected text inside paragraph, heading and other blocks that support Rich Text.
 - **Theme.json Integration:** Automatically include global class names generated from theme.json settings in your class suggestions.
 - **Show the control in its own panel:** User specific settings to show the Addional CSS Class(es) control in its own panel.
+- **Add classes without saving to the database:** User specific settings to toggle saving classes to the database.
 - **Import and Export:** Seamlessly transfer custom CSS class names to ensure consistency across projects.
 
 == Getting Started ==
@@ -75,8 +76,16 @@ Yes, you can disable theme.json generated class names from appearing in the drop
 
 Use the `css_class_manager_filtered_class_names` filter to add your class names from your plugin or theme. Check out the example code in this [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-use-the-php-filter) for more details.
 
+= How can I add class names without saving them to the database? =
+
+You can enable the option 'Press Space to add class names without creating them.' to add class names without saving them to the database from the Preferences settings in the CSS Class Manager modal. This setting is user-specific and allows you to manage class names temporarily during your editing session. For more details, please refer to the [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-add-css-classes-without-saving-them-to-the-database-or-class-manager-list).
+
 
 == Changelog ==
+
+= 1.6.0 - January 12, 2026 =
+* Add classes without saving to the database feature.
+* Add an user preference to toggle saving classes to the database.
 
 = 1.5.0 - October 04, 2025 =
 * Add Inline Element Classes feature to add custom class names to selected text inside paragraph, heading and other blocks that support Rich Text.
