@@ -20,6 +20,7 @@ There are two main motivations behind creating this plugins:
 - **Inline CSS Classes:** Add custom class names to any selected text inside paragraph, heading and other blocks that support Rich Text.
 - **Theme.json Integration:** Automatically include global class names generated from theme.json settings in your class suggestions.
 - **Show the control in its own panel:** User specific settings to show the Addional CSS Class(es) control in its own panel.
+- **Add classes without saving to the database:** User specific settings to toggle saving classes to the database.
 - **Import and Export:** Seamlessly transfer custom CSS class names to ensure consistency across projects.
 
 ## Getting Started
@@ -79,6 +80,9 @@ Yes, you can disable theme.json generated class names from appearing in the drop
 
 ### How to use the PHP filter?
 Use the `css_class_manager_filtered_class_names` filter to add your class names from your plugin or theme. Check out the example code in this [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-use-the-php-filter) for more details.
+
+### How can I add class names without saving them to the database?
+You can enable the option 'Press Space to add class names without creating them.' to add class names without saving them to the database from the Preferences settings in the CSS Class Manager modal. This setting is user-specific and allows you to manage class names temporarily during your editing session. For more details, please refer to the [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-add-css-classes-without-saving-them-to-the-database-or-class-manager-list).
 
 ## Requirements
 
