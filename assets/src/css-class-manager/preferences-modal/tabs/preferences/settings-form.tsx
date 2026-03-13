@@ -55,11 +55,11 @@ const SettingsForm = () => {
 			<ToggleControl
 				checked={ userSettings.hideThemeJSONGeneratedClasses }
 				label={ __(
-					'Hide theme.json generated classes.',
+					'Hide theme.json generated classes in the list.',
 					'css-class-manager'
 				) }
 				help={ __(
-					'This will hide the automatically generated CSS classes from theme.json. Please refresh your browser if you change this setting.',
+					'This will hide the automatically generated CSS classes from theme.json in the class name control list. Please refresh your browser if you change this setting.',
 					'css-class-manager'
 				) }
 				onChange={ ( isChecked ) =>
