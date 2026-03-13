@@ -78,6 +78,9 @@
 
 		<!-- Handle with the SlevomatCodingStandard. -->
 		<exclude name="Squiz.Commenting.VariableComment.MissingVar"/>
+
+		<!-- Open brace for a function should always be on a new line. -->
+		<exclude name="Squiz.Functions.MultiLineFunctionDeclaration.NewlineBeforeOpenBrace"/>
 	</rule>
 	<rule ref="WordPress-Core">
 		<!-- Let's stop using Yoda. -->
@@ -134,6 +137,9 @@
 		<!-- Prefer PSR12 - No empty space after or before class braces. -->
 		<exclude name="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces.NoEmptyLineAfterOpeningBrace"/>
 		<exclude name="SlevomatCodingStandard.Classes.EmptyLinesAroundClassBraces.NoEmptyLineBeforeClosingBrace"/>
+
+		<!-- Allow multi line method signatures. -->
+		<exclude name="SlevomatCodingStandard.Classes.RequireSingleLineMethodSignature.RequiredSingleLineSignature"/>
 
 		<!-- Allow using global functions without using a namespace. -->
 		<exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified"/>

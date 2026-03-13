@@ -8,6 +8,7 @@ export interface ClassPreset {
 	name: string;
 	description?: string;
 	isDynamic?: boolean;
+	priority?: number;
 }
 
 export interface CombinedClassPreset extends ClassPreset {
