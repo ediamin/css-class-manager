@@ -65,6 +65,7 @@
 		/* stylelint-disable-next-line selector-class-pattern */
 		.edit-post-block-manager__search {
 			margin-top: 0;
+			margin-bottom: 1rem;
 		}
 
 		/* stylelint-disable-next-line selector-class-pattern */
@@ -235,6 +236,14 @@
 
 		&__settings-panel {
 			min-width: 300px;
+		}
+	}
+
+	&__toggle-control {
+
+		/* stylelint-disable-next-line selector-class-pattern */
+		.components-base-control__help {
+			margin-bottom: 1rem;
 		}
 	}
 }

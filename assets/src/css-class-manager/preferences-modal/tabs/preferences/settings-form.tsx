@@ -28,6 +28,7 @@ const SettingsForm = () => {
 			) }
 		>
 			<ToggleControl
+				className="css-class-manager__toggle-control"
 				checked={
 					userSettings.inspectorControlPosition === 'own-panel'
 				}
@@ -53,6 +54,7 @@ const SettingsForm = () => {
 			/>
 
 			<ToggleControl
+				className="css-class-manager__toggle-control"
 				checked={ userSettings.hideThemeJSONGeneratedClasses }
 				label={ __(
 					'Hide theme.json generated classes in the list.',
@@ -76,6 +78,7 @@ const SettingsForm = () => {
 			/>
 
 			<ToggleControl
+				className="css-class-manager__toggle-control"
 				__nextHasNoMarginBottom
 				checked={ userSettings.allowAddingClassNamesWithoutCreating }
 				label={ __(
