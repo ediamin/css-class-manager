@@ -2,9 +2,9 @@
 Contributors: ediamin
 Tags: gutenberg, editor, dropdown, styles, multiple
 Requires at least: 6.6
-Tested up to: 6.9
+Tested up to: 6.9.4
 Requires PHP: 7.4
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPL-3.0
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -14,9 +14,9 @@ Advanced autocomplete CSS class control for blocks with inline styling, body/pos
 
 Struggling with adding multiple CSS classes to your WordPress blocks? CSS Class Manager simplifies the process with autocomplete suggestions and a dedicated manager for adding, editing, and organizing your classes. Boost your block styling efficiency!
 
-There are two main motivations behind creating this plugins:
+There are two main motivations behind creating this plugin:
 **Limitation of Block Style** - When applying a block style, only one CSS class can be added to a block. Unfortunately, the block editor lacks the ability to select multiple block styles. To address this, users must resort to the Additional CSS Class(es) inspector control to apply multiple classes. CSS Class Manager provides a powerful manager and an autocomplete inspector control, enabling users to easily add and apply CSS classes to their blocks.
-**Poor UX of the Addional CSS Class(es) control** - The default control for adding class names is a simple text input. This can be cumbersome, especially when applying CSS classes frequently. With the custom inspector control provided by CSS Class Manager, users can effortlessly add their class names, enhancing the user experience.
+**Poor UX of the Additional CSS Class(es) control** - The default control for adding class names is a simple text input. This can be cumbersome, especially when applying CSS classes frequently. With the custom inspector control provided by CSS Class Manager, users can effortlessly add their class names, enhancing the user experience.
 
 == Features ==
 
@@ -25,7 +25,7 @@ There are two main motivations behind creating this plugins:
 - **Body and Post Classes:** Add custom class names to post body and post containers using body_class and post_class filters directly from the post editor.
 - **Inline CSS Classes:** Add custom class names to any selected text inside paragraph, heading and other blocks that support Rich Text.
 - **Theme.json Integration:** Automatically include global class names generated from theme.json settings in your class suggestions.
-- **Show the control in its own panel:** User specific settings to show the Addional CSS Class(es) control in its own panel.
+- **Show the control in its own panel:** User specific settings to show the Additional CSS Class(es) control in its own panel.
 - **Add classes without saving to the database:** User specific settings to toggle saving classes to the database.
 - **Import and Export:** Seamlessly transfer custom CSS class names to ensure consistency across projects.
 
@@ -80,8 +80,15 @@ Use the `css_class_manager_filtered_class_names` filter to add your class names 
 
 You can enable the option 'Press Space to add class names without creating them.' to add class names without saving them to the database from the Preferences settings in the CSS Class Manager modal. This setting is user-specific and allows you to manage class names temporarily during your editing session. For more details, please refer to the [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-add-css-classes-without-saving-them-to-the-database-or-class-manager-list).
 
+= How to use the priority property for class presets? =
+
+You can set a priority for your class presets to control the order in which they are applied. Higher priority classes will be applied before lower priority ones. For more details, please refer to the [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-use-the-priority-property-for-class-presets).
+
 
 == Changelog ==
+
+= 1.6.1 - March 26, 2026 =
+* Add priority option for class names. [See documentation for more details.](https://github.com/ediamin/css-class-manager/wiki#how-to-use-the-priority-property-for-class-presets)
 
 = 1.6.0 - January 12, 2026 =
 * Add classes without saving to the database feature.

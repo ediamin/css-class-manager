@@ -84,6 +84,10 @@ Use the `css_class_manager_filtered_class_names` filter to add your class names 
 ### How can I add class names without saving them to the database?
 You can enable the option 'Press Space to add class names without creating them.' to add class names without saving them to the database from the Preferences settings in the CSS Class Manager modal. This setting is user-specific and allows you to manage class names temporarily during your editing session. For more details, please refer to the [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-add-css-classes-without-saving-them-to-the-database-or-class-manager-list).
 
+### How to use the priority property for class presets?
+You can set a priority for your class presets to control the order in which they are applied. Higher priority classes will be applied before lower priority ones. For more details, please refer to the [GitHub wiki page](https://github.com/ediamin/css-class-manager/wiki#how-to-use-the-priority-property-for-class-presets).
+
+
 ## Requirements
 
 - WordPress 6.6 or higher.
