@@ -10,6 +10,10 @@ on:
       - main
       - trunk
 
+# Restrict the default GITHUB_TOKEN to read-only for all jobs.
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
