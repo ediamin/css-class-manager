@@ -1,0 +1,163 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+      - trunk
+  pull_request:
+    branches:
+      - main
+      - trunk
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # PHP unit & integration tests with code coverage
+  # ---------------------------------------------------------------------------
+  php:
+    name: PHP Tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: ['7.4']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: xdebug
+          tools: composer
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          restore-keys: composer-${{ matrix.php }}-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Start wp-env (with Xdebug coverage mode)
+        run: npm run env:start
+
+      - name: Run PHP tests with coverage
+        run: npm run test:php
+
+      - name: Upload PHP coverage report (Clover)
+        uses: actions/upload-artifact@v4
+        with:
+          name: php-coverage-clover
+          path: coverage.xml
+          if-no-files-found: warn
+
+      - name: Upload PHP coverage report (HTML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: php-coverage-html
+          path: coverage/php
+          if-no-files-found: warn
+
+      - name: Upload JUnit test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: php-junit-results
+          path: junit.xml
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # JavaScript unit tests with coverage
+  # ---------------------------------------------------------------------------
+  js:
+    name: JavaScript Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Run JavaScript unit tests with coverage
+        run: npm run test:js:coverage
+
+      - name: Upload JS coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: js-coverage
+          path: coverage/js
+          if-no-files-found: warn
+
+  # ---------------------------------------------------------------------------
+  # Playwright E2E tests
+  # ---------------------------------------------------------------------------
+  e2e:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Start wp-env (no Xdebug overhead for E2E)
+        run: wp-env start
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload Playwright HTML report
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 14
+
+      - name: Upload E2E JUnit results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-junit-results
+          path: e2e-results.xml
+          if-no-files-found: warn
