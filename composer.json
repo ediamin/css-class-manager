@@ -22,6 +22,11 @@
 			"includes/functions.php"
 		]
 	},
+	"autoload-dev": {
+		"psr-4": {
+			"CSSClassManager\\Tests\\": "tests/php/"
+		}
+	},
 	"scripts": {
 		"analyze": "phpstan analyze",
 		"phpcs": "phpcs",

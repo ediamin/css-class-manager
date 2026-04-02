@@ -16,6 +16,11 @@ languages
 phpcs-report.txt
 coverage.xml
 .phpunit.result.cache
+coverage/
+junit.xml
+playwright-report/
+e2e-results.xml
+tests/e2e/.auth/
 composer.lock
 css-class-manager.zip
 
