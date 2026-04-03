@@ -44,14 +44,10 @@ test.describe( 'CSS Class Manager modal', () => {
 		await openCssClassManagerModal( page );
 
 		// Navigate to the "CSS Classes" tab.
-		await page
-			.getByRole( 'tab', { name: /css classes/i } )
-			.click();
+		await page.getByRole( 'tab', { name: /css classes/i } ).click();
 
 		// Click the "Add new class" button.
-		await page
-			.getByRole( 'button', { name: /add new class/i } )
-			.click();
+		await page.getByRole( 'button', { name: /add new class/i } ).click();
 
 		// Fill in the class form.
 		await page
@@ -65,9 +61,7 @@ test.describe( 'CSS Class Manager modal', () => {
 		await page.getByRole( 'button', { name: /save/i } ).click();
 
 		// The new class should appear in the class list.
-		await expect(
-			page.getByText( 'modal-test-class' )
-		).toBeVisible();
+		await expect( page.getByText( 'modal-test-class' ) ).toBeVisible();
 	} );
 
 	test( 'can delete a class name', async ( { page, requestUtils } ) => {
@@ -85,9 +79,7 @@ test.describe( 'CSS Class Manager modal', () => {
 		await page.reload();
 		await openCssClassManagerModal( page );
 
-		await page
-			.getByRole( 'tab', { name: /css classes/i } )
-			.click();
+		await page.getByRole( 'tab', { name: /css classes/i } ).click();
 
 		// Click the delete button for the seeded class.
 		await page
@@ -96,7 +88,9 @@ test.describe( 'CSS Class Manager modal', () => {
 			.click();
 
 		// Confirm deletion in the dialog if one appears.
-		const confirmBtn = page.getByRole( 'button', { name: /confirm|yes|ok/i } );
+		const confirmBtn = page.getByRole( 'button', {
+			name: /confirm|yes|ok/i,
+		} );
 		if ( await confirmBtn.isVisible() ) {
 			await confirmBtn.click();
 		}

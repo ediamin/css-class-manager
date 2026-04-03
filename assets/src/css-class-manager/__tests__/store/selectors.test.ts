@@ -71,9 +71,7 @@ describe( 'notices', () => {
 
 	it( 'appends a success notice', () => {
 		const registry = createStoreRegistry();
-		registry
-			.dispatch( STORE_NAME )
-			.createSuccessNotice( 'Class added.' );
+		registry.dispatch( STORE_NAME ).createSuccessNotice( 'Class added.' );
 
 		const notices = registry.select( STORE_NAME ).getNotices();
 		expect( notices ).toHaveLength( 1 );
@@ -175,9 +173,9 @@ describe( 'getCssClassNames', () => {
 			.createSuccessNotice( 'placeholder' ); // just to trigger a state read
 
 		// Verify alphabetical order for the initial empty state.
-		expect(
-			registry.select( STORE_NAME ).getCssClassNames()
-		).toHaveLength( 0 );
+		expect( registry.select( STORE_NAME ).getCssClassNames() ).toHaveLength(
+			0
+		);
 
 		// Sorting logic is exercised in actions.test.ts after state mutations.
 		// This assertion validates the selector returns an array.

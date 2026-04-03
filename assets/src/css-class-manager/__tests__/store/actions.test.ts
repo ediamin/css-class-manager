@@ -140,11 +140,13 @@ describe( 'saveUserDefinedClassNames', () => {
 			description: '',
 		};
 
-		await registry.dispatch( STORE_NAME ).saveUserDefinedClassNames(
-			{ name: 'updated-class', description: '' },
-			[ existing ],
-			existing
-		);
+		await registry
+			.dispatch( STORE_NAME )
+			.saveUserDefinedClassNames(
+				{ name: 'updated-class', description: '' },
+				[ existing ],
+				existing
+			);
 
 		const userDefined = registry
 			.select( STORE_NAME )
@@ -160,10 +162,9 @@ describe( 'saveUserDefinedClassNames', () => {
 
 		const registry = createStoreRegistry();
 
-		await registry.dispatch( STORE_NAME ).saveUserDefinedClassNames(
-			{ name: 'fail-class' },
-			[]
-		);
+		await registry
+			.dispatch( STORE_NAME )
+			.saveUserDefinedClassNames( { name: 'fail-class' }, [] );
 
 		const notices = registry.select( STORE_NAME ).getNotices();
 		expect( notices.some( ( n ) => n.status === 'error' ) ).toBe( true );
@@ -185,10 +186,9 @@ describe( 'deleteUserDefinedClassName', () => {
 		const registry = createStoreRegistry();
 		const classToDelete = { name: 'to-delete', id: 'del-id' };
 
-		await registry.dispatch( STORE_NAME ).saveUserDefinedClassNames(
-			{ name: 'to-delete' },
-			[]
-		);
+		await registry
+			.dispatch( STORE_NAME )
+			.saveUserDefinedClassNames( { name: 'to-delete' }, [] );
 
 		await registry
 			.dispatch( STORE_NAME )
@@ -210,10 +210,11 @@ describe( 'deleteUserDefinedClassName', () => {
 
 		const registry = createStoreRegistry();
 
-		await registry.dispatch( STORE_NAME ).deleteUserDefinedClassName(
-			{ name: 'some-class', id: 'id-1' },
-			[ { name: 'some-class', id: 'id-1' } ]
-		);
+		await registry
+			.dispatch( STORE_NAME )
+			.deleteUserDefinedClassName( { name: 'some-class', id: 'id-1' }, [
+				{ name: 'some-class', id: 'id-1' },
+			] );
 
 		const notices = registry.select( STORE_NAME ).getNotices();
 		expect( notices.some( ( n ) => n.status === 'error' ) ).toBe( true );
@@ -239,9 +240,7 @@ describe( 'updateUserSettings', () => {
 			allowAddingClassNamesWithoutCreating: true,
 		};
 
-		await registry
-			.dispatch( STORE_NAME )
-			.updateUserSettings( newSettings );
+		await registry.dispatch( STORE_NAME ).updateUserSettings( newSettings );
 
 		expect( registry.select( STORE_NAME ).getUserSettings() ).toEqual(
 			newSettings

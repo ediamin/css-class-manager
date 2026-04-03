@@ -1,8 +1,10 @@
-import { expect, type Page } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 import { Admin, Editor } from '@wordpress/e2e-test-utils-playwright';
 
 /**
  * Navigate to a new post in the block editor.
+ * @param admin
+ * @param postType
  */
 export async function createNewPost(
 	admin: Admin,
@@ -13,6 +15,7 @@ export async function createNewPost(
 
 /**
  * Open the CSS Class Manager preferences modal via the editor "Tools" menu.
+ * @param page
  */
 export async function openCssClassManagerModal( page: Page ): Promise< void > {
 	// Click the three-dot "Options" menu in the editor toolbar.
@@ -32,6 +35,8 @@ export async function openCssClassManagerModal( page: Page ): Promise< void > {
 
 /**
  * Select a block in the editor by its block name and return the block element.
+ * @param editor
+ * @param blockName
  */
 export async function selectFirstBlock(
 	editor: Editor,
@@ -45,6 +50,7 @@ export async function selectFirstBlock(
 
 /**
  * Open the "Advanced" section of the block inspector panel.
+ * @param page
  */
 export async function openAdvancedInspectorSection(
 	page: Page

@@ -90,9 +90,7 @@ test.describe( 'Block editor CSS class control', () => {
 		await classInput.fill( 'e2e-test' );
 
 		// Select the suggestion.
-		await page
-			.getByRole( 'option', { name: /e2e-test-class/i } )
-			.click();
+		await page.getByRole( 'option', { name: /e2e-test-class/i } ).click();
 
 		// Save the post.
 		await editor.publishPost();
@@ -108,8 +106,6 @@ test.describe( 'Block editor CSS class control', () => {
 		await openAdvancedInspectorSection( page );
 
 		// The class should still be visible in the control.
-		await expect(
-			page.getByText( 'e2e-test-class' )
-		).toBeVisible();
+		await expect( page.getByText( 'e2e-test-class' ) ).toBeVisible();
 	} );
 } );
