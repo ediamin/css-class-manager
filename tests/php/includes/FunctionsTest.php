@@ -42,7 +42,7 @@ class FunctionsTest extends TestCase
 	 */
 	public function test_spaces_are_stripped(): void
 	{
-		$this->assertSame( 'my-class', css_class_manager_sanitize_html_class( 'my class' ) );
+		$this->assertSame( 'myclass', css_class_manager_sanitize_html_class( 'my class' ) );
 	}
 
 	/**

@@ -2,28 +2,37 @@
  * Store action tests.
  *
  * Synchronous action creators are tested by verifying the action objects they
- * return. Async actions are tested with a mocked @wordpress/api-fetch to
- * confirm they update the store state correctly on success and dispatch an
- * error notice on failure.
+ * return using an isolated registry.
+ *
+ * Async actions use the global default registry because the store's thunks
+ * internally call `select( STORE_NAME )` and `dispatch( STORE_NAME )` from
+ * the top-level `@wordpress/data` module, which always operates on the
+ * default registry.
  */
 import apiFetch from '@wordpress/api-fetch';
-import { createRegistry } from '@wordpress/data';
+import {
+	createRegistry,
+	dispatch as globalDispatch,
+	register as globalRegister,
+	select as globalSelect,
+} from '@wordpress/data';
 
-import { STORE_NAME } from '../../../constants';
+import { STORE_NAME } from '../../constants';
+import store from '../../store';
 
 jest.mock( '@wordpress/api-fetch' );
 
 const mockedApiFetch = apiFetch as jest.MockedFunction< typeof apiFetch >;
 
 // ---------------------------------------------------------------------------
-// Helper
+// Helper — isolated registry for synchronous-only tests
 // ---------------------------------------------------------------------------
 
 function createStoreRegistry() {
 	const registry = createRegistry();
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	const store = require( '../../../store' ).default;
-	registry.register( store );
+	const freshStore = require( '../../store' ).default;
+	registry.register( freshStore );
 	return registry;
 }
 
@@ -98,10 +107,15 @@ describe( 'removeNotice', () => {
 } );
 
 // ---------------------------------------------------------------------------
-// Async action: saveUserDefinedClassNames
+// Async actions — use the default global registry because the store's thunks
+// internally reference the global `select` and `dispatch`.
 // ---------------------------------------------------------------------------
 
 describe( 'saveUserDefinedClassNames', () => {
+	beforeAll( () => {
+		globalRegister( store );
+	} );
+
 	beforeEach( () => {
 		mockedApiFetch.mockResolvedValue( {} );
 	} );
@@ -111,9 +125,7 @@ describe( 'saveUserDefinedClassNames', () => {
 	} );
 
 	it( 'persists a new class name via apiFetch and adds it to the store', async () => {
-		const registry = createStoreRegistry();
-
-		await registry.dispatch( STORE_NAME ).saveUserDefinedClassNames(
+		await globalDispatch( STORE_NAME ).saveUserDefinedClassNames(
 			{ name: 'new-class', description: 'My new class' },
 			[] // no existing user-defined classes
 		);
@@ -125,32 +137,27 @@ describe( 'saveUserDefinedClassNames', () => {
 			} )
 		);
 
-		const userDefined = registry
-			.select( STORE_NAME )
-			.getUserDefinedClassNames();
+		const userDefined =
+			globalSelect( STORE_NAME ).getUserDefinedClassNames();
 		const names = userDefined.map( ( c ) => c.name );
 		expect( names ).toContain( 'new-class' );
 	} );
 
 	it( 'updates an existing class name when previousClassPreset is provided', async () => {
-		const registry = createStoreRegistry();
 		const existing = {
 			name: 'old-class',
 			id: 'existing-id',
 			description: '',
 		};
 
-		await registry
-			.dispatch( STORE_NAME )
-			.saveUserDefinedClassNames(
-				{ name: 'updated-class', description: '' },
-				[ existing ],
-				existing
-			);
+		await globalDispatch( STORE_NAME ).saveUserDefinedClassNames(
+			{ name: 'updated-class', description: '' },
+			[ existing ],
+			existing
+		);
 
-		const userDefined = registry
-			.select( STORE_NAME )
-			.getUserDefinedClassNames();
+		const userDefined =
+			globalSelect( STORE_NAME ).getUserDefinedClassNames();
 		const names = userDefined.map( ( c ) => c.name );
 
 		expect( names ).toContain( 'updated-class' );
@@ -160,13 +167,12 @@ describe( 'saveUserDefinedClassNames', () => {
 	it( 'dispatches an error notice when apiFetch rejects', async () => {
 		mockedApiFetch.mockRejectedValue( new Error( 'Network error' ) );
 
-		const registry = createStoreRegistry();
+		await globalDispatch( STORE_NAME ).saveUserDefinedClassNames(
+			{ name: 'fail-class' },
+			[]
+		);
 
-		await registry
-			.dispatch( STORE_NAME )
-			.saveUserDefinedClassNames( { name: 'fail-class' }, [] );
-
-		const notices = registry.select( STORE_NAME ).getNotices();
+		const notices = globalSelect( STORE_NAME ).getNotices();
 		expect( notices.some( ( n ) => n.status === 'error' ) ).toBe( true );
 	} );
 } );
@@ -183,22 +189,19 @@ describe( 'deleteUserDefinedClassName', () => {
 	it( 'removes the class name from the store and calls apiFetch', async () => {
 		mockedApiFetch.mockResolvedValue( {} );
 
-		const registry = createStoreRegistry();
 		const classToDelete = { name: 'to-delete', id: 'del-id' };
 
-		await registry
-			.dispatch( STORE_NAME )
-			.saveUserDefinedClassNames( { name: 'to-delete' }, [] );
+		await globalDispatch( STORE_NAME ).saveUserDefinedClassNames(
+			{ name: 'to-delete' },
+			[]
+		);
 
-		await registry
-			.dispatch( STORE_NAME )
-			.deleteUserDefinedClassName(
-				classToDelete,
-				registry.select( STORE_NAME ).getUserDefinedClassNames()
-			);
+		await globalDispatch( STORE_NAME ).deleteUserDefinedClassName(
+			classToDelete,
+			globalSelect( STORE_NAME ).getUserDefinedClassNames()
+		);
 
-		const names = registry
-			.select( STORE_NAME )
+		const names = globalSelect( STORE_NAME )
 			.getUserDefinedClassNames()
 			.map( ( c ) => c.name );
 
@@ -208,15 +211,12 @@ describe( 'deleteUserDefinedClassName', () => {
 	it( 'dispatches an error notice when apiFetch rejects', async () => {
 		mockedApiFetch.mockRejectedValue( new Error( 'Server error' ) );
 
-		const registry = createStoreRegistry();
+		await globalDispatch( STORE_NAME ).deleteUserDefinedClassName(
+			{ name: 'some-class', id: 'id-1' },
+			[ { name: 'some-class', id: 'id-1' } ]
+		);
 
-		await registry
-			.dispatch( STORE_NAME )
-			.deleteUserDefinedClassName( { name: 'some-class', id: 'id-1' }, [
-				{ name: 'some-class', id: 'id-1' },
-			] );
-
-		const notices = registry.select( STORE_NAME ).getNotices();
+		const notices = globalSelect( STORE_NAME ).getNotices();
 		expect( notices.some( ( n ) => n.status === 'error' ) ).toBe( true );
 	} );
 } );
@@ -233,16 +233,15 @@ describe( 'updateUserSettings', () => {
 	it( 'updates user settings in the store after a successful save', async () => {
 		mockedApiFetch.mockResolvedValue( {} );
 
-		const registry = createStoreRegistry();
 		const newSettings = {
 			inspectorControlPosition: 'own-panel' as const,
 			hideThemeJSONGeneratedClasses: true,
 			allowAddingClassNamesWithoutCreating: true,
 		};
 
-		await registry.dispatch( STORE_NAME ).updateUserSettings( newSettings );
+		await globalDispatch( STORE_NAME ).updateUserSettings( newSettings );
 
-		expect( registry.select( STORE_NAME ).getUserSettings() ).toEqual(
+		expect( globalSelect( STORE_NAME ).getUserSettings() ).toEqual(
 			newSettings
 		);
 	} );
@@ -250,15 +249,13 @@ describe( 'updateUserSettings', () => {
 	it( 'dispatches an error notice when the save fails', async () => {
 		mockedApiFetch.mockRejectedValue( new Error( 'Unauthorized' ) );
 
-		const registry = createStoreRegistry();
-
-		await registry.dispatch( STORE_NAME ).updateUserSettings( {
+		await globalDispatch( STORE_NAME ).updateUserSettings( {
 			inspectorControlPosition: 'default',
 			hideThemeJSONGeneratedClasses: false,
 			allowAddingClassNamesWithoutCreating: false,
 		} );
 
-		const notices = registry.select( STORE_NAME ).getNotices();
+		const notices = globalSelect( STORE_NAME ).getNotices();
 		expect( notices.some( ( n ) => n.status === 'error' ) ).toBe( true );
 	} );
 } );

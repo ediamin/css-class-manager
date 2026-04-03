@@ -7,9 +7,9 @@
  */
 import { createRegistry } from '@wordpress/data';
 
-import { STORE_NAME } from '../../../constants';
+import { STORE_NAME } from '../../constants';
 
-import type { UserSettings } from '../../../types';
+import type { UserSettings } from '../../types';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -25,7 +25,7 @@ function createStoreRegistry() {
 
 	// Load a fresh copy of the store so that initialState is not shared.
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
-	const store = require( '../../../store' ).default;
+	const store = require( '../../store' ).default;
 	registry.register( store );
 
 	return registry;
