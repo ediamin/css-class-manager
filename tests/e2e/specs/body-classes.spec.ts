@@ -22,8 +22,8 @@ test.describe( 'Body classes', () => {
 	let editor: Editor;
 	let postUrl: string;
 
-	test.beforeEach( async ( { page } ) => {
-		admin = new Admin( { page, pageUtils: null as never } );
+	test.beforeEach( async ( { page, pageUtils } ) => {
+		admin = new Admin( { page, pageUtils } );
 		editor = new Editor( { page } );
 	} );
 

@@ -1,7 +1,7 @@
 import path from 'path';
 
 import { test as setup } from '@playwright/test';
-import { Admin } from '@wordpress/e2e-test-utils-playwright';
+import { Admin, PageUtils } from '@wordpress/e2e-test-utils-playwright';
 
 /**
  * Authentication setup.
@@ -13,8 +13,9 @@ import { Admin } from '@wordpress/e2e-test-utils-playwright';
 
 const AUTH_STATE_FILE = path.join( __dirname, '../.auth/admin.json' );
 
-setup( 'authenticate as admin', async ( { page, context } ) => {
-	const admin = new Admin( { page, pageUtils: null as never } );
+setup( 'authenticate as admin', async ( { page, context, browserName } ) => {
+	const pageUtils = new PageUtils( { page, browserName } );
+	const admin = new Admin( { page, pageUtils } );
 	await admin.visitAdminPage( '/' );
 
 	// If already redirected to wp-admin, authentication succeeded.

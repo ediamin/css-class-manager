@@ -18,8 +18,8 @@ import { createNewPost, openCssClassManagerModal } from '../utils/helpers';
 test.describe( 'Import / Export', () => {
 	let admin: Admin;
 
-	test.beforeEach( async ( { page, requestUtils } ) => {
-		admin = new Admin( { page, pageUtils: null as never } );
+	test.beforeEach( async ( { page, pageUtils, requestUtils } ) => {
+		admin = new Admin( { page, pageUtils } );
 
 		// Reset class names before each test.
 		await requestUtils.rest( {
