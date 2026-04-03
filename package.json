@@ -77,9 +77,9 @@
 		"test:js": "wp-scripts test-unit-js",
 		"test:js:watch": "wp-scripts test-unit-js --watch",
 		"test:js:coverage": "wp-scripts test-unit-js --coverage",
-		"test:e2e": "npx playwright test",
-		"test:e2e:debug": "PWDEBUG=1 npx playwright test",
-		"test:e2e:ui": "npx playwright test --ui",
+		"test:e2e": "wp-scripts test-playwright",
+		"test:e2e:debug": "wp-scripts test-playwright --debug",
+		"test:e2e:ui": "wp-scripts test-playwright --ui",
 		"make-pot": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli wp i18n make-pot . languages/css-class-manager.pot --include=includes,assets/dist",
 		"zip": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli php zip.php",
 		"make-dist-zip": "npm run clean && npm run make-pot && npm run build && npm run zip"
