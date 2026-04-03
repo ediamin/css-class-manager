@@ -2,8 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { expect, test } from '@playwright/test';
-import { Admin } from '@wordpress/e2e-test-utils-playwright';
+import { Admin, expect, test } from '@wordpress/e2e-test-utils-playwright';
 
 import { createNewPost, openCssClassManagerModal } from '../utils/helpers';
 

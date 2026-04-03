@@ -1,5 +1,9 @@
-import { expect, test } from '@playwright/test';
-import { Admin, Editor } from '@wordpress/e2e-test-utils-playwright';
+import {
+	Admin,
+	Editor,
+	expect,
+	test,
+} from '@wordpress/e2e-test-utils-playwright';
 
 import {
 	createNewPost,
