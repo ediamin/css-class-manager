@@ -32,6 +32,12 @@ test.describe( 'Body classes', () => {
 	} ) => {
 		await createNewPost( admin );
 
+		// Add a block so the post has content and can be published.
+		await editor.canvas
+			.getByRole( 'button', { name: /add default block/i } )
+			.click();
+		await page.keyboard.type( 'Body class test post.' );
+
 		// Open the inspector and navigate to the "Post" tab.
 		await page
 			.getByRole( 'region', { name: 'Editor top bar' } )
@@ -61,6 +67,11 @@ test.describe( 'Body classes', () => {
 			.getByRole( 'combobox' );
 
 		await bodyClassCombobox.fill( BODY_CLASS );
+
+		// Select/create the option to commit the value to the editor state.
+		await page
+			.getByRole( 'option', { name: new RegExp( BODY_CLASS, 'i' ) } )
+			.click();
 
 		// Publish the post.
 		postId = await editor.publishPost();

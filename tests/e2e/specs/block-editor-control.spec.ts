@@ -72,6 +72,9 @@ test.describe( 'Block editor CSS class control', () => {
 			},
 		} );
 
+		// Reload so the plugin's store initialises with the seeded class names.
+		await page.reload();
+
 		// Insert a paragraph block.
 		await editor.canvas
 			.getByRole( 'button', { name: /add default block/i } )
@@ -99,17 +102,12 @@ test.describe( 'Block editor CSS class control', () => {
 		// Save the post.
 		await editor.publishPost();
 
-		// Reload and confirm the class is still applied.
+		// Reload and confirm the class is applied to the block in the canvas.
 		await page.reload();
-		await page
-			.getByRole( 'region', { name: 'Editor top bar' } )
-			.getByRole( 'button', { name: /settings/i } )
-			.click();
 
-		await selectFirstBlock( editor, 'Paragraph' );
-		await openAdvancedInspectorSection( page );
-
-		// The class should still be visible in the control.
-		await expect( page.getByText( 'e2e-test-class' ) ).toBeVisible();
+		// The paragraph in the canvas should carry the applied class.
+		await expect(
+			editor.canvas.locator( 'p.e2e-test-class' )
+		).toBeVisible();
 	} );
 } );

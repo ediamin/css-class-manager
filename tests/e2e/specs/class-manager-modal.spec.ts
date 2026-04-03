@@ -5,7 +5,11 @@ import {
 	test,
 } from '@wordpress/e2e-test-utils-playwright';
 
-import { createNewPost, openCssClassManagerModal } from '../utils/helpers';
+import {
+	createNewPost,
+	openAdvancedInspectorSection,
+	openCssClassManagerModal,
+} from '../utils/helpers';
 
 /**
  * E2E tests for the CSS Class Manager preferences modal.
@@ -61,8 +65,10 @@ test.describe( 'CSS Class Manager modal', () => {
 		// Submit the form.
 		await page.getByRole( 'button', { name: /add class/i } ).click();
 
-		// The new class should appear in the class list.
-		await expect( page.getByText( 'modal-test-class' ) ).toBeVisible();
+		// The new class should appear in the class list (exact text on the panel toggle).
+		await expect(
+			page.getByText( 'modal-test-class', { exact: true } )
+		).toBeVisible();
 	} );
 
 	test( 'can delete a class name', async ( { page, requestUtils } ) => {
@@ -92,12 +98,12 @@ test.describe( 'CSS Class Manager modal', () => {
 		await page.getByRole( 'button', { name: /^delete$/i } ).click();
 
 		// Confirm deletion.
-		await page
-			.getByRole( 'button', { name: /confirm delete/i } )
-			.click();
+		await page.getByRole( 'button', { name: /confirm delete/i } ).click();
 
-		// The class should no longer appear.
-		await expect( page.getByText( 'class-to-delete' ) ).not.toBeVisible();
+		// The class panel should no longer appear (exact text on the panel toggle).
+		await expect(
+			page.getByText( 'class-to-delete', { exact: true } )
+		).not.toBeVisible();
 	} );
 
 	test( 'newly added class appears as autocomplete suggestion in the inspector', async ( {
@@ -133,6 +139,8 @@ test.describe( 'CSS Class Manager modal', () => {
 			.getByRole( 'document', { name: /paragraph/i } )
 			.first()
 			.click();
+
+		await openAdvancedInspectorSection( page );
 
 		const classInput = page.getByRole( 'combobox', {
 			name: /additional css class/i,

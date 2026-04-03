@@ -2,7 +2,12 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { Admin, Editor, expect, test } from '@wordpress/e2e-test-utils-playwright';
+import {
+	Admin,
+	Editor,
+	expect,
+	test,
+} from '@wordpress/e2e-test-utils-playwright';
 
 import { createNewPost, openCssClassManagerModal } from '../utils/helpers';
 
@@ -19,7 +24,11 @@ test.describe( 'Import / Export', () => {
 	let admin: Admin;
 
 	test.beforeEach( async ( { page, pageUtils, requestUtils } ) => {
-		admin = new Admin( { page, pageUtils, editor: new Editor( { page } ) } );
+		admin = new Admin( {
+			page,
+			pageUtils,
+			editor: new Editor( { page } ),
+		} );
 
 		// Reset class names before each test.
 		await requestUtils.rest( {
@@ -103,7 +112,9 @@ test.describe( 'Import / Export', () => {
 
 		// An error snackbar notice should be displayed.
 		await expect(
-			page.getByText( /invalid class list data/i )
+			page.locator( '.components-snackbar__content', {
+				hasText: /invalid class list data/i,
+			} )
 		).toBeVisible();
 	} );
 } );
