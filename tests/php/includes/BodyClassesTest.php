@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace CSSClassManager\Tests;
 
 use CSSClassManager\BodyClasses;
+use ReflectionClass;
 
 /**
  * Integration tests for the BodyClasses feature.
@@ -179,7 +180,7 @@ class BodyClassesTest extends WPTestCase
 	public function test_unsupported_post_types_filter_excludes_type(): void
 	{
 		// Reset static cache to force re-computation.
-		$reflection = new \ReflectionClass( BodyClasses::class );
+		$reflection = new ReflectionClass( BodyClasses::class );
 		$property   = $reflection->getProperty( 'cached_supported_post_types' );
 		$property->setAccessible( true );
 		$property->setValue( null, [] );

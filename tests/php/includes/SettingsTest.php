@@ -28,7 +28,7 @@ class SettingsTest extends WPTestCase
 		parent::set_up();
 
 		global $wp_rest_server;
-		$wp_rest_server = new WP_REST_Server();
+		$wp_rest_server = new WP_REST_Server(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		$this->server   = $wp_rest_server;
 		do_action( 'rest_api_init' );
 
@@ -43,7 +43,7 @@ class SettingsTest extends WPTestCase
 	public function tear_down(): void
 	{
 		global $wp_rest_server;
-		$wp_rest_server = null;
+		$wp_rest_server = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		parent::tear_down();
 	}
 

@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace CSSClassManager\Tests;
 
+use CSSClassManager\Plugin;
+
 /**
  * Integration tests for the plugin Bootstrap class.
  *
@@ -27,7 +29,7 @@ class BootstrapTest extends WPTestCase
 	public function test_global_helper_returns_plugin_instance(): void
 	{
 		$plugin = css_class_manager();
-		$this->assertInstanceOf( \CSSClassManager\Plugin::class, $plugin );
+		$this->assertInstanceOf( Plugin::class, $plugin );
 	}
 
 	/**

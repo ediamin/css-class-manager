@@ -9,7 +9,7 @@ import { createRegistry } from '@wordpress/data';
 
 import { STORE_NAME } from '../../../constants';
 
-import type { CombinedClassPreset, UserSettings } from '../../../types';
+import type { UserSettings } from '../../../types';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -154,12 +154,6 @@ describe( 'getCssClassNames', () => {
 
 	it( 'sorts class names case-insensitively by name', async () => {
 		const registry = createStoreRegistry();
-
-		const classes: CombinedClassPreset[] = [
-			{ name: 'zebra', id: '1' },
-			{ name: 'Apple', id: '2' },
-			{ name: 'mango', id: '3' },
-		];
 
 		await registry
 			.dispatch( STORE_NAME )
