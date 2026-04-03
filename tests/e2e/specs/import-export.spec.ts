@@ -2,7 +2,7 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-import { Admin, expect, test } from '@wordpress/e2e-test-utils-playwright';
+import { Admin, Editor, expect, test } from '@wordpress/e2e-test-utils-playwright';
 
 import { createNewPost, openCssClassManagerModal } from '../utils/helpers';
 
@@ -19,7 +19,7 @@ test.describe( 'Import / Export', () => {
 	let admin: Admin;
 
 	test.beforeEach( async ( { page, pageUtils, requestUtils } ) => {
-		admin = new Admin( { page, pageUtils } );
+		admin = new Admin( { page, pageUtils, editor: new Editor( { page } ) } );
 
 		// Reset class names before each test.
 		await requestUtils.rest( {
@@ -89,7 +89,9 @@ test.describe( 'Import / Export', () => {
 		page,
 	} ) => {
 		const tmpPath = path.join( os.tmpdir(), 'invalid-import.json' );
-		fs.writeFileSync( tmpPath, 'this is not valid json {{{' );
+		// Write a valid JSON file that is not an array — this triggers the
+		// plugin's own "Error: Invalid class list data." notice.
+		fs.writeFileSync( tmpPath, JSON.stringify( { notAnArray: true } ) );
 
 		const fileInput = page.locator( 'input[type="file"]' );
 		await fileInput.setInputFiles( tmpPath );
@@ -99,11 +101,9 @@ test.describe( 'Import / Export', () => {
 			await importBtn.click();
 		}
 
-		// An error notice or message should be displayed.
+		// An error snackbar notice should be displayed.
 		await expect(
-			page
-				.getByRole( 'alert' )
-				.or( page.getByText( /invalid|error|failed/i ) )
+			page.getByText( /invalid class list data/i )
 		).toBeVisible();
 	} );
 } );

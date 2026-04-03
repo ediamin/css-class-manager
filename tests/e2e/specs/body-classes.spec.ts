@@ -5,7 +5,7 @@ import {
 	test,
 } from '@wordpress/e2e-test-utils-playwright';
 
-import { createNewPost, openCssClassManagerModal } from '../utils/helpers';
+import { createNewPost } from '../utils/helpers';
 
 /**
  * E2E tests for the body classes feature.
@@ -20,11 +20,11 @@ const BODY_CLASS = 'e2e-body-class';
 test.describe( 'Body classes', () => {
 	let admin: Admin;
 	let editor: Editor;
-	let postUrl: string;
+	let postId: number | null;
 
 	test.beforeEach( async ( { page, pageUtils } ) => {
-		admin = new Admin( { page, pageUtils } );
 		editor = new Editor( { page } );
+		admin = new Admin( { page, pageUtils, editor } );
 	} );
 
 	test( 'body class is applied to the <body> element on the front end', async ( {
@@ -32,35 +32,41 @@ test.describe( 'Body classes', () => {
 	} ) => {
 		await createNewPost( admin );
 
-		// Open the inspector and navigate to the Body Classes panel.
+		// Open the inspector and navigate to the "Post" tab.
 		await page
 			.getByRole( 'region', { name: 'Editor top bar' } )
 			.getByRole( 'button', { name: /settings/i } )
 			.click();
 
-		// Find the body class input in the inspector (expected in "Post" tab).
 		await page.getByRole( 'tab', { name: /post/i } ).click();
 
-		const bodyClassInput = page.getByRole( 'textbox', {
-			name: /body class/i,
+		// Expand the Body Classes panel if present.
+		const bodyClassesPanel = page.getByRole( 'button', {
+			name: /body classes/i,
 		} );
 
-		if ( await bodyClassInput.isVisible() ) {
-			await bodyClassInput.fill( BODY_CLASS );
-		} else {
-			// If the input is inside the preferences, open the modal.
-			await openCssClassManagerModal( page );
-			const input = page.getByRole( 'textbox', {
-				name: /body class/i,
-			} );
-			await input.fill( BODY_CLASS );
+		if ( ! ( await bodyClassesPanel.isVisible() ) ) {
+			// Body classes feature not available for this post type — skip.
+			return;
 		}
 
+		const expanded = await bodyClassesPanel.getAttribute( 'aria-expanded' );
+		if ( expanded !== 'true' ) {
+			await bodyClassesPanel.click();
+		}
+
+		// The body class control is a combobox inside the Body Classes panel.
+		const bodyClassCombobox = page
+			.locator( '.css-class-manager__body-class-control-panel' )
+			.getByRole( 'combobox' );
+
+		await bodyClassCombobox.fill( BODY_CLASS );
+
 		// Publish the post.
-		postUrl = await editor.publishPost();
+		postId = await editor.publishPost();
 
 		// Visit the front-end URL.
-		await page.goto( postUrl );
+		await page.goto( `/?p=${ postId }` );
 
 		// The class must appear on the <body> element.
 		const bodyClasses = await page.evaluate(
@@ -78,8 +84,8 @@ test.describe( 'Body classes', () => {
 			.click();
 		await page.keyboard.type( 'Post without body class.' );
 
-		postUrl = await editor.publishPost();
-		await page.goto( postUrl );
+		postId = await editor.publishPost();
+		await page.goto( `/?p=${ postId }` );
 
 		const bodyClasses = await page.evaluate(
 			() => document.body.className

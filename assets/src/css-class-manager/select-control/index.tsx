@@ -158,7 +158,7 @@ const SelectControl: FC< SelectControlProps > = ( {
 	return (
 		<>
 			<CreatableSelect
-				id="css-class-manager__select"
+				inputId="css-class-manager__select"
 				className="css-class-manager__react-select"
 				classNamePrefix="css-class-manager__react-select"
 				menuPlacement="auto"

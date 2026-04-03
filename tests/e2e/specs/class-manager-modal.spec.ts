@@ -19,8 +19,8 @@ test.describe( 'CSS Class Manager modal', () => {
 	let editor: Editor;
 
 	test.beforeEach( async ( { page, pageUtils, requestUtils } ) => {
-		admin = new Admin( { page, pageUtils } );
 		editor = new Editor( { page } );
+		admin = new Admin( { page, pageUtils, editor } );
 
 		// Start with no user-defined class names.
 		await requestUtils.rest( {
@@ -50,10 +50,7 @@ test.describe( 'CSS Class Manager modal', () => {
 		// Navigate to the "CSS Classes" tab.
 		await page.getByRole( 'tab', { name: /css classes/i } ).click();
 
-		// Click the "Add new class" button.
-		await page.getByRole( 'button', { name: /add new class/i } ).click();
-
-		// Fill in the class form.
+		// Fill in the class form (the form is directly visible — no "Add" button needed).
 		await page
 			.getByRole( 'textbox', { name: /class name/i } )
 			.fill( 'modal-test-class' );
@@ -62,7 +59,7 @@ test.describe( 'CSS Class Manager modal', () => {
 			.fill( 'A class added via the modal' );
 
 		// Submit the form.
-		await page.getByRole( 'button', { name: /save/i } ).click();
+		await page.getByRole( 'button', { name: /add class/i } ).click();
 
 		// The new class should appear in the class list.
 		await expect( page.getByText( 'modal-test-class' ) ).toBeVisible();
@@ -85,19 +82,19 @@ test.describe( 'CSS Class Manager modal', () => {
 
 		await page.getByRole( 'tab', { name: /css classes/i } ).click();
 
-		// Click the delete button for the seeded class.
-		await page
-			.getByRole( 'row', { name: /class-to-delete/i } )
-			.getByRole( 'button', { name: /delete/i } )
-			.click();
-
-		// Confirm deletion in the dialog if one appears.
-		const confirmBtn = page.getByRole( 'button', {
-			name: /confirm|yes|ok/i,
+		// Expand the collapsible panel for the class to delete.
+		const classPanel = page.getByRole( 'button', {
+			name: /class-to-delete/i,
 		} );
-		if ( await confirmBtn.isVisible() ) {
-			await confirmBtn.click();
-		}
+		await classPanel.click();
+
+		// Click the delete button for the seeded class.
+		await page.getByRole( 'button', { name: /^delete$/i } ).click();
+
+		// Confirm deletion.
+		await page
+			.getByRole( 'button', { name: /confirm delete/i } )
+			.click();
 
 		// The class should no longer appear.
 		await expect( page.getByText( 'class-to-delete' ) ).not.toBeVisible();

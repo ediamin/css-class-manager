@@ -24,8 +24,8 @@ test.describe( 'Block editor CSS class control', () => {
 	let editor: Editor;
 
 	test.beforeEach( async ( { page, pageUtils, requestUtils } ) => {
-		admin = new Admin( { page, pageUtils } );
 		editor = new Editor( { page } );
+		admin = new Admin( { page, pageUtils, editor } );
 
 		// Ensure a clean state: delete all posts created in previous runs.
 		await requestUtils.deleteAllPosts();

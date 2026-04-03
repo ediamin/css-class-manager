@@ -10,7 +10,7 @@ export async function createNewPost(
 	admin: Admin,
 	postType: string = 'post'
 ): Promise< void > {
-	await admin.visitAdminPage( 'post-new.php', `post_type=${ postType }` );
+	await admin.createNewPost( { postType } );
 }
 
 /**

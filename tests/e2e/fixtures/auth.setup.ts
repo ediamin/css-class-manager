@@ -1,7 +1,6 @@
 import path from 'path';
 
 import { test as setup } from '@playwright/test';
-import { Admin, PageUtils } from '@wordpress/e2e-test-utils-playwright';
 
 /**
  * Authentication setup.
@@ -13,13 +12,12 @@ import { Admin, PageUtils } from '@wordpress/e2e-test-utils-playwright';
 
 const AUTH_STATE_FILE = path.join( __dirname, '../.auth/admin.json' );
 
-setup( 'authenticate as admin', async ( { page, context, browserName } ) => {
-	const pageUtils = new PageUtils( { page, browserName } );
-	const admin = new Admin( { page, pageUtils } );
-	await admin.visitAdminPage( '/' );
+setup( 'authenticate as admin', async ( { page, context } ) => {
+	// Navigate directly — redirects to wp-login.php when not authenticated.
+	await page.goto( '/wp-admin/' );
 
-	// If already redirected to wp-admin, authentication succeeded.
-	if ( page.url().includes( 'wp-admin' ) ) {
+	// If already on wp-admin, a cached session is still valid.
+	if ( ! page.url().includes( 'wp-login.php' ) ) {
 		await context.storageState( { path: AUTH_STATE_FILE } );
 		return;
 	}
