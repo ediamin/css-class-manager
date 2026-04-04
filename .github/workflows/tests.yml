@@ -60,6 +60,9 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Build assets
+        run: npm run build
+
       - name: Start wp-env (with Xdebug coverage mode)
         run: npm run env:start
 
@@ -98,6 +101,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-e2e-${{ hashFiles('composer.json') }}
+          restore-keys: composer-e2e-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -141,11 +160,11 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Start wp-env (no Xdebug overhead for E2E)
-        run: npm run env:start:e2e
-
       - name: Build assets
         run: npm run build
+
+      - name: Start wp-env (no Xdebug overhead for E2E)
+        run: npm run env:start:e2e
 
       - name: Run E2E tests
         run: npm run test:e2e
