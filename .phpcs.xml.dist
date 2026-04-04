@@ -214,6 +214,7 @@
 		<properties>
 			<property name="rootNamespaces" type="array">
 				<element key="includes" value="CSSClassManager"/>
+				<element key="tests/php" value="CSSClassManager\Tests"/>
 				<element key="tests/php/includes" value="CSSClassManager\Tests"/>
 			</property>
 		</properties>

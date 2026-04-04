@@ -17,8 +17,6 @@ class BodyClassesTest extends WPTestCase
 {
 	/**
 	 * Post ID used across tests in this class.
-	 *
-	 * @var int
 	 */
 	private int $post_id;
 
@@ -51,7 +49,8 @@ class BodyClassesTest extends WPTestCase
 		$this->go_to( get_permalink( $this->post_id ) );
 
 		global $post;
-		$post = get_post( $this->post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( $this->post_id );
 
 		$classes = apply_filters( 'body_class', [] );
 
@@ -67,7 +66,8 @@ class BodyClassesTest extends WPTestCase
 		$this->go_to( get_permalink( $this->post_id ) );
 
 		global $post;
-		$post = get_post( $this->post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( $this->post_id );
 
 		$original = [ 'existing-class' ];
 		$classes  = apply_filters( 'body_class', $original );
@@ -95,7 +95,7 @@ class BodyClassesTest extends WPTestCase
 	// -------------------------------------------------------------------------
 
 	/**
-	 * add_post_classes() must append classes when meta is set and
+	 * The add_post_classes() method must append classes when meta is set and
 	 * use_in_post_loop is truthy.
 	 */
 	public function test_add_post_classes_appends_custom_classes(): void
@@ -104,7 +104,8 @@ class BodyClassesTest extends WPTestCase
 		update_post_meta( $this->post_id, BodyClasses::META_KEY_USE_IN_POST_LOOP, true );
 
 		global $post;
-		$post = get_post( $this->post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( $this->post_id );
 
 		$classes = apply_filters( 'post_class', [], '', $this->post_id );
 
@@ -113,7 +114,7 @@ class BodyClassesTest extends WPTestCase
 	}
 
 	/**
-	 * add_post_classes() must not add anything when use_in_post_loop is false.
+	 * The add_post_classes() method must not add anything when use_in_post_loop is false.
 	 */
 	public function test_add_post_classes_skips_when_use_in_post_loop_is_false(): void
 	{
@@ -121,7 +122,8 @@ class BodyClassesTest extends WPTestCase
 		update_post_meta( $this->post_id, BodyClasses::META_KEY_USE_IN_POST_LOOP, false );
 
 		global $post;
-		$post = get_post( $this->post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$post = get_post( $this->post_id );
 
 		$classes = apply_filters( 'post_class', [], '', $this->post_id );
 
@@ -133,7 +135,7 @@ class BodyClassesTest extends WPTestCase
 	// -------------------------------------------------------------------------
 
 	/**
-	 * sanitize_classes() must trim extra whitespace and return unique classes.
+	 * The sanitize_classes() method must trim extra whitespace and return unique classes.
 	 */
 	public function test_sanitize_classes_deduplicates_and_trims(): void
 	{
@@ -142,7 +144,7 @@ class BodyClassesTest extends WPTestCase
 	}
 
 	/**
-	 * sanitize_classes() must strip characters outside the allowed set.
+	 * The sanitize_classes() method must strip characters outside the allowed set.
 	 */
 	public function test_sanitize_classes_strips_invalid_characters(): void
 	{
@@ -151,7 +153,7 @@ class BodyClassesTest extends WPTestCase
 	}
 
 	/**
-	 * sanitize_classes() must return an empty string for empty input.
+	 * The sanitize_classes() method must return an empty string for empty input.
 	 */
 	public function test_sanitize_classes_returns_empty_for_empty_input(): void
 	{
@@ -187,7 +189,7 @@ class BodyClassesTest extends WPTestCase
 
 		add_filter(
 			'css_class_manager_body_class_unsupported_post_types',
-			static fn( $types ) => array_merge( $types, [ 'post' ] )
+			static fn ( $types ) => array_merge( $types, [ 'post' ] )
 		);
 
 		$types = BodyClasses::get_supported_post_types();

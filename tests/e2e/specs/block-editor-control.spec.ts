@@ -8,6 +8,7 @@ import {
 import {
 	createNewPost,
 	openAdvancedInspectorSection,
+	resetCssClassManagerUserSettings,
 	selectFirstBlock,
 } from '../utils/helpers';
 
@@ -26,10 +27,7 @@ test.describe( 'Block editor CSS class control', () => {
 	test.beforeEach( async ( { page, pageUtils, requestUtils } ) => {
 		editor = new Editor( { page } );
 		admin = new Admin( { page, pageUtils, editor } );
-
-		// Ensure a clean state: delete all posts created in previous runs.
-		await requestUtils.deleteAllPosts();
-
+		await resetCssClassManagerUserSettings( requestUtils );
 		await createNewPost( admin );
 	} );
 
@@ -43,10 +41,7 @@ test.describe( 'Block editor CSS class control', () => {
 		await page.keyboard.type( 'Test paragraph.' );
 
 		// Open the block inspector sidebar.
-		await page
-			.getByRole( 'region', { name: 'Editor top bar' } )
-			.getByRole( 'button', { name: /settings/i } )
-			.click();
+		await editor.openDocumentSettingsSidebar();
 
 		await selectFirstBlock( editor, 'Paragraph' );
 		await openAdvancedInspectorSection( page );
@@ -82,10 +77,7 @@ test.describe( 'Block editor CSS class control', () => {
 		await page.keyboard.type( 'Paragraph with class.' );
 
 		// Open inspector.
-		await page
-			.getByRole( 'region', { name: 'Editor top bar' } )
-			.getByRole( 'button', { name: /settings/i } )
-			.click();
+		await editor.openDocumentSettingsSidebar();
 
 		await selectFirstBlock( editor, 'Paragraph' );
 		await openAdvancedInspectorSection( page );

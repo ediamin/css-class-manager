@@ -1,34 +1,32 @@
 import path from 'path';
 
 import { test as setup } from '@playwright/test';
+import { RequestUtils } from '@wordpress/e2e-test-utils-playwright';
 
 /**
  * Authentication setup.
  *
- * Logs in as the WordPress admin user and saves the browser storage state to
- * a JSON file. All spec projects reference this file via `storageState` so
- * that individual tests never need to re-authenticate.
+ * Logs in via RequestUtils (HTTP-based) which also:
+ * - Obtains the REST API nonce
+ * - Saves cookies + nonce + rootURL to the auth state file
+ * - Activates the css-class-manager plugin so all spec tests can rely on it
  */
 
 const AUTH_STATE_FILE = path.join( __dirname, '../.auth/admin.json' );
 
-setup( 'authenticate as admin', async ( { page, context } ) => {
-	// Navigate directly — redirects to wp-login.php when not authenticated.
-	await page.goto( '/wp-admin/' );
+setup( 'authenticate as admin', async () => {
+	const requestUtils = await RequestUtils.setup( {
+		user: { username: 'admin', password: 'password' },
+		storageStatePath: AUTH_STATE_FILE,
+		baseURL: 'http://localhost:8889',
+	} );
 
-	// If already on wp-admin, a cached session is still valid.
-	if ( ! page.url().includes( 'wp-login.php' ) ) {
-		await context.storageState( { path: AUTH_STATE_FILE } );
-		return;
-	}
+	// Login and get the REST API nonce; persists cookies + nonce + rootURL.
+	await requestUtils.setupRest();
 
-	// Fill in the login form.
-	await page.fill( '#user_login', 'admin' );
-	await page.fill( '#user_pass', 'password' );
-	await page.click( '#wp-submit' );
+	// Guarantee the plugin is active for all specs.
+	await requestUtils.activatePlugin( 'css-class-manager' );
 
-	await page.waitForURL( '**/wp-admin/**' );
-
-	// Persist the authenticated session.
-	await context.storageState( { path: AUTH_STATE_FILE } );
+	// Ensure a proper theme is active so the front end renders with body classes.
+	await requestUtils.activateTheme( 'twentytwentyfive' );
 } );

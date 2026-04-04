@@ -97,7 +97,7 @@ class UserSettingsTest extends WPTestCase
 	}
 
 	/**
-	 * get_user_settings() without a user_id argument must fall back to the current user.
+	 * Calling get_user_settings() without a user_id argument must fall back to the current user.
 	 */
 	public function test_get_user_settings_defaults_to_current_user(): void
 	{

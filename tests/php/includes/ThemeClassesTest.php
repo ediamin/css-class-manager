@@ -19,8 +19,6 @@ class ThemeClassesTest extends WPTestCase
 {
 	/**
 	 * User ID used throughout the test class.
-	 *
-	 * @var int
 	 */
 	private int $user_id;
 
@@ -44,6 +42,7 @@ class ThemeClassesTest extends WPTestCase
 	{
 		remove_all_filters( 'css_class_manager_theme_classes_css' );
 		remove_all_filters( 'css_class_manager_filtered_class_names' );
+
 		parent::tear_down();
 	}
 
@@ -62,12 +61,12 @@ class ThemeClassesTest extends WPTestCase
 
 		add_filter(
 			'css_class_manager_theme_classes_css',
-			static fn() => '.theme-color-primary { color: red; } .theme-color-secondary { color: blue; }'
+			static fn () => '.theme-color-primary { color: red; } .theme-color-secondary { color: blue; }'
 		);
 
 		$result = ThemeClasses::add_theme_classes( [] );
 		$names  = array_map(
-			static fn( ClassPreset $p ) => $p->get_name(),
+			static fn ( ClassPreset $p ) => $p->get_name(),
 			$result
 		);
 
@@ -89,7 +88,7 @@ class ThemeClassesTest extends WPTestCase
 
 		add_filter(
 			'css_class_manager_theme_classes_css',
-			static fn() => '.should-not-appear { color: green; }'
+			static fn () => '.should-not-appear { color: green; }'
 		);
 
 		$initial_classes = [ new ClassPreset( 'existing' ) ];
@@ -110,7 +109,7 @@ class ThemeClassesTest extends WPTestCase
 			[ 'hideThemeJSONGeneratedClasses' => false ]
 		);
 
-		add_filter( 'css_class_manager_theme_classes_css', static fn() => '' );
+		add_filter( 'css_class_manager_theme_classes_css', static fn () => '' );
 
 		$result = ThemeClasses::add_theme_classes( [] );
 		$this->assertEmpty( $result );
@@ -129,7 +128,7 @@ class ThemeClassesTest extends WPTestCase
 
 		add_filter(
 			'css_class_manager_theme_classes_css',
-			static fn() => '.dynamic-class { font-size: 1rem; }'
+			static fn () => '.dynamic-class { font-size: 1rem; }'
 		);
 
 		$result = ThemeClasses::add_theme_classes( [] );
@@ -138,10 +137,7 @@ class ThemeClassesTest extends WPTestCase
 
 		foreach ( $result as $preset ) {
 			$data = $preset->jsonSerialize();
-			$this->assertTrue(
-				$data['isDynamic'],
-				'Theme-derived presets should be marked as dynamic'
-			);
+			$this->assertTrue( $data['isDynamic'], 'Theme-derived presets should be marked as dynamic' );
 		}
 	}
 }

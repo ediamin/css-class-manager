@@ -48,7 +48,8 @@ const SelectControl: FC< SelectControlProps > = ( {
 } ) => {
 	const [ inputValue, setInputValue ] = useState( '' );
 	const [ searchStr, setSearchStr ] = useState( '' );
-	const { cssClassNames, cssUniqueClassNames, userSettings } = useStore();
+	const { cssClassNames, cssUniqueClassNames, userSettings, panelLabel } =
+		useStore();
 	const classNameList = useClassNameList( searchStr, cssClassNames );
 
 	const selectedValue = useMemo( () => {
@@ -159,6 +160,7 @@ const SelectControl: FC< SelectControlProps > = ( {
 		<>
 			<CreatableSelect
 				inputId="css-class-manager__select"
+				aria-label={ panelLabel }
 				className="css-class-manager__react-select"
 				classNamePrefix="css-class-manager__react-select"
 				menuPlacement="auto"

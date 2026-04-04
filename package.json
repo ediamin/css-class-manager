@@ -64,7 +64,7 @@
 		"env:stop": "wp-env stop",
 		"format": "wp-scripts format",
 		"lint": "npm run composer phpcs . && npm run lint:js && npm run lint:css",
-		"lint:js": "wp-scripts lint-js",
+		"lint:js": "wp-scripts lint-js assets/src tests playwright.config.ts jest.config.js webpack.config.js version-update.js .eslintrc.js",
 		"lint:css": "wp-scripts lint-style assets/src",
 		"composer": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer",
 		"dev": "wp-scripts start",

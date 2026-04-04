@@ -44,7 +44,14 @@ test.describe( 'Body classes', () => {
 			.getByRole( 'button', { name: /settings/i } )
 			.click();
 
-		await page.getByRole( 'tab', { name: /post/i } ).click();
+		// The sidebar may re-render as plugin panels mount; use force to bypass
+		// the stability check and ensure the click lands on the Post tab.
+		await page
+			.getByRole( 'tab', { name: /post/i } )
+			.waitFor( { state: 'visible' } );
+		await page
+			.getByRole( 'tab', { name: /post/i } )
+			.click( { force: true } );
 
 		// Expand the Body Classes panel if present.
 		const bodyClassesPanel = page.getByRole( 'button', {

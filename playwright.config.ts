@@ -14,8 +14,11 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig( {
 	testDir: './tests/e2e/specs',
 
-	/* Run tests in files in parallel */
-	fullyParallel: true,
+	/* These specs share a single wp-env site and mutate global WordPress state. */
+	fullyParallel: false,
+
+	/* Avoid cross-test races against shared options, posts, and user meta. */
+	workers: 1,
 
 	/* Fail the build on CI if you accidentally left test.only in the source */
 	forbidOnly: !! process.env.CI,
@@ -29,6 +32,11 @@ export default defineConfig( {
 		[ 'junit', { outputFile: 'e2e-results.xml' } ],
 		[ 'list' ],
 	],
+
+	/* Increase the default assertion timeout for WordPress block editor interactions */
+	expect: {
+		timeout: 15000,
+	},
 
 	use: {
 		/* Base URL — the wp-env tests environment */

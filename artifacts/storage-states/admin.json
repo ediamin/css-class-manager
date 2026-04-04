@@ -12,17 +12,17 @@
 		},
 		{
 			"name": "wp-settings-time-1",
-			"value": "1775237113",
+			"value": "1775275379",
 			"domain": "localhost",
 			"path": "/",
-			"expires": 1806773113.584,
+			"expires": 1806811379.834,
 			"httpOnly": false,
 			"secure": false,
 			"sameSite": "Lax"
 		},
 		{
 			"name": "wordpress_23778236db82f19306f247e20a353a99",
-			"value": "admin%7C1775409913%7CEdJbw0Dj5wP5nQJVHYXuvN5voI9bsKqQJlHiT3B3UtW%7Cb726be57022c4ac7fa2f19befc2355d82ae5dca77df3b541418dc3b0434c48b0",
+			"value": "admin%7C1775458415%7C5lKTHu8SjPnqSKG3eYWStLuo4byo2KyKkCbAnL3qmuR%7Ca2fa869c9f946727b2dde21bc22abac493f339529c7559efe87afe9ce9301ab5",
 			"domain": "localhost",
 			"path": "/wp-content/plugins",
 			"expires": -1,
@@ -32,7 +32,7 @@
 		},
 		{
 			"name": "wordpress_23778236db82f19306f247e20a353a99",
-			"value": "admin%7C1775409913%7CEdJbw0Dj5wP5nQJVHYXuvN5voI9bsKqQJlHiT3B3UtW%7Cb726be57022c4ac7fa2f19befc2355d82ae5dca77df3b541418dc3b0434c48b0",
+			"value": "admin%7C1775458415%7C5lKTHu8SjPnqSKG3eYWStLuo4byo2KyKkCbAnL3qmuR%7Ca2fa869c9f946727b2dde21bc22abac493f339529c7559efe87afe9ce9301ab5",
 			"domain": "localhost",
 			"path": "/wp-admin",
 			"expires": -1,
@@ -42,15 +42,25 @@
 		},
 		{
 			"name": "wordpress_logged_in_23778236db82f19306f247e20a353a99",
-			"value": "admin%7C1775409913%7CEdJbw0Dj5wP5nQJVHYXuvN5voI9bsKqQJlHiT3B3UtW%7C82ae3b3e764f2b3ce89e4dd4656e25df4f96a6cb90c1b9eb9333383d53b270bc",
+			"value": "admin%7C1775458415%7C5lKTHu8SjPnqSKG3eYWStLuo4byo2KyKkCbAnL3qmuR%7Cce12f97d2d59c8a23eea5819a1ae9b4023862d0f8ade193e224d641a7287cd51",
 			"domain": "localhost",
 			"path": "/",
 			"expires": -1,
 			"httpOnly": true,
 			"secure": false,
 			"sameSite": "Lax"
+		},
+		{
+			"name": "wp-settings-1",
+			"value": "libraryContent%3Dbrowse",
+			"domain": "localhost",
+			"path": "/",
+			"expires": 1806811379.834,
+			"httpOnly": false,
+			"secure": false,
+			"sameSite": "Lax"
 		}
 	],
-	"nonce": "2125fe9326",
+	"nonce": "3817172b55",
 	"rootURL": "http://localhost:8889/index.php?rest_route=/"
 }

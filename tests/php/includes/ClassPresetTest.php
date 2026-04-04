@@ -18,6 +18,7 @@ class ClassPresetTest extends WPTestCase
 	public function tear_down(): void
 	{
 		delete_option( Settings::OPTION_CLASS_NAMES );
+
 		parent::tear_down();
 	}
 
@@ -27,7 +28,7 @@ class ClassPresetTest extends WPTestCase
 	// -------------------------------------------------------------------------
 
 	/**
-	 * get_name() must return the name passed to the constructor.
+	 * The get_name() method must return the name passed to the constructor.
 	 */
 	public function test_get_name_returns_constructor_value(): void
 	{
@@ -36,7 +37,7 @@ class ClassPresetTest extends WPTestCase
 	}
 
 	/**
-	 * jsonSerialize() must include at minimum the name and priority keys.
+	 * The jsonSerialize() method must include at minimum the name and priority keys.
 	 */
 	public function test_json_serialize_includes_required_keys(): void
 	{
@@ -80,8 +81,14 @@ class ClassPresetTest extends WPTestCase
 	public function test_sanitize_valid_class_names(): void
 	{
 		$input  = [
-			[ 'name' => 'my-button', 'description' => 'A button' ],
-			[ 'name' => 'card-header', 'description' => '' ],
+			[
+				'description' => 'A button',
+				'name'        => 'my-button',
+			],
+			[
+				'description' => '',
+				'name'        => 'card-header',
+			],
 		];
 		$result = Settings::sanitize_class_names( $input );
 		$names  = array_column( $result, 'name' );
@@ -96,13 +103,19 @@ class ClassPresetTest extends WPTestCase
 	public function test_sanitize_deduplicates_entries(): void
 	{
 		$input  = [
-			[ 'name' => 'btn', 'description' => 'First' ],
-			[ 'name' => 'btn', 'description' => 'Second (duplicate)' ],
+			[
+				'description' => 'First',
+				'name'        => 'btn',
+			],
+			[
+				'description' => 'Second (duplicate)',
+				'name'        => 'btn',
+			],
 		];
 		$result = Settings::sanitize_class_names( $input );
 		$names  = array_column( $result, 'name' );
 
-		$this->assertCount( 1, array_keys( $names, 'btn' ) );
+		$this->assertCount( 1, array_keys( $names, 'btn', true ) );
 	}
 
 	/**
@@ -111,8 +124,14 @@ class ClassPresetTest extends WPTestCase
 	public function test_sanitize_discards_empty_names(): void
 	{
 		$input  = [
-			[ 'name' => '', 'description' => '' ],
-			[ 'name' => 'valid', 'description' => '' ],
+			[
+				'description' => '',
+				'name'        => '',
+			],
+			[
+				'description' => '',
+				'name'        => 'valid',
+			],
 		];
 		$result = Settings::sanitize_class_names( $input );
 
@@ -127,9 +146,18 @@ class ClassPresetTest extends WPTestCase
 	public function test_sanitize_sorts_results_alphabetically(): void
 	{
 		$input  = [
-			[ 'name' => 'zebra', 'description' => '' ],
-			[ 'name' => 'apple', 'description' => '' ],
-			[ 'name' => 'Mango', 'description' => '' ],
+			[
+				'description' => '',
+				'name'        => 'zebra',
+			],
+			[
+				'description' => '',
+				'name'        => 'apple',
+			],
+			[
+				'description' => '',
+				'name'        => 'Mango',
+			],
 		];
 		$result = Settings::sanitize_class_names( $input );
 		$names  = array_column( $result, 'name' );
@@ -137,7 +165,7 @@ class ClassPresetTest extends WPTestCase
 		$sorted = $names;
 		usort(
 			$sorted,
-			static fn( $a, $b ) => strcasecmp( $a, $b )
+			static fn ( $a, $b ) => strcasecmp( $a, $b )
 		);
 
 		$this->assertSame( $sorted, $names );
@@ -150,8 +178,8 @@ class ClassPresetTest extends WPTestCase
 	{
 		$input  = [
 			[
-				'name'        => 'my-class',
 				'description' => '<script>alert("xss")</script>My description',
+				'name'        => 'my-class',
 			],
 		];
 		$result = Settings::sanitize_class_names( $input );
@@ -166,7 +194,10 @@ class ClassPresetTest extends WPTestCase
 	public function test_update_and_retrieve_option(): void
 	{
 		$class_names = [
-			[ 'name' => 'header-bg', 'description' => 'Header background' ],
+			[
+				'description' => 'Header background',
+				'name'        => 'header-bg',
+			],
 		];
 
 		update_option( Settings::OPTION_CLASS_NAMES, $class_names );

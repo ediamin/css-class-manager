@@ -9,6 +9,8 @@ import {
 	createNewPost,
 	openAdvancedInspectorSection,
 	openCssClassManagerModal,
+	resetCssClassManagerUserSettings,
+	selectFirstBlock,
 } from '../utils/helpers';
 
 /**
@@ -25,6 +27,7 @@ test.describe( 'CSS Class Manager modal', () => {
 	test.beforeEach( async ( { page, pageUtils, requestUtils } ) => {
 		editor = new Editor( { page } );
 		admin = new Admin( { page, pageUtils, editor } );
+		await resetCssClassManagerUserSettings( requestUtils );
 
 		// Start with no user-defined class names.
 		await requestUtils.rest( {
@@ -130,15 +133,9 @@ test.describe( 'CSS Class Manager modal', () => {
 		await page.keyboard.type( 'Paragraph.' );
 
 		// Open inspector and look for the class in the autocomplete.
-		await page
-			.getByRole( 'region', { name: 'Editor top bar' } )
-			.getByRole( 'button', { name: /settings/i } )
-			.click();
+		await editor.openDocumentSettingsSidebar();
 
-		await editor.canvas
-			.getByRole( 'document', { name: /paragraph/i } )
-			.first()
-			.click();
+		await selectFirstBlock( editor, 'Paragraph' );
 
 		await openAdvancedInspectorSection( page );
 

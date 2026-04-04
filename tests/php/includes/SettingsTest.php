@@ -15,8 +15,6 @@ class SettingsTest extends WPTestCase
 {
 	/**
 	 * REST server instance.
-	 *
-	 * @var WP_REST_Server
 	 */
 	private WP_REST_Server $server;
 
@@ -28,7 +26,8 @@ class SettingsTest extends WPTestCase
 		parent::set_up();
 
 		global $wp_rest_server;
-		$wp_rest_server = new WP_REST_Server(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wp_rest_server = new WP_REST_Server();
 		$this->server   = $wp_rest_server;
 		do_action( 'rest_api_init' );
 
@@ -43,7 +42,9 @@ class SettingsTest extends WPTestCase
 	public function tear_down(): void
 	{
 		global $wp_rest_server;
-		$wp_rest_server = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		$wp_rest_server = null;
+
 		parent::tear_down();
 	}
 
@@ -56,11 +57,7 @@ class SettingsTest extends WPTestCase
 		$response = $this->server->dispatch( $request );
 		$data     = $response->get_data();
 
-		$this->assertArrayHasKey(
-			'schema',
-			$data,
-			'OPTIONS response should contain a schema'
-		);
+		$this->assertArrayHasKey( 'schema', $data, 'OPTIONS response should contain a schema' );
 		$this->assertArrayHasKey(
 			Settings::OPTION_CLASS_NAMES,
 			$data['schema']['properties'],
@@ -88,8 +85,14 @@ class SettingsTest extends WPTestCase
 	public function test_post_valid_class_names_saves_them(): void
 	{
 		$class_names = [
-			[ 'name' => 'my-button', 'description' => 'Primary button' ],
-			[ 'name' => 'card-header', 'description' => '' ],
+			[
+				'description' => 'Primary button',
+				'name'        => 'my-button',
+			],
+			[
+				'description' => '',
+				'name'        => 'card-header',
+			],
 		];
 
 		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
@@ -111,8 +114,14 @@ class SettingsTest extends WPTestCase
 	public function test_sanitize_callback_strips_invalid_characters(): void
 	{
 		$class_names = [
-			[ 'name' => 'valid-class', 'description' => '' ],
-			[ 'name' => 'invalid class!', 'description' => '' ],
+			[
+				'description' => '',
+				'name'        => 'valid-class',
+			],
+			[
+				'description' => '',
+				'name'        => 'invalid class!',
+			],
 		];
 
 		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
@@ -133,8 +142,14 @@ class SettingsTest extends WPTestCase
 	public function test_sanitize_callback_deduplicates_class_names(): void
 	{
 		$class_names = [
-			[ 'name' => 'my-class', 'description' => 'First' ],
-			[ 'name' => 'my-class', 'description' => 'Duplicate' ],
+			[
+				'description' => 'First',
+				'name'        => 'my-class',
+			],
+			[
+				'description' => 'Duplicate',
+				'name'        => 'my-class',
+			],
 		];
 
 		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
@@ -157,8 +172,14 @@ class SettingsTest extends WPTestCase
 	public function test_sanitize_callback_discards_empty_names(): void
 	{
 		$class_names = [
-			[ 'name' => '', 'description' => '' ],
-			[ 'name' => 'valid-class', 'description' => '' ],
+			[
+				'description' => '',
+				'name'        => '',
+			],
+			[
+				'description' => '',
+				'name'        => 'valid-class',
+			],
 		];
 
 		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
