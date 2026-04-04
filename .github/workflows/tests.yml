@@ -142,7 +142,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Start wp-env (no Xdebug overhead for E2E)
-        run: wp-env start
+        run: npm run env:start:e2e
 
       - name: Build assets
         run: npm run build

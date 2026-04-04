@@ -22,7 +22,7 @@
 		},
 		{
 			"name": "wordpress_23778236db82f19306f247e20a353a99",
-			"value": "admin%7C1775458415%7C5lKTHu8SjPnqSKG3eYWStLuo4byo2KyKkCbAnL3qmuR%7Ca2fa869c9f946727b2dde21bc22abac493f339529c7559efe87afe9ce9301ab5",
+			"value": "admin%7C1775460239%7CwrfOXRdfR0YA0emLJr6SuEvGlduy7p2D9dwp2W0j0MN%7C6860a28008f5697bc091d9f3648c46cbcba2bdf378833300f53baa3467d15a71",
 			"domain": "localhost",
 			"path": "/wp-content/plugins",
 			"expires": -1,
@@ -32,7 +32,7 @@
 		},
 		{
 			"name": "wordpress_23778236db82f19306f247e20a353a99",
-			"value": "admin%7C1775458415%7C5lKTHu8SjPnqSKG3eYWStLuo4byo2KyKkCbAnL3qmuR%7Ca2fa869c9f946727b2dde21bc22abac493f339529c7559efe87afe9ce9301ab5",
+			"value": "admin%7C1775460239%7CwrfOXRdfR0YA0emLJr6SuEvGlduy7p2D9dwp2W0j0MN%7C6860a28008f5697bc091d9f3648c46cbcba2bdf378833300f53baa3467d15a71",
 			"domain": "localhost",
 			"path": "/wp-admin",
 			"expires": -1,
@@ -42,7 +42,7 @@
 		},
 		{
 			"name": "wordpress_logged_in_23778236db82f19306f247e20a353a99",
-			"value": "admin%7C1775458415%7C5lKTHu8SjPnqSKG3eYWStLuo4byo2KyKkCbAnL3qmuR%7Cce12f97d2d59c8a23eea5819a1ae9b4023862d0f8ade193e224d641a7287cd51",
+			"value": "admin%7C1775460239%7CwrfOXRdfR0YA0emLJr6SuEvGlduy7p2D9dwp2W0j0MN%7Cbd4ae114505ffccc3bd16f4ed9353a9ddc265b041f256cd2ea96911761f6d1d2",
 			"domain": "localhost",
 			"path": "/",
 			"expires": -1,
@@ -61,6 +61,6 @@
 			"sameSite": "Lax"
 		}
 	],
-	"nonce": "3817172b55",
+	"nonce": "ec3b9dd1ed",
 	"rootURL": "http://localhost:8889/index.php?rest_route=/"
 }

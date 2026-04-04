@@ -32,16 +32,10 @@
 		"phpcs": "phpcs",
 		"phpcbf": "phpcbf -p"
 	},
-	"repositories": [
-		{
-			"type": "git",
-			"url": "https://github.com/PHPCompatibility/PHPCompatibility"
-		}
-	],
 	"require-dev": {
 		"automattic/vipwpcs": "^3.0",
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"phpcompatibility/php-compatibility": "dev-develop",
+		"phpcompatibility/php-compatibility": "^9.3",
 		"slevomat/coding-standard": "^8.14",
 		"phpstan/phpstan": "^1.10",
 		"szepeviktor/phpstan-wordpress": "^1.3",
