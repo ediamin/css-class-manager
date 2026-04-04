@@ -102,22 +102,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.4'
-          tools: composer
-
-      - name: Cache Composer packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.composer/cache
-          key: composer-e2e-${{ hashFiles('composer.json') }}
-          restore-keys: composer-e2e-
-
-      - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -147,6 +131,22 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-e2e-${{ hashFiles('composer.json') }}
+          restore-keys: composer-e2e-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
