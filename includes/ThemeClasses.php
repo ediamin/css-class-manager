@@ -19,7 +19,7 @@ class ThemeClasses
 	{
 		$user_settings = css_class_manager()->get_user_settings();
 
-		if ( $user_settings['hideThemeJSONGeneratedClasses'] ) {
+		if ( ! empty( $user_settings['hideThemeJSONGeneratedClasses'] ) ) {
 			return $classes;
 		}
 
