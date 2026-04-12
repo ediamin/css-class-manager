@@ -2,6 +2,13 @@ const defaultConfig = require( '@wordpress/scripts/config/.eslintrc' );
 
 module.exports = {
 	...defaultConfig,
+	overrides: [
+		...( defaultConfig.overrides || [] ),
+		{
+			files: [ 'tests/e2e/**/*.ts' ],
+			extends: [ 'plugin:@wordpress/eslint-plugin/test-playwright' ],
+		},
+	],
 	rules: {
 		...defaultConfig.rules,
 		'@wordpress/i18n-text-domain': [

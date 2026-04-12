@@ -118,7 +118,7 @@ export async function openAdvancedInspectorSection(
 
 	const isSelected = await blockTab.getAttribute( 'aria-selected' );
 	if ( isSelected !== 'true' ) {
-		await blockTab.click( { force: true } );
+		await blockTab.click();
 		await expect( blockTab ).toHaveAttribute( 'aria-selected', 'true' );
 	}
 

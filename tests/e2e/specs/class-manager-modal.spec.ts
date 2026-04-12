@@ -106,7 +106,7 @@ test.describe( 'CSS Class Manager modal', () => {
 		// The class panel should no longer appear (exact text on the panel toggle).
 		await expect(
 			page.getByText( 'class-to-delete', { exact: true } )
-		).not.toBeVisible();
+		).toBeHidden();
 	} );
 
 	test( 'newly added class appears as autocomplete suggestion in the inspector', async ( {

@@ -1,6 +1,6 @@
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
+import * as fs from 'fs';
+import * as os from 'os';
+import * as path from 'path';
 
 import {
 	Admin,
@@ -81,11 +81,14 @@ test.describe( 'Import / Export', () => {
 		const fileInput = page.locator( 'input[type="file"]' );
 		await fileInput.setInputFiles( tmpPath );
 
-		// Confirm the import if a dialog or button appears.
-		const importBtn = page.getByRole( 'button', { name: /^import$/i } );
-		if ( await importBtn.isVisible() ) {
-			await importBtn.click();
-		}
+		// The Import component processes the file automatically via the onChange
+		// handler — there is no separate "Import" button. Wait for the success
+		// snackbar to confirm the async REST save has completed before switching tabs.
+		await expect(
+			page.locator( '.components-snackbar__content', {
+				hasText: /class list imported/i,
+			} )
+		).toBeVisible();
 
 		// Switch to the CSS Classes tab to verify the imports.
 		await page.getByRole( 'tab', { name: /css classes/i } ).click();
@@ -105,10 +108,8 @@ test.describe( 'Import / Export', () => {
 		const fileInput = page.locator( 'input[type="file"]' );
 		await fileInput.setInputFiles( tmpPath );
 
-		const importBtn = page.getByRole( 'button', { name: /^import$/i } );
-		if ( await importBtn.isVisible() ) {
-			await importBtn.click();
-		}
+		// The Import component processes the file automatically via the onChange
+		// handler — there is no separate "Import" button.
 
 		// An error snackbar notice should be displayed.
 		await expect(

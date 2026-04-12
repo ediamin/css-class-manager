@@ -21,7 +21,9 @@ import type { UserSettings } from '../../types';
  * initialState for each test group.
  */
 function createStoreRegistry() {
-	const registry = createRegistry();
+	const registry = createRegistry() as ReturnType< typeof createRegistry > & {
+		register: ( store: unknown ) => void;
+	};
 
 	// Load a fresh copy of the store so that initialState is not shared.
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -152,29 +154,34 @@ describe( 'getCssClassNames', () => {
 		);
 	} );
 
-	it( 'sorts class names case-insensitively by name', async () => {
+	it( 'sorts class names case-insensitively by name', () => {
+		// Seed the global cssClassManager mock with out-of-order names so the
+		// store's initialState is populated, then read back via getCssClassNames.
+		const original = cssClassManager.filteredClassNames;
+
+		cssClassManager.filteredClassNames = [
+			{ name: 'Zebra', description: '' },
+			{ name: 'apple', description: '' },
+			{ name: 'Mango', description: '' },
+		];
+
+		// createStoreRegistry uses require() to get a fresh store copy so it
+		// picks up the updated global.
+		jest.resetModules();
 		const registry = createStoreRegistry();
 
-		await registry
-			.dispatch( STORE_NAME )
-			// saveUserDefinedClassNames is an async thunk that calls apiFetch;
-			// we bypass it and use a direct state update via the sync action path
-			// by injecting state. Instead, we test via getFilteredClassNames and
-			// getUserDefinedClassNames which mirror the initialState.
-			// For a full end-to-end test see actions.test.ts.
-			// Here we test the sorting logic indirectly by verifying the order
-			// of names returned from a pre-populated registry.
-			.createSuccessNotice( 'placeholder' ); // just to trigger a state read
+		const names = registry
+			.select( STORE_NAME )
+			.getCssClassNames()
+			.map( ( c: { name: string } ) => c.name );
 
-		// Verify alphabetical order for the initial empty state.
-		expect( registry.select( STORE_NAME ).getCssClassNames() ).toHaveLength(
-			0
+		const sorted = [ ...names ].sort( ( a, b ) =>
+			a.toLowerCase().localeCompare( b.toLowerCase() )
 		);
+		expect( names ).toEqual( sorted );
 
-		// Sorting logic is exercised in actions.test.ts after state mutations.
-		// This assertion validates the selector returns an array.
-		expect(
-			Array.isArray( registry.select( STORE_NAME ).getCssClassNames() )
-		).toBe( true );
+		// Restore original value.
+		cssClassManager.filteredClassNames = original;
+		jest.resetModules();
 	} );
 } );

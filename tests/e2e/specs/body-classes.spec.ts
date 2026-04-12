@@ -44,29 +44,25 @@ test.describe( 'Body classes', () => {
 			.getByRole( 'button', { name: /settings/i } )
 			.click();
 
-		// The sidebar may re-render as plugin panels mount; use force to bypass
-		// the stability check and ensure the click lands on the Post tab.
-		await page
-			.getByRole( 'tab', { name: /post/i } )
-			.waitFor( { state: 'visible' } );
-		await page
-			.getByRole( 'tab', { name: /post/i } )
-			.click( { force: true } );
+		// The sidebar re-renders as plugin panels mount, repeatedly detaching the
+		// Post tab node. Wait for it to be visible then dispatch a native JS click
+		// so Playwright does not block on the stability check.
+		const postTab = page.getByRole( 'tab', { name: /post/i } );
+		await postTab.waitFor( { state: 'visible' } );
+		await postTab.evaluate( ( el: HTMLElement ) => el.click() );
 
 		// Expand the Body Classes panel if present.
 		const bodyClassesPanel = page.getByRole( 'button', {
 			name: /body classes/i,
 		} );
 
-		if ( ! ( await bodyClassesPanel.isVisible() ) ) {
-			// Body classes feature not available for this post type — skip.
-			return;
-		}
+		await expect( bodyClassesPanel ).toBeVisible();
 
-		const expanded = await bodyClassesPanel.getAttribute( 'aria-expanded' );
-		if ( expanded !== 'true' ) {
-			await bodyClassesPanel.click();
-		}
+		await bodyClassesPanel.click();
+		await expect( bodyClassesPanel ).toHaveAttribute(
+			'aria-expanded',
+			'true'
+		);
 
 		// The body class control is a combobox inside the Body Classes panel.
 		const bodyClassCombobox = page

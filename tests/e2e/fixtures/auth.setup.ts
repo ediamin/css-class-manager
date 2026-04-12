@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 
 import { test as setup } from '@playwright/test';
 import { RequestUtils } from '@wordpress/e2e-test-utils-playwright';

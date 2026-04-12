@@ -19,6 +19,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "1.57.0",
+		"@types/node": "25.6.0",
 		"@types/wordpress__block-editor": "14.21.8",
 		"@types/wordpress__blocks": "12.5.18",
 		"@wordpress/api-fetch": "7.37.0",
@@ -66,8 +67,9 @@
 		"env:start:e2e": "wp-env start",
 		"env:stop": "wp-env stop",
 		"format": "wp-scripts format",
-		"lint": "npm run composer phpcs . && npm run lint:js && npm run lint:css",
+		"lint": "npm run composer phpcs . && npm run lint:js && npm run lint:css && npm run lint:types",
 		"lint:js": "wp-scripts lint-js assets/src tests playwright.config.ts jest.config.js webpack.config.js version-update.js .eslintrc.js",
+		"lint:types": "tsc --noEmit",
 		"lint:css": "wp-scripts lint-style assets/src",
 		"composer": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer",
 		"dev": "wp-scripts start",

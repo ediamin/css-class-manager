@@ -7,7 +7,7 @@
 		"jsx": "react-jsx",
 		"target": "esnext",
 		"module": "NodeNext",
-		"lib": [ "dom", "esnext" ],
+		"lib": [ "dom", "dom.iterable", "esnext" ],
 		"declaration": true,
 		"declarationMap": false,
 		"composite": true,
@@ -28,7 +28,9 @@
 
 		/* This needs to be false so our types are possible to consume without setting this */
 		"esModuleInterop": false,
-		"resolveJsonModule": true
+		"resolveJsonModule": true,
+		"types": [ "node" ],
+		"skipLibCheck": true
 	},
 	"exclude": []
 }

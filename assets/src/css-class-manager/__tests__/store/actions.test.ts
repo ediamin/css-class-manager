@@ -29,12 +29,25 @@ const mockedApiFetch = apiFetch as jest.MockedFunction< typeof apiFetch >;
 // ---------------------------------------------------------------------------
 
 function createStoreRegistry() {
-	const registry = createRegistry();
+	const registry = createRegistry() as ReturnType< typeof createRegistry > & {
+		register: ( store: unknown ) => void;
+	};
 	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const freshStore = require( '../../store' ).default;
 	registry.register( freshStore );
 	return registry;
 }
+
+// ---------------------------------------------------------------------------
+// Register the store in the global registry once for all async test groups.
+// Async thunks internally reference the global `select` and `dispatch`, so
+// they cannot use an isolated registry. Registration is idempotent in
+// @wordpress/data — subsequent calls for the same store key are no-ops.
+// ---------------------------------------------------------------------------
+
+beforeAll( () => {
+	globalRegister( store );
+} );
 
 // ---------------------------------------------------------------------------
 // Synchronous actions
@@ -112,10 +125,6 @@ describe( 'removeNotice', () => {
 // ---------------------------------------------------------------------------
 
 describe( 'saveUserDefinedClassNames', () => {
-	beforeAll( () => {
-		globalRegister( store );
-	} );
-
 	beforeEach( () => {
 		mockedApiFetch.mockResolvedValue( {} );
 	} );
@@ -125,7 +134,7 @@ describe( 'saveUserDefinedClassNames', () => {
 	} );
 
 	it( 'persists a new class name via apiFetch and adds it to the store', async () => {
-		await globalDispatch( STORE_NAME ).saveUserDefinedClassNames(
+		await globalDispatch( store ).saveUserDefinedClassNames(
 			{ name: 'new-class', description: 'My new class' },
 			[] // no existing user-defined classes
 		);
@@ -137,8 +146,7 @@ describe( 'saveUserDefinedClassNames', () => {
 			} )
 		);
 
-		const userDefined =
-			globalSelect( STORE_NAME ).getUserDefinedClassNames();
+		const userDefined = globalSelect( store ).getUserDefinedClassNames();
 		const names = userDefined.map( ( c ) => c.name );
 		expect( names ).toContain( 'new-class' );
 	} );
@@ -150,14 +158,13 @@ describe( 'saveUserDefinedClassNames', () => {
 			description: '',
 		};
 
-		await globalDispatch( STORE_NAME ).saveUserDefinedClassNames(
+		await globalDispatch( store ).saveUserDefinedClassNames(
 			{ name: 'updated-class', description: '' },
 			[ existing ],
 			existing
 		);
 
-		const userDefined =
-			globalSelect( STORE_NAME ).getUserDefinedClassNames();
+		const userDefined = globalSelect( store ).getUserDefinedClassNames();
 		const names = userDefined.map( ( c ) => c.name );
 
 		expect( names ).toContain( 'updated-class' );
@@ -167,12 +174,12 @@ describe( 'saveUserDefinedClassNames', () => {
 	it( 'dispatches an error notice when apiFetch rejects', async () => {
 		mockedApiFetch.mockRejectedValue( new Error( 'Network error' ) );
 
-		await globalDispatch( STORE_NAME ).saveUserDefinedClassNames(
+		await globalDispatch( store ).saveUserDefinedClassNames(
 			{ name: 'fail-class' },
 			[]
 		);
 
-		const notices = globalSelect( STORE_NAME ).getNotices();
+		const notices = globalSelect( store ).getNotices();
 		expect( notices.some( ( n ) => n.status === 'error' ) ).toBe( true );
 	} );
 } );
@@ -182,6 +189,10 @@ describe( 'saveUserDefinedClassNames', () => {
 // ---------------------------------------------------------------------------
 
 describe( 'deleteUserDefinedClassName', () => {
+	beforeEach( () => {
+		mockedApiFetch.mockResolvedValue( {} );
+	} );
+
 	afterEach( () => {
 		jest.clearAllMocks();
 	} );
@@ -191,17 +202,17 @@ describe( 'deleteUserDefinedClassName', () => {
 
 		const classToDelete = { name: 'to-delete', id: 'del-id' };
 
-		await globalDispatch( STORE_NAME ).saveUserDefinedClassNames(
+		await globalDispatch( store ).saveUserDefinedClassNames(
 			{ name: 'to-delete' },
 			[]
 		);
 
-		await globalDispatch( STORE_NAME ).deleteUserDefinedClassName(
+		await globalDispatch( store ).deleteUserDefinedClassName(
 			classToDelete,
-			globalSelect( STORE_NAME ).getUserDefinedClassNames()
+			globalSelect( store ).getUserDefinedClassNames()
 		);
 
-		const names = globalSelect( STORE_NAME )
+		const names = globalSelect( store )
 			.getUserDefinedClassNames()
 			.map( ( c ) => c.name );
 
@@ -211,12 +222,12 @@ describe( 'deleteUserDefinedClassName', () => {
 	it( 'dispatches an error notice when apiFetch rejects', async () => {
 		mockedApiFetch.mockRejectedValue( new Error( 'Server error' ) );
 
-		await globalDispatch( STORE_NAME ).deleteUserDefinedClassName(
+		await globalDispatch( store ).deleteUserDefinedClassName(
 			{ name: 'some-class', id: 'id-1' },
 			[ { name: 'some-class', id: 'id-1' } ]
 		);
 
-		const notices = globalSelect( STORE_NAME ).getNotices();
+		const notices = globalSelect( store ).getNotices();
 		expect( notices.some( ( n ) => n.status === 'error' ) ).toBe( true );
 	} );
 } );
@@ -226,6 +237,10 @@ describe( 'deleteUserDefinedClassName', () => {
 // ---------------------------------------------------------------------------
 
 describe( 'updateUserSettings', () => {
+	beforeEach( () => {
+		mockedApiFetch.mockResolvedValue( {} );
+	} );
+
 	afterEach( () => {
 		jest.clearAllMocks();
 	} );
@@ -239,9 +254,9 @@ describe( 'updateUserSettings', () => {
 			allowAddingClassNamesWithoutCreating: true,
 		};
 
-		await globalDispatch( STORE_NAME ).updateUserSettings( newSettings );
+		await globalDispatch( store ).updateUserSettings( newSettings );
 
-		expect( globalSelect( STORE_NAME ).getUserSettings() ).toEqual(
+		expect( globalSelect( store ).getUserSettings() ).toEqual(
 			newSettings
 		);
 	} );
@@ -249,13 +264,13 @@ describe( 'updateUserSettings', () => {
 	it( 'dispatches an error notice when the save fails', async () => {
 		mockedApiFetch.mockRejectedValue( new Error( 'Unauthorized' ) );
 
-		await globalDispatch( STORE_NAME ).updateUserSettings( {
+		await globalDispatch( store ).updateUserSettings( {
 			inspectorControlPosition: 'default',
 			hideThemeJSONGeneratedClasses: false,
 			allowAddingClassNamesWithoutCreating: false,
 		} );
 
-		const notices = globalSelect( STORE_NAME ).getNotices();
+		const notices = globalSelect( store ).getNotices();
 		expect( notices.some( ( n ) => n.status === 'error' ) ).toBe( true );
 	} );
 } );
