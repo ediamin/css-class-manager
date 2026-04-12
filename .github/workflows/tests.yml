@@ -20,15 +20,33 @@ concurrency:
 
 jobs:
   # ---------------------------------------------------------------------------
-  # PHP unit & integration tests with code coverage
+  # PHP unit & integration tests (no wp-env / Docker)
   # ---------------------------------------------------------------------------
   php:
     name: PHP Tests (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        php: ['7.4']
+        php: ['7.4', '8.3', '8.4']
+        include:
+          - php: '8.4'
+            coverage: true
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress_tests
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout repository
@@ -38,46 +56,65 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: xdebug
+          coverage: ${{ matrix.coverage && 'xdebug' || 'none' }}
           tools: composer
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer packages
         uses: actions/cache@v4
         with:
-          path: ~/.composer/cache
-          key: composer-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
           restore-keys: composer-${{ matrix.php }}-
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: npm
+      - name: Download WordPress
+        run: curl -sL https://wordpress.org/latest.tar.gz | tar xz -C /tmp
 
-      - name: Install npm dependencies
-        run: npm ci
+      - name: Create wp-tests-config.php
+        run: |
+          cat > /tmp/wp-tests-config.php << 'PHP'
+          <?php
+          define( 'DB_NAME', 'wordpress_tests' );
+          define( 'DB_USER', 'root' );
+          define( 'DB_PASSWORD', 'root' );
+          define( 'DB_HOST', '127.0.0.1' );
+          define( 'DB_CHARSET', 'utf8' );
+          define( 'DB_COLLATE', '' );
 
-      - name: Build assets
-        run: npm run build
+          $table_prefix = 'wptests_';
 
-      # Cache the local wp-env download directory so subsequent runs don't re-download WordPress core and plugins
-      - name: Cache wp-env environment
-        uses: actions/cache@v4
-        with:
-          path: ~/.wp-env
-          key: wp-env-${{ hashFiles('.wp-env.json') }}
-          restore-keys: wp-env-
+          define( 'WP_TESTS_DOMAIN', 'example.org' );
+          define( 'WP_TESTS_EMAIL', 'admin@example.org' );
+          define( 'WP_TESTS_TITLE', 'CSS Class Manager for WordPress Blocks' );
+          define( 'WP_PHP_BINARY', 'php' );
 
-      - name: Start wp-env (with Xdebug coverage mode)
-        run: npm run env:start
+          define( 'ABSPATH', '/tmp/wordpress/' );
+          PHP
 
-      - name: Run PHP tests with coverage
-        run: npm run test:php
+      - name: Create stub asset file
+        run: |
+          mkdir -p assets/dist/css-class-manager
+          echo "<?php return ['dependencies' => [], 'version' => 'test'];" > assets/dist/css-class-manager/index.asset.php
+
+      - name: Run PHP tests
+        env:
+          WP_PHPUNIT__DIR: ${{ github.workspace }}/vendor/wp-phpunit/wp-phpunit
+          WP_PHPUNIT__TESTS_CONFIG: /tmp/wp-tests-config.php
+        run: |
+          if [ "${{ matrix.coverage }}" = "true" ]; then
+            vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover coverage.xml --verbose
+          else
+            vendor/bin/phpunit -c phpunit.xml.dist --no-coverage --verbose
+          fi
 
       - name: Upload PHP coverage report (Clover)
+        if: matrix.coverage
         uses: actions/upload-artifact@v4
         with:
           name: php-coverage-clover
@@ -85,6 +122,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload PHP coverage report (HTML)
+        if: matrix.coverage
         uses: actions/upload-artifact@v4
         with:
           name: php-coverage-html
@@ -95,7 +133,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: php-junit-results
+          name: php-junit-results-${{ matrix.php }}
           path: junit.xml
           if-no-files-found: warn
 
@@ -130,11 +168,25 @@ jobs:
           if-no-files-found: warn
 
   # ---------------------------------------------------------------------------
-  # Playwright E2E tests
+  # Playwright E2E tests (no wp-env / Docker)
   # ---------------------------------------------------------------------------
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
       - name: Checkout repository
@@ -143,18 +195,23 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
-          tools: composer
+          php-version: '8.4'
+          coverage: none
+          tools: composer, wp-cli
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer packages
         uses: actions/cache@v4
         with:
-          path: ~/.composer/cache
-          key: composer-e2e-${{ hashFiles('composer.json') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-e2e-${{ hashFiles('composer.lock') }}
           restore-keys: composer-e2e-
 
-      - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist
+      - name: Install Composer dependencies (production only)
+        run: composer install --no-interaction --prefer-dist --no-dev
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -165,22 +222,85 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers and system dependencies
         run: npx playwright install --with-deps chromium
 
       - name: Build assets
         run: npm run build
 
-      # Cache the local wp-env download directory so subsequent runs don't re-download WordPress core and plugins
-      - name: Cache wp-env environment
-        uses: actions/cache@v4
-        with:
-          path: ~/.wp-env
-          key: wp-env-${{ hashFiles('.wp-env.json') }}
-          restore-keys: wp-env-
+      - name: Set up WordPress
+        run: |
+          # Download WordPress core
+          wp core download --path=/tmp/wordpress
 
-      - name: Start wp-env (no Xdebug overhead for E2E)
-        run: npm run env:start:e2e
+          # Configure database connection
+          wp config create --path=/tmp/wordpress \
+            --dbname=wordpress \
+            --dbuser=root \
+            --dbpass=root \
+            --dbhost=127.0.0.1
+
+          # Install WordPress
+          wp core install --path=/tmp/wordpress \
+            --url=http://localhost:8889 \
+            --title="CSS Class Manager Tests" \
+            --admin_user=admin \
+            --admin_password=password \
+            --admin_email=admin@example.org \
+            --skip-email
+
+          # Enable debug mode
+          wp config set WP_DEBUG true --raw --path=/tmp/wordpress
+          wp config set WP_DEBUG_LOG true --raw --path=/tmp/wordpress
+
+          # Symlink the plugin into the WordPress plugins directory
+          ln -s "$GITHUB_WORKSPACE" /tmp/wordpress/wp-content/plugins/css-class-manager
+
+          # Activate the plugin
+          wp plugin activate css-class-manager --path=/tmp/wordpress
+
+          # Install and activate the theme used by E2E tests
+          wp theme install twentytwentyfive --activate --path=/tmp/wordpress
+
+          # Set up pretty permalinks for REST API support
+          wp rewrite structure '/%postname%/' --path=/tmp/wordpress
+          wp rewrite flush --path=/tmp/wordpress
+
+      - name: Create PHP router for built-in server
+        run: |
+          cat > /tmp/wordpress/router.php << 'ROUTER'
+          <?php
+          $uri = urldecode( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
+
+          if ( $uri !== '/' && file_exists( $_SERVER['DOCUMENT_ROOT'] . $uri ) ) {
+              return false;
+          }
+
+          $_SERVER['PHP_SELF'] = '/index.php';
+          require $_SERVER['DOCUMENT_ROOT'] . '/index.php';
+          ROUTER
+
+      - name: Start WordPress
+        run: PHP_CLI_SERVER_WORKERS=4 php -S localhost:8889 -t /tmp/wordpress /tmp/wordpress/router.php &
+
+      - name: Wait for WordPress
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sS -o /dev/null http://localhost:8889/wp-login.php 2>/dev/null; then
+              echo "WordPress is ready"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "WordPress failed to start"
+          exit 1
 
       - name: Run E2E tests
         run: npm run test:e2e
