@@ -59,6 +59,12 @@
 		},
 		"test-exclude": {
 			"minimatch": "3.1.5"
+		},
+		"@typescript-eslint/typescript-estree": {
+			"minimatch": ">=9.0.7"
+		},
+		"express": {
+			"path-to-regexp": ">=0.1.13"
 		}
 	},
 	"scripts": {
