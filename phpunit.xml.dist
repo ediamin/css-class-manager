@@ -1,4 +1,7 @@
+<?xml version="1.0"?>
 <phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd"
 	bootstrap="tests/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
@@ -13,10 +16,32 @@
 		<testsuite name="default">
 			<directory suffix="Test.php">./tests/php/includes</directory>
 		</testsuite>
+		<!-- Fast unit tests — no WordPress DB/API required -->
+		<testsuite name="unit">
+			<file>./tests/php/includes/PluginTest.php</file>
+			<file>./tests/php/includes/ClassNameParserTest.php</file>
+			<file>./tests/php/includes/FunctionsTest.php</file>
+		</testsuite>
+		<!-- Integration tests — require a running WordPress environment -->
+		<testsuite name="integration">
+			<file>./tests/php/includes/BootstrapTest.php</file>
+			<file>./tests/php/includes/HooksTest.php</file>
+			<file>./tests/php/includes/SettingsTest.php</file>
+			<file>./tests/php/includes/UserSettingsTest.php</file>
+			<file>./tests/php/includes/ClassPresetTest.php</file>
+			<file>./tests/php/includes/BodyClassesTest.php</file>
+			<file>./tests/php/includes/ThemeClassesTest.php</file>
+		</testsuite>
 	</testsuites>
-	<coverage processUncoveredFiles="false">
+	<coverage processUncoveredFiles="true">
 		<include>
 			<directory suffix=".php">includes</directory>
 		</include>
+		<report>
+			<html outputDirectory="coverage/php"/>
+		</report>
 	</coverage>
+	<logging>
+		<junit outputFile="junit.xml"/>
+	</logging>
 </phpunit>

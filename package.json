@@ -18,6 +18,8 @@
 		"npm": ">=10.9.2"
 	},
 	"devDependencies": {
+		"@playwright/test": "1.57.0",
+		"@types/node": "25.6.0",
 		"@types/wordpress__block-editor": "14.21.8",
 		"@types/wordpress__blocks": "12.5.18",
 		"@wordpress/api-fetch": "7.37.0",
@@ -25,6 +27,7 @@
 		"@wordpress/compose": "7.37.0",
 		"@wordpress/core-data": "7.37.0",
 		"@wordpress/data": "10.37.0",
+		"@wordpress/e2e-test-utils-playwright": "1.42.0",
 		"@wordpress/editor": "14.37.0",
 		"@wordpress/element": "6.37.0",
 		"@wordpress/env": "10.37.0",
@@ -47,30 +50,41 @@
 	"overrides": {
 		"@babel/runtime": ">=7.26.10",
 		"serialize-javascript": ">=7.0.4",
-		"minimatch": "9.0.9",
 		"webpack-dev-server": ">=5.2.1",
 		"markdownlint-cli": {
 			"minimatch": "3.1.5"
 		},
 		"eslint-plugin-import": {
 			"minimatch": "3.1.5"
+		},
+		"test-exclude": {
+			"minimatch": "3.1.5"
 		}
 	},
 	"scripts": {
 		"prepare": "husky install",
 		"env:start": "wp-env start --xdebug=debug,coverage",
+		"env:start:e2e": "wp-env start",
 		"env:stop": "wp-env stop",
 		"format": "wp-scripts format",
-		"lint": "npm run composer phpcs . && npm run lint:js && npm run lint:css",
-		"lint:js": "wp-scripts lint-js",
+		"lint": "npm run composer phpcs . && npm run lint:js && npm run lint:css && npm run lint:types",
+		"lint:js": "wp-scripts lint-js assets/src tests playwright.config.ts jest.config.js webpack.config.js version-update.js .eslintrc.js",
+		"lint:types": "tsc --noEmit",
 		"lint:css": "wp-scripts lint-style assets/src",
 		"composer": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer",
 		"dev": "wp-scripts start",
 		"build": "wp-scripts build",
 		"clean": "rimraf assets/dist",
 		"php:analyze": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli composer analyze",
-		"test:php": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' tests-wordpress vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover coverage.xml --verbose && npm run php:coverage:fix-path",
+		"test": "npm run test:php && npm run test:js && npm run test:e2e",
+		"test:php": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' tests-wordpress vendor/bin/phpunit -c phpunit.xml.dist --coverage-clover coverage.xml --coverage-html coverage/php --verbose && npm run php:coverage:fix-path",
 		"php:coverage:fix-path": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' tests-wordpress sed -i 's|/var/www/html/wp-content/plugins/css-class-manager/||g' coverage.xml",
+		"test:js": "wp-scripts test-unit-js",
+		"test:js:watch": "wp-scripts test-unit-js --watch",
+		"test:js:coverage": "wp-scripts test-unit-js --coverage",
+		"test:e2e": "wp-scripts test-playwright",
+		"test:e2e:debug": "wp-scripts test-playwright --debug",
+		"test:e2e:ui": "wp-scripts test-playwright --ui",
 		"make-pot": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli wp i18n make-pot . languages/css-class-manager.pot --include=includes,assets/dist",
 		"zip": "wp-env run --env-cwd='wp-content/plugins/css-class-manager' cli php zip.php",
 		"make-dist-zip": "npm run clean && npm run make-pot && npm run build && npm run zip"

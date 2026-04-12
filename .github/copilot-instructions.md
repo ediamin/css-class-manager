@@ -218,20 +218,54 @@ import { __ } from '@wordpress/i18n';
 - **Code Standards**: WordPress VIP coding standards via PHPCS
 - **PHP Compatibility**: Test against PHP 7.4+ using PHPCompatibility
 
-### JavaScript Testing
+### JavaScript Unit Testing
 - **TypeScript**: Strict type checking enabled
 - **Linting**: ESLint with WordPress standards
 - **Style Linting**: Stylelint for SCSS files
+- **Runner**: `npm run test:js` (wp-scripts test-unit-js)
+
+### E2E Testing
+- **Framework**: Playwright via `wp-scripts test-playwright`
+- **Runner**: `npm run test:e2e` (requires wp-env running)
+- **Config**: `playwright.config.ts` in the project root
+- **Specs**: `tests/e2e/specs/`
+- **Auth setup**: `tests/e2e/fixtures/auth.setup.ts`
+- **Import `test`/`expect`** from `@wordpress/e2e-test-utils-playwright` (not `@playwright/test`) to get WordPress fixtures (`admin`, `editor`, `pageUtils`, `requestUtils`)
+- **`pageUtils` in spec files**: destructure from fixture params — `{ page, pageUtils }` — and pass to `new Admin({ page, pageUtils })`
+- **`pageUtils` in `auth.setup.ts`**: use `@playwright/test`'s `setup`; create `new PageUtils({ page, browserName })` explicitly and pass to `new Admin({ page, pageUtils })`
 
 ## Build & Development
+
+### Pre-Commit Requirement
+
+**You must always run all linters and all tests before making any commit.** Do not commit code that fails linting or tests.
+
+```bash
+npm run lint:js          # Must pass before committing
+npm run lint:css         # Must pass before committing
+npm run test:js          # Must pass before committing
+```
 
 ### Commands
 ```bash
 # Development
 npm run dev              # Start development build
 npm run build           # Production build
-npm run lint            # Run all linting
 npm run php:analyze     # PHPStan analysis
+
+# Linting (run all before committing)
+npm run lint            # Run all linting (PHP PHPCS + JS + CSS) — requires wp-env
+npm run lint:js         # Lint JS/TS files only (wp-scripts lint-js)
+npm run lint:css        # Lint SCSS files only (wp-scripts lint-style assets/src)
+
+# Testing (run all before committing)
+npm run test            # Run all tests (PHP + JS + E2E) — requires wp-env
+npm run test:js         # Run JS unit tests (wp-scripts test-unit-js)
+npm run test:js:watch   # Run JS unit tests in watch mode
+npm run test:js:coverage # Run JS unit tests with coverage report
+npm run test:e2e        # Run E2E tests (wp-scripts test-playwright) — requires wp-env
+npm run test:e2e:debug  # Run E2E tests in debug mode
+npm run test:e2e:ui     # Run E2E tests with Playwright UI
 
 # Environment
 npm run env:start       # Start wp-env

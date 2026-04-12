@@ -11,7 +11,12 @@ import type { ActionCreator } from '@wordpress/data';
 import type { ComponentProps } from 'react';
 
 type SnackbarListProps = ComponentProps< typeof SnackbarList >;
-type Notices = SnackbarListProps[ 'notices' ];
+type NoticeStatus = 'warning' | 'success' | 'error' | 'info';
+type Notice = SnackbarListProps[ 'notices' ][ number ] & {
+	status: NoticeStatus;
+	explicitDismiss?: boolean;
+};
+type Notices = Notice[];
 type RemoveNotice = SnackbarListProps[ 'onRemove' ];
 
 interface State {

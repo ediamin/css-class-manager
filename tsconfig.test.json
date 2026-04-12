@@ -1,0 +1,16 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"composite": false,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
+		"skipLibCheck": true
+	},
+	"include": [
+		"assets/src/**/*.ts",
+		"assets/src/**/*.tsx",
+		"tests/jest-globals.d.ts"
+	],
+	"exclude": []
+}
