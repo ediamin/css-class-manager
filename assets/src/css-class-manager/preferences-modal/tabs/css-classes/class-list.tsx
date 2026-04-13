@@ -35,25 +35,28 @@ const ClassList = () => {
 		createErrorNotice,
 	} = useStore();
 
+	// Memoize the Fuse instance separately so the search index is only
+	// rebuilt when the class names list changes, not on every keystroke.
+	const fuse = useMemo( () => {
+		return new Fuse< CombinedClassPreset >( cssClassNames, {
+			keys: [ 'name', 'description' ],
+			includeMatches: true,
+			threshold: 0.3,
+		} );
+	}, [ cssClassNames ] );
+
 	const filteredClassList: FilteredClassList[] = useMemo( () => {
 		if ( ! search.trim() ) {
 			return cssClassNames;
 		}
 
-		const options = {
-			keys: [ 'name', 'description' ],
-			includeMatches: true,
-			threshold: 0.3,
-		};
-
-		const fuse = new Fuse< CombinedClassPreset >( cssClassNames, options );
 		const result = fuse.search( search );
 
 		return result.map( ( itemObj ) => ( {
 			...itemObj.item,
 			matches: itemObj.matches,
 		} ) );
-	}, [ cssClassNames, search ] );
+	}, [ cssClassNames, search, fuse ] );
 
 	// Searching for items causes sudden height-shrinking jerks.
 	// Setting a minimum height for the container can fix this issue.
