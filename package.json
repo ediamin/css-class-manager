@@ -49,6 +49,8 @@
 	},
 	"overrides": {
 		"@babel/runtime": ">=7.26.10",
+		"basic-ftp": ">=5.3.0",
+		"follow-redirects": ">=1.16.0",
 		"serialize-javascript": ">=7.0.4",
 		"webpack-dev-server": ">=5.2.1",
 		"markdownlint-cli": {

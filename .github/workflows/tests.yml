@@ -67,10 +67,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: composer-${{ matrix.php }}-${{ hashFiles('composer.lock') }}
-          restore-keys: composer-${{ matrix.php }}-
+          key: composer-downloads-${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: composer-downloads-${{ runner.os }}-php-${{ matrix.php }}-
+
+      - name: Cache Composer vendor directory
+        id: composer-vendor-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-vendor-${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('composer.json', 'composer.lock') }}
 
       - name: Install Composer dependencies
+        if: steps.composer-vendor-cache.outputs.cache-hit != 'true'
         run: composer install --no-interaction --prefer-dist
 
       - name: Download WordPress
@@ -153,8 +161,17 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Cache node_modules
+        id: node-modules-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
 
       - name: Install npm dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Run JavaScript unit tests with coverage
@@ -173,6 +190,8 @@ jobs:
   e2e:
     name: E2E Tests
     runs-on: ubuntu-latest
+    env:
+      WP_BASE_URL: http://127.0.0.1:8889
 
     services:
       mysql:
@@ -207,10 +226,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: composer-e2e-${{ hashFiles('composer.lock') }}
-          restore-keys: composer-e2e-
+          key: composer-downloads-${{ runner.os }}-e2e-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: composer-downloads-${{ runner.os }}-e2e-
+
+      - name: Cache Composer vendor directory
+        id: composer-vendor-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-vendor-${{ runner.os }}-e2e-${{ hashFiles('composer.json', 'composer.lock') }}
 
       - name: Install Composer dependencies (production only)
+        if: steps.composer-vendor-cache.outputs.cache-hit != 'true'
         run: composer install --no-interaction --prefer-dist --no-dev
 
       - name: Set up Node.js
@@ -218,8 +245,17 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Cache node_modules
+        id: node-modules-cache
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('.nvmrc', 'package.json', 'package-lock.json') }}
 
       - name: Install npm dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Cache Playwright browsers
@@ -227,9 +263,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ hashFiles('package-lock.json') }}
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright browsers and system dependencies
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Build assets
@@ -249,7 +286,7 @@ jobs:
 
           # Install WordPress
           wp core install --path=/tmp/wordpress \
-            --url=http://localhost:8889 \
+            --url="$WP_BASE_URL" \
             --title="CSS Class Manager Tests" \
             --admin_user=admin \
             --admin_password=password \
@@ -288,12 +325,14 @@ jobs:
           ROUTER
 
       - name: Start WordPress
-        run: PHP_CLI_SERVER_WORKERS=4 php -S localhost:8889 -t /tmp/wordpress /tmp/wordpress/router.php &
+        run: |
+          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8889 -t /tmp/wordpress /tmp/wordpress/router.php > /tmp/wordpress/php-server.log 2>&1 &
+          echo $! > /tmp/wordpress/php-server.pid
 
       - name: Wait for WordPress
         run: |
           for i in $(seq 1 30); do
-            if curl -sS -o /dev/null http://localhost:8889/wp-login.php 2>/dev/null; then
+            if curl -sS -o /dev/null "$WP_BASE_URL/wp-login.php" 2>/dev/null; then
               echo "WordPress is ready"
               exit 0
             fi
@@ -303,7 +342,17 @@ jobs:
           exit 1
 
       - name: Run E2E tests
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 'true'
         run: npm run test:e2e
+
+      - name: Upload PHP server log
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: php-server-log
+          path: /tmp/wordpress/php-server.log
+          if-no-files-found: warn
 
       - name: Upload Playwright HTML report
         uses: actions/upload-artifact@v4
