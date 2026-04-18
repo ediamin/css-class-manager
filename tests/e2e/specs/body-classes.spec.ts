@@ -5,7 +5,7 @@ import {
 	test,
 } from '@wordpress/e2e-test-utils-playwright';
 
-import { createNewPost } from '../utils/helpers';
+import { createNewPost, typeIntoReactSelect } from '../utils/helpers';
 
 /**
  * E2E tests for the body classes feature.
@@ -69,7 +69,7 @@ test.describe( 'Body classes', () => {
 			.locator( '.css-class-manager__body-class-control-panel' )
 			.getByRole( 'combobox' );
 
-		await bodyClassCombobox.fill( BODY_CLASS );
+		await typeIntoReactSelect( bodyClassCombobox, BODY_CLASS );
 
 		// Select/create the option to commit the value to the editor state.
 		await page

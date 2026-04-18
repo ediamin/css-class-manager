@@ -189,20 +189,13 @@ jobs:
   # ---------------------------------------------------------------------------
   e2e:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
       WP_BASE_URL: http://localhost:8889
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          coverage: none
-          tools: composer
 
       - name: Get Composer cache directory
         id: composer-cache
@@ -256,6 +249,30 @@ jobs:
 
       - name: Build assets
         run: npm run build
+
+      - name: Patch wp-env Composer install for Composer 2.9
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const target = 'node_modules/@wordpress/env/lib/init-config.js';
+          const source = fs.readFileSync(target, 'utf8');
+          const original =
+            'RUN composer global require --dev phpunit/phpunit:"^5.7.21 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0"';
+          const replacement =
+            'RUN composer global require --dev --no-security-blocking phpunit/phpunit:"^5.7.21 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0"';
+
+          if (source.includes(replacement)) {
+            console.log('wp-env Composer install already patched');
+            process.exit(0);
+          }
+
+          if (!source.includes(original)) {
+            throw new Error('Expected wp-env Composer install command was not found');
+          }
+
+          fs.writeFileSync(target, source.replace(original, replacement));
+          console.log('Patched wp-env Composer install for Composer 2.9');
+          NODE
 
       - name: Remove local wp-env overrides
         run: rm -f .wp-env.override.json

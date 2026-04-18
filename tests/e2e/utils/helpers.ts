@@ -1,4 +1,4 @@
-import { type Page, expect } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 import {
 	Admin,
 	Editor,
@@ -37,6 +37,41 @@ export async function openCssClassManagerModal( page: Page ): Promise< void > {
 	await expect(
 		page.getByRole( 'dialog', { name: /css class manager/i } )
 	).toBeVisible();
+}
+
+/**
+ * Close the CSS Class Manager modal.
+ * @param page
+ */
+export async function closeCssClassManagerModal( page: Page ): Promise< void > {
+	await page.getByRole( 'button', { name: /^close$/i } ).click();
+	await expect(
+		page.getByRole( 'dialog', { name: /css class manager/i } )
+	).toBeHidden();
+}
+
+/**
+ * Add a class in the CSS Classes tab of the preferences modal.
+ * @param page
+ * @param className
+ * @param description
+ */
+export async function addCssClassInModal(
+	page: Page,
+	className: string,
+	description: string = ''
+): Promise< void > {
+	await page
+		.getByRole( 'textbox', { name: /class name/i } )
+		.fill( className );
+
+	const descriptionInput = page.getByRole( 'textbox', {
+		name: /description/i,
+	} );
+	await descriptionInput.fill( description );
+
+	await page.getByRole( 'button', { name: /add class/i } ).click();
+	await expect( page.getByText( className, { exact: true } ) ).toBeVisible();
 }
 
 /**
@@ -150,4 +185,18 @@ export async function openAdvancedInspectorSection(
 	if ( expanded !== 'true' ) {
 		await advanced.click();
 	}
+}
+
+/**
+ * Type into a react-select combobox using real key events so the menu filters
+ * update consistently in Chromium and in CI.
+ * @param combobox
+ * @param value
+ */
+export async function typeIntoReactSelect(
+	combobox: Locator,
+	value: string
+): Promise< void > {
+	await combobox.click();
+	await combobox.pressSequentially( value );
 }

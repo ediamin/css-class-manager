@@ -6,11 +6,14 @@ import {
 } from '@wordpress/e2e-test-utils-playwright';
 
 import {
+	addCssClassInModal,
+	closeCssClassManagerModal,
 	createNewPost,
 	openAdvancedInspectorSection,
 	openCssClassManagerModal,
 	resetCssClassManagerUserSettings,
 	selectFirstBlock,
+	typeIntoReactSelect,
 } from '../utils/helpers';
 
 /**
@@ -35,13 +38,12 @@ test.describe( 'CSS Class Manager modal', () => {
 			method: 'POST',
 			data: { css_class_manager_class_names: [] },
 		} );
-
-		await createNewPost( admin );
 	} );
 
 	test( 'can open the CSS Class Manager modal from the editor menu', async ( {
 		page,
 	} ) => {
+		await createNewPost( admin );
 		await openCssClassManagerModal( page );
 
 		await expect(
@@ -52,44 +54,30 @@ test.describe( 'CSS Class Manager modal', () => {
 	test( 'can add a new class name and it appears in the list', async ( {
 		page,
 	} ) => {
+		await createNewPost( admin );
 		await openCssClassManagerModal( page );
 
 		// Navigate to the "CSS Classes" tab.
 		await page.getByRole( 'tab', { name: /css classes/i } ).click();
 
-		// Fill in the class form (the form is directly visible — no "Add" button needed).
-		await page
-			.getByRole( 'textbox', { name: /class name/i } )
-			.fill( 'modal-test-class' );
-		await page
-			.getByRole( 'textbox', { name: /description/i } )
-			.fill( 'A class added via the modal' );
+		await addCssClassInModal(
+			page,
+			'modal-test-class',
+			'A class added via the modal'
+		);
 
-		// Submit the form.
-		await page.getByRole( 'button', { name: /add class/i } ).click();
-
-		// The new class should appear in the class list (exact text on the panel toggle).
 		await expect(
 			page.getByText( 'modal-test-class', { exact: true } )
 		).toBeVisible();
 	} );
 
-	test( 'can delete a class name', async ( { page, requestUtils } ) => {
-		// Pre-seed a class to delete.
-		await requestUtils.rest( {
-			path: '/wp/v2/settings',
-			method: 'POST',
-			data: {
-				css_class_manager_class_names: [
-					{ name: 'class-to-delete', description: '' },
-				],
-			},
-		} );
-
-		await page.reload();
+	test( 'can delete a class name', async ( { page } ) => {
+		await createNewPost( admin );
 		await openCssClassManagerModal( page );
 
 		await page.getByRole( 'tab', { name: /css classes/i } ).click();
+
+		await addCssClassInModal( page, 'class-to-delete' );
 
 		// Expand the collapsible panel for the class to delete.
 		const classPanel = page.getByRole( 'button', {
@@ -111,20 +99,12 @@ test.describe( 'CSS Class Manager modal', () => {
 
 	test( 'newly added class appears as autocomplete suggestion in the inspector', async ( {
 		page,
-		requestUtils,
 	} ) => {
-		// Pre-seed a class.
-		await requestUtils.rest( {
-			path: '/wp/v2/settings',
-			method: 'POST',
-			data: {
-				css_class_manager_class_names: [
-					{ name: 'autocomplete-suggest', description: '' },
-				],
-			},
-		} );
-
-		await page.reload();
+		await createNewPost( admin );
+		await openCssClassManagerModal( page );
+		await page.getByRole( 'tab', { name: /css classes/i } ).click();
+		await addCssClassInModal( page, 'autocomplete-suggest' );
+		await closeCssClassManagerModal( page );
 
 		// Add a paragraph block.
 		await editor.canvas
@@ -142,7 +122,7 @@ test.describe( 'CSS Class Manager modal', () => {
 		const classInput = page.getByRole( 'combobox', {
 			name: /additional css class/i,
 		} );
-		await classInput.fill( 'autocomplete' );
+		await typeIntoReactSelect( classInput, 'autocomplete' );
 
 		await expect(
 			page.getByRole( 'option', { name: /autocomplete-suggest/i } )

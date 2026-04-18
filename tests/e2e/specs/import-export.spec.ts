@@ -9,7 +9,11 @@ import {
 	test,
 } from '@wordpress/e2e-test-utils-playwright';
 
-import { createNewPost, openCssClassManagerModal } from '../utils/helpers';
+import {
+	addCssClassInModal,
+	createNewPost,
+	openCssClassManagerModal,
+} from '../utils/helpers';
 
 /**
  * E2E tests for the import / export functionality.
@@ -34,11 +38,7 @@ test.describe( 'Import / Export', () => {
 		await requestUtils.rest( {
 			path: '/wp/v2/settings',
 			method: 'POST',
-			data: {
-				css_class_manager_class_names: [
-					{ name: 'export-class', description: 'For export test' },
-				],
-			},
+			data: { css_class_manager_class_names: [] },
 		} );
 
 		await createNewPost( admin );
@@ -49,6 +49,12 @@ test.describe( 'Import / Export', () => {
 	} );
 
 	test( 'can export the class list as a JSON file', async ( { page } ) => {
+		await page.getByRole( 'tab', { name: /css classes/i } ).click();
+		await addCssClassInModal( page, 'export-class', 'For export test' );
+		await page
+			.getByRole( 'tab', { name: /import.*export|export.*import/i } )
+			.click();
+
 		// Start waiting for the download before triggering the click.
 		const [ download ] = await Promise.all( [
 			page.waitForEvent( 'download' ),
