@@ -10,6 +10,7 @@ import {
 	openAdvancedInspectorSection,
 	resetCssClassManagerUserSettings,
 	selectFirstBlock,
+	typeIntoReactSelect,
 } from '../utils/helpers';
 
 /**
@@ -28,12 +29,13 @@ test.describe( 'Block editor CSS class control', () => {
 		editor = new Editor( { page } );
 		admin = new Admin( { page, pageUtils, editor } );
 		await resetCssClassManagerUserSettings( requestUtils );
-		await createNewPost( admin );
 	} );
 
 	test( 'renders the plugin CSS class control in the block inspector', async ( {
 		page,
 	} ) => {
+		await createNewPost( admin );
+
 		// Insert a paragraph block and select it.
 		await editor.canvas
 			.getByRole( 'button', { name: /add default block/i } )
@@ -67,8 +69,9 @@ test.describe( 'Block editor CSS class control', () => {
 			},
 		} );
 
-		// Reload so the plugin's store initialises with the seeded class names.
-		await page.reload();
+		// Open a fresh editor so the plugin store bootstraps with the seeded
+		// class list from localized data instead of reusing the current draft.
+		await createNewPost( admin );
 
 		// Insert a paragraph block.
 		await editor.canvas
@@ -86,7 +89,7 @@ test.describe( 'Block editor CSS class control', () => {
 		const classInput = page.getByRole( 'combobox', {
 			name: /additional css class/i,
 		} );
-		await classInput.fill( 'e2e-test' );
+		await typeIntoReactSelect( classInput, 'e2e-test' );
 
 		// Select the suggestion.
 		await page.getByRole( 'option', { name: /e2e-test-class/i } ).click();

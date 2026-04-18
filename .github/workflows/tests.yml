@@ -185,38 +185,17 @@ jobs:
           if-no-files-found: warn
 
   # ---------------------------------------------------------------------------
-  # Playwright E2E tests (no wp-env / Docker)
+  # Playwright E2E tests via wp-env
   # ---------------------------------------------------------------------------
   e2e:
     name: E2E Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
-      WP_BASE_URL: http://127.0.0.1:8889
-
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: wordpress
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+      WP_BASE_URL: http://localhost:8889
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          coverage: none
-          tools: composer, wp-cli
 
       - name: Get Composer cache directory
         id: composer-cache
@@ -266,92 +245,56 @@ jobs:
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
 
       - name: Install Playwright browsers and system dependencies
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps chromium
 
       - name: Build assets
         run: npm run build
 
-      - name: Set up WordPress
+      - name: Patch wp-env Composer install for Composer 2.9
         run: |
-          # Download WordPress core
-          wp core download --path=/tmp/wordpress
+          node <<'NODE'
+          const fs = require('node:fs');
+          const target = 'node_modules/@wordpress/env/lib/init-config.js';
+          const source = fs.readFileSync(target, 'utf8');
+          const original =
+            'RUN composer global require --dev phpunit/phpunit:"^5.7.21 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0"';
+          const replacement =
+            'RUN composer global require --dev --no-security-blocking phpunit/phpunit:"^5.7.21 || ^6.0 || ^7.0 || ^8.0 || ^9.0 || ^10.0"';
 
-          # Configure database connection
-          wp config create --path=/tmp/wordpress \
-            --dbname=wordpress \
-            --dbuser=root \
-            --dbpass=root \
-            --dbhost=127.0.0.1
-
-          # Install WordPress
-          wp core install --path=/tmp/wordpress \
-            --url="$WP_BASE_URL" \
-            --title="CSS Class Manager Tests" \
-            --admin_user=admin \
-            --admin_password=password \
-            --admin_email=admin@example.org \
-            --skip-email
-
-          # Enable debug mode
-          wp config set WP_DEBUG true --raw --path=/tmp/wordpress
-          wp config set WP_DEBUG_LOG true --raw --path=/tmp/wordpress
-
-          # Symlink the plugin into the WordPress plugins directory
-          ln -s "$GITHUB_WORKSPACE" /tmp/wordpress/wp-content/plugins/css-class-manager
-
-          # Activate the plugin
-          wp plugin activate css-class-manager --path=/tmp/wordpress
-
-          # Install and activate the theme used by E2E tests
-          wp theme install twentytwentyfive --activate --path=/tmp/wordpress
-
-          # Set up pretty permalinks for REST API support
-          wp rewrite structure '/%postname%/' --path=/tmp/wordpress
-          wp rewrite flush --path=/tmp/wordpress
-
-      - name: Create PHP router for built-in server
-        run: |
-          cat > /tmp/wordpress/router.php << 'ROUTER'
-          <?php
-          $uri = urldecode( parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ) );
-
-          if ( $uri !== '/' && file_exists( $_SERVER['DOCUMENT_ROOT'] . $uri ) ) {
-              return false;
+          if (source.includes(replacement)) {
+            console.log('wp-env Composer install already patched');
+            process.exit(0);
           }
 
-          $_SERVER['PHP_SELF'] = '/index.php';
-          require $_SERVER['DOCUMENT_ROOT'] . '/index.php';
-          ROUTER
+          if (!source.includes(original)) {
+            throw new Error('Expected wp-env Composer install command was not found');
+          }
 
-      - name: Start WordPress
-        run: |
-          PHP_CLI_SERVER_WORKERS=4 php -S 127.0.0.1:8889 -t /tmp/wordpress /tmp/wordpress/router.php > /tmp/wordpress/php-server.log 2>&1 &
-          echo $! > /tmp/wordpress/php-server.pid
+          fs.writeFileSync(target, source.replace(original, replacement));
+          console.log('Patched wp-env Composer install for Composer 2.9');
+          NODE
 
-      - name: Wait for WordPress
-        run: |
-          for i in $(seq 1 30); do
-            if curl -sS -o /dev/null "$WP_BASE_URL/wp-login.php" 2>/dev/null; then
-              echo "WordPress is ready"
-              exit 0
-            fi
-            sleep 1
-          done
-          echo "WordPress failed to start"
-          exit 1
+      - name: Remove local wp-env overrides
+        run: rm -f .wp-env.override.json
+
+      - name: Start WordPress test environment
+        run: npm run env:start:e2e
 
       - name: Run E2E tests
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 'true'
         run: npm run test:e2e
 
-      - name: Upload PHP server log
+      - name: Capture wp-env logs
+        if: failure()
+        run: npx wp-env logs tests --no-watch > /tmp/wp-env-tests.log 2>&1 || true
+
+      - name: Upload wp-env logs
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: php-server-log
-          path: /tmp/wordpress/php-server.log
+          name: wp-env-tests-log
+          path: /tmp/wp-env-tests.log
           if-no-files-found: warn
 
       - name: Upload Playwright HTML report
@@ -369,3 +312,7 @@ jobs:
           name: e2e-junit-results
           path: e2e-results.xml
           if-no-files-found: warn
+
+      - name: Stop WordPress test environment
+        if: always()
+        run: npm run env:stop
