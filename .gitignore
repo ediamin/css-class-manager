@@ -23,7 +23,6 @@ e2e-results.xml
 test-results/
 artifacts/
 tests/e2e/.auth/
-composer.lock
 css-class-manager.zip
 
 # TypeScript
