@@ -13,12 +13,13 @@ import { RequestUtils } from '@wordpress/e2e-test-utils-playwright';
  */
 
 const AUTH_STATE_FILE = path.join( __dirname, '../.auth/admin.json' );
+const WP_BASE_URL = process.env.WP_BASE_URL || 'http://127.0.0.1:8889';
 
 setup( 'authenticate as admin', async () => {
 	const requestUtils = await RequestUtils.setup( {
 		user: { username: 'admin', password: 'password' },
 		storageStatePath: AUTH_STATE_FILE,
-		baseURL: 'http://localhost:8889',
+		baseURL: WP_BASE_URL,
 	} );
 
 	// Login and get the REST API nonce; persists cookies + nonce + rootURL.
