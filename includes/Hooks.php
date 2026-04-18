@@ -39,5 +39,9 @@ class Hooks
 		add_action( 'init', [ Enqueue::class, 'register_scripts' ] );
 		add_action( 'enqueue_block_editor_assets', [ Enqueue::class, 'enqueue_block_editor_assets' ] );
 		add_filter( 'css_class_manager_filtered_class_names', [ ThemeClasses::class, 'add_theme_classes' ] );
+
+		// Clear theme classes cache when theme or global styles change.
+		add_action( 'switch_theme', [ ThemeClasses::class, 'clear_cache' ] );
+		add_action( 'save_post_wp_global_styles', [ ThemeClasses::class, 'clear_cache' ] );
 	}
 }

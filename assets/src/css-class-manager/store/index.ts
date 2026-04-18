@@ -119,20 +119,19 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 		},
 
 		getCssClassNames( state ) {
-			let hasPriority = false;
-			const sortedClassNames = [
+			return [
 				...state.filteredClassNames,
 				...state.userDefinedClassNames,
 			].sort( ( a, b ) => {
-				// Check if any of the class presets have priority higher than 0.
-				if (
-					( a.priority && a.priority > 0 ) ||
-					( b.priority && b.priority > 0 )
-				) {
-					hasPriority = true;
+				const priorityA = a.priority || 0;
+				const priorityB = b.priority || 0;
+
+				// Sort by priority first (descending).
+				if ( priorityA !== priorityB ) {
+					return priorityB - priorityA;
 				}
 
-				// Convert names to lowercase for case-insensitive sorting.
+				// Then sort alphabetically (case-insensitive).
 				const nameA = a.name.toLowerCase();
 				const nameB = b.name.toLowerCase();
 
@@ -144,18 +143,8 @@ const store = createReduxStore< State, Actions, Selectors >( STORE_NAME, {
 					return 1;
 				}
 
-				// Names are equal.
 				return 0;
 			} );
-
-			return ! hasPriority
-				? sortedClassNames
-				: sortedClassNames.sort( ( a, b ) => {
-						const priorityA = a.priority || 0;
-						const priorityB = b.priority || 0;
-
-						return priorityB - priorityA;
-				  } );
 		},
 
 		getNotices( state ) {
