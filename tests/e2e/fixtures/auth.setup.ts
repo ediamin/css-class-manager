@@ -13,7 +13,7 @@ import { RequestUtils } from '@wordpress/e2e-test-utils-playwright';
  */
 
 const AUTH_STATE_FILE = path.join( __dirname, '../.auth/admin.json' );
-const WP_BASE_URL = process.env.WP_BASE_URL || 'http://127.0.0.1:8889';
+const WP_BASE_URL = process.env.WP_BASE_URL || 'http://localhost:8889';
 
 setup( 'authenticate as admin', async () => {
 	const requestUtils = await RequestUtils.setup( {

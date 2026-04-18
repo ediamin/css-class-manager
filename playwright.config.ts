@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const wpBaseUrl = process.env.WP_BASE_URL || 'http://127.0.0.1:8889';
+const wpBaseUrl = process.env.WP_BASE_URL || 'http://localhost:8889';
 
 /**
  * Playwright E2E test configuration.

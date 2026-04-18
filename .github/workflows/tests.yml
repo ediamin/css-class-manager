@@ -191,7 +191,7 @@ jobs:
     name: E2E Tests
     runs-on: ubuntu-latest
     env:
-      WP_BASE_URL: http://127.0.0.1:8889
+      WP_BASE_URL: http://localhost:8889
 
     services:
       mysql:
@@ -326,7 +326,7 @@ jobs:
 
       - name: Start WordPress
         run: |
-          php -S 127.0.0.1:8889 -t /tmp/wordpress /tmp/wordpress/router.php > /tmp/wordpress/php-server.log 2>&1 &
+          PHP_CLI_SERVER_WORKERS=4 php -S localhost:8889 -t /tmp/wordpress /tmp/wordpress/router.php > /tmp/wordpress/php-server.log 2>&1 &
           echo $! > /tmp/wordpress/php-server.pid
 
       - name: Wait for WordPress
