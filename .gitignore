@@ -30,3 +30,4 @@ css-class-manager.zip
 build
 build-types
 tsconfig.tsbuildinfo
+tsconfig.test.tsbuildinfo
