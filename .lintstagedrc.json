@@ -1,7 +1,0 @@
-{
-	"*.php": [ "composer run phpcs" ],
-	"*.json": [ "wp-scripts format" ],
-	"*.scss": [ "wp-scripts lint-style" ],
-	"*.{js,ts,tsx}": [ "wp-scripts lint-js" ],
-	"package.json": [ "wp-scripts lint-pkg-json" ]
-}

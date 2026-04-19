@@ -1,0 +1,146 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["7.4"]
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-downloads-${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('composer.json', 'composer.lock') }}
+          restore-keys: composer-downloads-${{ runner.os }}-php-${{ matrix.php }}-
+
+      - name: Cache Composer vendor directory
+        id: composer-vendor-cache
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-vendor-${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('composer.json', 'composer.lock') }}
+
+      - name: Install Composer dependencies
+        if: steps.composer-vendor-cache.outputs.cache-hit != 'true'
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Run PHPCS
+        run: vendor/bin/phpcs .
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyze
+
+  js:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Resolve Node.js version
+        id: node-version
+        run: echo "value=$(node -p 'process.version')" >> "$GITHUB_OUTPUT"
+
+      - name: Restore node_modules cache
+        id: node-modules-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ steps.node-version.outputs.value }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install npm dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Save node_modules cache
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: node_modules
+          key: ${{ steps.node-modules-cache.outputs.cache-primary-key }}
+
+      - name: Run JavaScript lint
+        run: npm run lint:js
+
+      - name: Run CSS lint
+        run: npm run lint:css
+
+      - name: Run package.json lint
+        run: npm run lint:pkg-json
+
+  types:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Resolve Node.js version
+        id: node-version
+        run: echo "value=$(node -p 'process.version')" >> "$GITHUB_OUTPUT"
+
+      - name: Restore node_modules cache
+        id: node-modules-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ steps.node-version.outputs.value }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install npm dependencies
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Save node_modules cache
+        if: steps.node-modules-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: node_modules
+          key: ${{ steps.node-modules-cache.outputs.cache-primary-key }}
+
+      - name: Run TypeScript checks
+        run: npm run lint:types
